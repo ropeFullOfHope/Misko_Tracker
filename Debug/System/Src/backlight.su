@@ -1,0 +1,2 @@
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:3217:22:LL_TIM_OC_SetCompareCH1	16	static
+../System/Src/backlight.c:4:6:backlight_set_brightness	16	static

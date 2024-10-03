@@ -1,0 +1,5 @@
+../System/Src/lcd.c:15:6:LCD_init	16	static
+../System/Src/lcd.c:36:6:LCD_update_screen	16	static
+../System/Src/lcd.c:46:6:LCD_update_tile	24	static
+../System/Src/lcd.c:58:6:LCD_draw	24	static
+../System/Src/lcd.c:65:10:LCD_is_DMA_ready	8	static

@@ -1,0 +1,4 @@
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h:7744:26:LL_ADC_IsEnabled	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h:7948:26:LL_ADC_REG_ReadConversionData12	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h:8275:26:LL_ADC_IsActiveFlag_EOC	16	static
+../Application/Src/app.c:11:6:app_main	56	static
