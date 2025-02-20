@@ -1,0 +1,132 @@
+#include "lcd.h"
+#include "LCD_tileset.h"
+#include "ili9341.h"
+#include "backlight.h"
+#include "millis.h"
+
+#define QUEUE_SIZE (ROW_COUNT * COLUMN_COUNT)
+
+typedef struct {
+    uint8_t tile;
+    color_t color;
+    uint8_t dirty;
+} tile_t;
+
+typedef struct {
+    uint8_t x;
+    uint8_t y;
+} coordinates_t;
+
+static void LCD_enqueue_tile(coordinates_t coordinates);
+static coordinates_t LCD_dequeue_tile(void);
+
+static tile_t screen[ROW_COUNT][COLUMN_COUNT] = {0};
+static coordinates_t queue[QUEUE_SIZE] = {0};
+static uint32_t queued_tiles = 0;
+static uint32_t queue_read_head = 0;
+static uint32_t queue_write_head = 0;
+
+void LCD_init(void)
+{
+    // Initialize ILI9341.
+    ILI9341_init();
+
+    // Clear Screen
+    ILI9341_column_address_set(0, 319);
+    ILI9341_page_address_set(0, 239);
+    ILI9341_memory_write_start();
+
+    uint16_t data = 0x0000;
+    for (int i = 0; i < 320 * 240; i++)
+        ILI9341_send_data(&data, 1);
+
+    // Wait for data to be sent completly.
+    delay_millis(100);
+
+    // Turn on backlight.
+    backlight_set_brightness(50);
+}
+
+void LCD_draw(uint8_t tile, uint32_t x, uint32_t y, color_t color)
+{
+    if (x >= COLUMN_COUNT || y >= ROW_COUNT)
+        return;
+
+    if (tile == screen[y][x].tile && color == screen[y][x].color)
+        return;
+
+    screen[y][x].tile  = tile;
+    screen[y][x].color = color;
+
+    if (screen[y][x].dirty == 0) {
+        screen[y][x].dirty = 1;
+
+        LCD_enqueue_tile((coordinates_t){x, y});
+    }
+}
+
+void LCD_update_screen(void)
+{
+    while (queued_tiles != 0)
+        LCD_update_one_tile();
+}
+
+void LCD_update_one_tile(void)
+{
+    if (queued_tiles == 0)
+        return;
+
+    while (LCD_is_DMA_ready() == 0);
+    coordinates_t coordiantes = LCD_dequeue_tile();
+    LCD_update_tile(coordiantes.x, coordiantes.y);
+}
+
+void LCD_update_tile(uint32_t x, uint32_t y)
+{
+    if (x >= COLUMN_COUNT || y >= ROW_COUNT)
+        return;
+
+    if (screen[y][x].dirty == 0)
+        return;
+
+    ILI9341_column_address_set(x * 8, x * 8 + 7);
+    ILI9341_page_address_set(y * 8, y * 8 + 7);
+    ILI9341_memory_write_start();
+
+    while (LCD_is_DMA_ready() == 0);
+
+    ILI9341_send_data_DMA((uint16_t*) tileset[screen[y][x].color][screen[y][x].tile], 8 * 8);
+
+    screen[y][x].dirty = 0;
+}
+
+uint32_t LCD_is_DMA_ready(void)
+{
+    return ILI9341_is_DMA_ready();
+}
+
+void LCD_enqueue_tile(coordinates_t coordinates)
+{
+    if (queued_tiles >= QUEUE_SIZE)
+        return;
+
+    queued_tiles += 1;
+
+    queue[queue_write_head] = coordinates;
+
+    queue_write_head = (queue_write_head + 1) % QUEUE_SIZE;
+}
+
+coordinates_t LCD_dequeue_tile(void)
+{
+    if (queued_tiles == 0)
+        return (coordinates_t){-1, -1};
+
+    queued_tiles -= 1;
+
+    coordinates_t coordinates = queue[queue_read_head];
+
+    queue_read_head = (queue_read_head + 1) % QUEUE_SIZE;
+
+    return coordinates;
+}

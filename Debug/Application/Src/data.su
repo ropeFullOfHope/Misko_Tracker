@@ -1,0 +1,2 @@
+../Application/Src/data.c:9:9:get_song_chart_entry	16	static
+../Application/Src/data.c:18:6:set_song_chart_entry	24	static

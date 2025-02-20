@@ -1,0 +1,9 @@
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:784:26:LL_GPIO_ReadInputPort	1
+../System/Src/button.c:32:6:button_scan	22
+../System/Src/button.c:123:6:is_button_idle	5
+../System/Src/button.c:140:6:is_button_held	8
+../System/Src/button.c:160:6:is_button_long_held	4
+../System/Src/button.c:176:6:is_button_pressed	4
+../System/Src/button.c:192:6:is_button_double_pressed	3
+../System/Src/button.c:205:6:is_button_released	3
+../System/Src/button.c:218:6:is_button_debouncing	5
