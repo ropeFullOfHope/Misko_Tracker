@@ -16,10 +16,12 @@ typedef enum {
 } color_t;
 
 void LCD_init(void);
-void LCD_update_screen(void);
-void LCD_update_tile(uint32_t x, uint32_t y);
-void LCD_update_one_tile(void);
 void LCD_draw(uint8_t tile, uint32_t x, uint32_t y, color_t color);
+void LCD_change_tile(uint8_t tile, uint32_t x, uint32_t y);
+void LCD_change_color(color_t color, uint32_t x, uint32_t y);
+void LCD_update_screen(void);
+void LCD_update_one_tile(void);
+void LCD_update_tile(uint32_t x, uint32_t y);
 uint32_t LCD_is_DMA_ready(void);
 
 #endif /* INC_LCD_H_ */

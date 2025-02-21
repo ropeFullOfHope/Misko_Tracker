@@ -6,7 +6,7 @@ typedef struct {
 
 static project_data_t project_data = {0};
 
-uint8_t get_song_chart_entry(int32_t channel, int32_t row)
+uint8_t data_get_song_chart_entry(int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
         if (0 <= row && row < SONG_CHART_ROW_COUNT)
@@ -15,7 +15,7 @@ uint8_t get_song_chart_entry(int32_t channel, int32_t row)
     return 0;
 }
 
-void set_song_chart_entry(int8_t data, int32_t channel, int32_t row)
+void data_set_song_chart_entry(int8_t data, int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
         if (0 <= row && row < SONG_CHART_ROW_COUNT)

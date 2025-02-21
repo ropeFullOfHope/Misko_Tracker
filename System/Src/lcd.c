@@ -65,6 +65,40 @@ void LCD_draw(uint8_t tile, uint32_t x, uint32_t y, color_t color)
     }
 }
 
+void LCD_change_tile(uint8_t tile, uint32_t x, uint32_t y)
+{
+    if (x >= COLUMN_COUNT || y >= ROW_COUNT)
+        return;
+
+    if (tile == screen[y][x].tile)
+        return;
+
+    screen[y][x].tile = tile;
+
+    if (screen[y][x].dirty == 0) {
+        screen[y][x].dirty = 1;
+
+        LCD_enqueue_tile((coordinates_t){x, y});
+    }
+}
+
+void LCD_change_color(color_t color, uint32_t x, uint32_t y)
+{
+    if (x >= COLUMN_COUNT || y >= ROW_COUNT)
+        return;
+
+    if (color == screen[y][x].color)
+        return;
+
+    screen[y][x].color = color;
+
+    if (screen[y][x].dirty == 0) {
+        screen[y][x].dirty = 1;
+
+        LCD_enqueue_tile((coordinates_t){x, y});
+    }
+}
+
 void LCD_update_screen(void)
 {
     while (queued_tiles != 0)
