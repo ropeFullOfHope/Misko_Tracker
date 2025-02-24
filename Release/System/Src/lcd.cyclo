@@ -1,0 +1,8 @@
+../System/Src/lcd.c:29:6:LCD_init	2
+../System/Src/lcd.c:50:6:LCD_draw	7
+../System/Src/lcd.c:68:6:LCD_change_tile	6
+../System/Src/lcd.c:85:6:LCD_change_color	6
+../System/Src/lcd.c:118:6:LCD_update_tile	5
+../System/Src/lcd.c:108:6:LCD_update_one_tile	4
+../System/Src/lcd.c:102:6:LCD_update_screen	6
+../System/Src/lcd.c:137:10:LCD_is_DMA_ready	1

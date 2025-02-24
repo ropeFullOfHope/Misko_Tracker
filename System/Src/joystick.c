@@ -56,30 +56,26 @@ void joystick_scan(void)
     int32_t abs_y, angle;
     abs_y = y < 0 ? -y : y;
 
-    // Calculate angle.
+    // Calculate angle (returns range of -180° and 180°).
     if (x >= 0)
         angle = (45 * 1 - 45 * (x - abs_y) / (x + abs_y));
     else
         angle = (45 * 3 - 45 * (abs_y + x) / (abs_y - x));
     angle = y < 0 ? -angle : angle;
 
-    // Determine joystick's position depending on angle.
-    if (-35 <= angle && angle <= 35)
-        joystick_position = JOYSTICK_POSITION_RIGHT;
-    else if (55 <= angle && angle <= 125)
-        joystick_position = JOYSTICK_POSITION_UP;
-    else if ((145 <= angle || angle <= -145))
-        joystick_position = JOYSTICK_POSITION_LEFT;
-    else if (-125 <= angle && angle <= -55)
-        joystick_position = JOYSTICK_POSITION_DOWN;
-    else if (35 < angle && angle < 55)
-        joystick_position = JOYSTICK_POSITION_UPRIGHT;
-    else if (125 < angle && angle < 145)
-        joystick_position = JOYSTICK_POSITION_UPLEFT;
-    else if (-145 < angle && angle < -125)
-        joystick_position = JOYSTICK_POSITION_DOWNLEFT;
-    else if (-55 < angle && angle < -35)
-        joystick_position = JOYSTICK_POSITION_DOWNRIGHT;
+    // Determine joystick's position depending on angle using a lookup table.
+    const joystick_position_t joystick_position_lookup[361] = {
+        [  0 ...  35] = JOYSTICK_POSITION_LEFT,
+        [ 36 ...  54] = JOYSTICK_POSITION_DOWNLEFT,
+        [ 55 ... 125] = JOYSTICK_POSITION_DOWN,
+        [126 ... 144] = JOYSTICK_POSITION_DOWNRIGHT,
+        [145 ... 215] = JOYSTICK_POSITION_RIGHT,
+        [216 ... 234] = JOYSTICK_POSITION_UPRIGHT,
+        [235 ... 305] = JOYSTICK_POSITION_UP,
+        [306 ... 324] = JOYSTICK_POSITION_UPLEFT,
+        [325 ... 360] = JOYSTICK_POSITION_LEFT
+    };
+    joystick_position = joystick_position_lookup[angle + 180];
 }
 
 joystick_position_t joystick_get_position(void)

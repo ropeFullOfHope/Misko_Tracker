@@ -10,15 +10,18 @@ static void draw_map(void);
 typedef enum {
     LOGIC_STATE_SONG_INIT,
     LOGIC_STATE_SONG_MAIN,
+    LOGIC_STATE_PATTERN_INIT,
     LOGIC_STATE_MAX
 } logic_state_t;
 
 static logic_state_t logic_state_song_init(void);
 static logic_state_t logic_state_song_main(void);
+static logic_state_t logic_state_pattern_init(void);
 
 static logic_state_t (*logic_state_table[LOGIC_STATE_MAX]) (void) = {
-    [LOGIC_STATE_SONG_INIT] = logic_state_song_init,
-    [LOGIC_STATE_SONG_MAIN] = logic_state_song_main
+    [LOGIC_STATE_SONG_INIT]    = logic_state_song_init,
+    [LOGIC_STATE_SONG_MAIN]    = logic_state_song_main,
+    [LOGIC_STATE_PATTERN_INIT] = logic_state_pattern_init
 };
 
 static logic_state_t current_logic_state;
@@ -46,6 +49,39 @@ logic_state_t logic_state_song_init(void)
 }
 
 logic_state_t logic_state_song_main(void)
+{
+    if (is_button_held(BUTTON_RIGHT)) {
+        song_change_pattern(joystick_get_position()); // Hold A + Move
+    }
+    else if (is_button_held(BUTTON_DOWN)) {
+        song_move_page(joystick_get_position()); // Hold B + Up/Down
+
+        if (is_button_pressed(BUTTON_RIGHT))
+            song_delete_pattern(); // Hold B + A
+    }
+    else if (is_button_held(BUTTON_UP)) {
+        if (joystick_get_position() == JOYSTICK_POSITION_RIGHT)
+            if (song_get_selected_pattern() != 0x00)
+                return LOGIC_STATE_PATTERN_INIT; // Hold X + Right
+    }
+    else if (is_button_held(BUTTON_LEFT)) {
+
+    }
+    else {
+        song_move_cursor(joystick_get_position()); // Move
+
+        if (is_button_double_pressed(BUTTON_RIGHT))
+            song_insert_new_pattern(); // A + A
+        else if (is_button_pressed(BUTTON_RIGHT))
+            song_insert_pattern(); // A
+
+
+    }
+
+    return LOGIC_STATE_SONG_MAIN;
+}
+
+logic_state_t logic_state_pattern_init(void)
 {
     return LOGIC_STATE_SONG_MAIN;
 }

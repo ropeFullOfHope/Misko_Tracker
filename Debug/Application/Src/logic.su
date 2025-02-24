@@ -1,5 +1,4 @@
-../Application/Src/logic.c:27:6:logic_update	8	static
-../Application/Src/logic.c:35:15:logic_state_song_init	8	static
-../Application/Src/logic.c:48:15:logic_state_song_main	4	static
-../Application/Src/logic.c:53:6:draw_sidebar	4	static
-../Application/Src/logic.c:58:6:draw_map	4	static
+../Application/Src/logic.c:84:15:logic_state_pattern_init	0	static
+../Application/Src/logic.c:51:15:logic_state_song_main	8	static
+../Application/Src/logic.c:38:15:logic_state_song_init	8	static
+../Application/Src/logic.c:30:6:logic_update	8	static

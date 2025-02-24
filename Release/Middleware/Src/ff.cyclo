@@ -1,0 +1,8 @@
+../Middleware/Src/ff.c:3307:13:check_fs	21
+../Middleware/Src/ff.c:3401:16:mount_volume.constprop	39
+../Middleware/Src/ff.c:1177:14:get_fat.isra	15
+../Middleware/Src/ff.c:1715:16:dir_sdi.constprop	24
+../Middleware/Src/ff.c:3672:9:f_mount	9
+../Middleware/Src/ff.c:3732:9:f_open	55
+../Middleware/Src/ff.c:3929:9:f_read	22
+../Middleware/Src/ff.c:4231:9:f_close	6

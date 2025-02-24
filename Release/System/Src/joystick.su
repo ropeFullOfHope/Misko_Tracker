@@ -1,0 +1,8 @@
+../System/Src/joystick.c:14:6:joystick_init	0	static
+../System/Src/joystick.c:41:6:joystick_scan	376	static
+../System/Src/joystick.c:81:21:joystick_get_position	0	static
+../System/Src/joystick.c:86:10:is_joystick_centered	0	static
+../System/Src/joystick.c:94:10:is_joystick_up	0	static
+../System/Src/joystick.c:104:10:is_joystick_down	0	static
+../System/Src/joystick.c:114:10:is_joystick_right	0	static
+../System/Src/joystick.c:124:10:is_joystick_left	0	static

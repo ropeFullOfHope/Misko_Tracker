@@ -1,14 +1,15 @@
 #include "logic_song.h"
+#include <stdbool.h>
 #include "data.h"
 #include "lcd.h"
 
 typedef struct {
-    uint32_t x;
-    uint32_t y;
+    int32_t x;
+    int32_t y;
 } cursor_t;
 
 static cursor_t cursor_song = {0};
-static uint32_t scroll_song = 0;
+static int32_t scroll_song = 0;
 
 void song_draw_title(void)
 {
@@ -58,7 +59,7 @@ void song_draw_chart(void)
     }
 
     /* Draw chart with row numbers */
-    for (uint32_t y = 0; y < 24; y++) {
+    for (uint32_t y = 0; y < SONG_CHART_ROWS_ON_SCREEN; y++) {
         const char hex_digit[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
                                     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -71,9 +72,9 @@ void song_draw_chart(void)
             continue;
         }
 
-        uint8_t pattern[8];
+        uint8_t pattern[CHANNEL_COUNT];
 
-        for (uint32_t i = 0; i < 8; i++)
+        for (uint32_t i = 0; i < CHANNEL_COUNT; i++)
             pattern[i] = data_get_song_chart_entry(i, row_number);
 
         color_t color_normal;
@@ -93,7 +94,7 @@ void song_draw_chart(void)
 
         LCD_draw(' ', 3, y + 5, color_normal);
 
-        for (uint32_t i = 0; i < 8; i++) {
+        for (uint32_t i = 0; i < CHANNEL_COUNT; i++) {
             if (pattern[0] == 0) {
                 LCD_draw('-', i * 3 + 4, y + 5, color_fade);
                 LCD_draw('-', i * 3 + 5, y + 5, color_fade);
@@ -118,10 +119,10 @@ void song_highlight_cursor(void)
 {
     int32_t highlighted_row = cursor_song.y - scroll_song;
 
-    if (cursor_song.x >= 8)
+    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
         return;
 
-    if (highlighted_row < 0 || highlighted_row >= 24)
+    if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
     LCD_change_color(COLOR_HIGHLIGHT, cursor_song.x * 3 + 4, highlighted_row + 5);
@@ -130,18 +131,18 @@ void song_highlight_cursor(void)
 
 void song_unhighlight_cursor(void)
 {
-    if (cursor_song.x >= 8)
+    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
         return;
 
     int32_t highlighted_row = cursor_song.y - scroll_song;
 
-    if (highlighted_row < 0 || highlighted_row >= 24)
+    if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
     color_t color_normal;
     color_t color_fade;
 
-    if (highlighted_row % 4 == 0) {
+    if (cursor_song.y % 4 == 0) {
         color_normal = COLOR_DARK;
         color_fade = COLOR_DARK_FADE;
     }
@@ -150,7 +151,7 @@ void song_unhighlight_cursor(void)
         color_fade = COLOR_NORMAL_FADE;
     }
 
-    if (data_get_song_chart_entry(cursor_song.x, cursor_song.y) == 0) {
+    if (data_get_song_chart_entry(cursor_song.x, cursor_song.y) == 0x00) {
         LCD_change_color(color_fade, cursor_song.x * 3 + 4, highlighted_row + 5);
         LCD_change_color(color_fade, cursor_song.x * 3 + 5, highlighted_row + 5);
     }
@@ -162,7 +163,7 @@ void song_unhighlight_cursor(void)
 
 void song_highlight_column(void)
 {
-    if (cursor_song.x >= 8)
+    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
         return;
 
     LCD_change_color(COLOR_HIGHLIGHT, cursor_song.x * 3 + 4, 4);
@@ -171,7 +172,7 @@ void song_highlight_column(void)
 
 void song_unhighlight_column(void)
 {
-    if (cursor_song.x >= 8)
+    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
         return;
 
     LCD_change_color(COLOR_DARK_FADE, cursor_song.x * 3 + 4, 4);
@@ -182,7 +183,7 @@ void song_highlight_row(void)
 {
     int32_t highlighted_row = cursor_song.y - scroll_song;
 
-    if (highlighted_row < 0 || highlighted_row >= 24)
+    if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
     LCD_change_color(COLOR_HIGHLIGHT, 1,  highlighted_row + 5);
@@ -195,11 +196,477 @@ void song_unhighlight_row(void)
 {
     int32_t highlighted_row = cursor_song.y - scroll_song;
 
-    if (highlighted_row < 0 || highlighted_row >= 24)
+    if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
-    LCD_change_color(COLOR_DARK_FADE, 1,  highlighted_row + 5);
-    LCD_change_color(COLOR_DARK_FADE, 2,  highlighted_row + 5);
-    LCD_change_color(COLOR_DARK_FADE, 28, highlighted_row + 5);
-    LCD_change_color(COLOR_DARK_FADE, 29, highlighted_row + 5);
+    if (cursor_song.y % 4 == 0) {
+        LCD_change_color(COLOR_DARK_FADE, 1,  highlighted_row + 5);
+        LCD_change_color(COLOR_DARK_FADE, 2,  highlighted_row + 5);
+        LCD_change_color(COLOR_DARK_FADE, 28, highlighted_row + 5);
+        LCD_change_color(COLOR_DARK_FADE, 29, highlighted_row + 5);
+    }
+    else {
+        LCD_change_color(COLOR_NORMAL_FADE, 1,  highlighted_row + 5);
+        LCD_change_color(COLOR_NORMAL_FADE, 2,  highlighted_row + 5);
+        LCD_change_color(COLOR_NORMAL_FADE, 28, highlighted_row + 5);
+        LCD_change_color(COLOR_NORMAL_FADE, 29, highlighted_row + 5);
+    }
+}
+
+void song_move_cursor(joystick_position_t joystick_position)
+{
+    bool can_move_x;
+    bool can_move_y;
+    bool need_scroll;
+
+    switch (joystick_position) {
+        case JOYSTICK_POSITION_DOWN:
+            can_move_y = (cursor_song.y + 1 < SONG_CHART_ROW_COUNT);
+            need_scroll = (cursor_song.y + 1 >= scroll_song + SONG_CHART_ROWS_ON_SCREEN);
+
+            if (can_move_y) {
+                if (need_scroll) {
+                    cursor_song.y += 1;
+                    scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
+
+                    song_draw_chart();
+                    song_highlight_cursor();
+                    song_highlight_column();
+                    song_highlight_row();
+                }
+                else {
+                    song_unhighlight_cursor();
+                    song_unhighlight_row();
+
+                    cursor_song.y += 1;
+
+                    song_highlight_cursor();
+                    song_highlight_row();
+                }
+            }
+
+            break;
+        case JOYSTICK_POSITION_UP:
+            can_move_y = (cursor_song.y - 1 >= 0);
+            need_scroll = (cursor_song.y - 1 < scroll_song);
+
+            if (can_move_y) {
+                if (need_scroll) {
+                    cursor_song.y -= 1;
+                    scroll_song = cursor_song.y;
+
+                    song_draw_chart();
+                    song_highlight_cursor();
+                    song_highlight_column();
+                    song_highlight_row();
+                }
+                else {
+                    song_unhighlight_cursor();
+                    song_unhighlight_row();
+
+                    cursor_song.y -= 1;
+
+                    song_highlight_cursor();
+                    song_highlight_row();
+                }
+            }
+
+            break;
+        case JOYSTICK_POSITION_RIGHT:
+            can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
+
+            if (can_move_x) {
+                song_unhighlight_cursor();
+                song_unhighlight_column();
+
+                cursor_song.x += 1;
+
+                song_highlight_cursor();
+                song_highlight_column();
+            }
+
+            break;
+        case JOYSTICK_POSITION_LEFT:
+            can_move_x = (cursor_song.x - 1 >= 0);
+
+            if (can_move_x) {
+                song_unhighlight_cursor();
+                song_unhighlight_column();
+
+                cursor_song.x -= 1;
+
+                song_highlight_cursor();
+                song_highlight_column();
+            }
+
+            break;
+        case JOYSTICK_POSITION_DOWNRIGHT:
+            can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
+            can_move_y = (cursor_song.y + 1 < SONG_CHART_ROW_COUNT);
+            need_scroll = (cursor_song.y + 1 >= scroll_song + SONG_CHART_ROWS_ON_SCREEN);
+
+            if (can_move_x) {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.x += 1;
+                        cursor_song.y += 1;
+                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_column();
+                        song_unhighlight_row();
+
+                        cursor_song.x += 1;
+                        cursor_song.y += 1;
+
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                }
+                else {
+                    song_unhighlight_cursor();
+                    song_unhighlight_column();
+
+                    cursor_song.x += 1;
+
+                    song_highlight_cursor();
+                    song_highlight_column();
+                }
+            }
+            else {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.y += 1;
+                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_row();
+
+                        cursor_song.y += 1;
+
+                        song_highlight_cursor();
+                        song_highlight_row();
+                    }
+                }
+            }
+
+            break;
+        case JOYSTICK_POSITION_DOWNLEFT:
+            can_move_x = (cursor_song.x - 1 >= 0);
+            can_move_y = (cursor_song.y + 1 < SONG_CHART_ROW_COUNT);
+            need_scroll = (cursor_song.y + 1 >= scroll_song + SONG_CHART_ROWS_ON_SCREEN);
+
+            if (can_move_x) {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.x -= 1;
+                        cursor_song.y += 1;
+                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_column();
+                        song_unhighlight_row();
+
+                        cursor_song.x -= 1;
+                        cursor_song.y += 1;
+
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                }
+                else {
+                    song_unhighlight_cursor();
+                    song_unhighlight_column();
+
+                    cursor_song.x -= 1;
+
+                    song_highlight_cursor();
+                    song_highlight_column();
+                }
+            }
+            else {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.y += 1;
+                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_row();
+
+                        cursor_song.y += 1;
+
+                        song_highlight_cursor();
+                        song_highlight_row();
+                    }
+                }
+            }
+
+            break;
+        case JOYSTICK_POSITION_UPRIGHT:
+            can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
+            can_move_y = (cursor_song.y - 1 >= 0);
+            need_scroll = (cursor_song.y - 1 < scroll_song);
+
+            if (can_move_x) {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.x += 1;
+                        cursor_song.y -= 1;
+                        scroll_song = cursor_song.y;
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_column();
+                        song_unhighlight_row();
+
+                        cursor_song.x += 1;
+                        cursor_song.y -= 1;
+
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                }
+                else {
+                    song_unhighlight_cursor();
+                    song_unhighlight_column();
+
+                    cursor_song.x += 1;
+
+                    song_highlight_cursor();
+                    song_highlight_column();
+                }
+            }
+            else {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.y -= 1;
+                        scroll_song = cursor_song.y;
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_row();
+
+                        cursor_song.y -= 1;
+
+                        song_highlight_cursor();
+                        song_highlight_row();
+                    }
+                }
+            }
+
+            break;
+        case JOYSTICK_POSITION_UPLEFT:
+            can_move_x = (cursor_song.x - 1 >= 0);
+            can_move_y = (cursor_song.y - 1 >= 0);
+            need_scroll = (cursor_song.y - 1 < scroll_song);
+
+            if (can_move_x) {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.x -= 1;
+                        cursor_song.y -= 1;
+                        scroll_song = cursor_song.y;
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_column();
+                        song_unhighlight_row();
+
+                        cursor_song.x -= 1;
+                        cursor_song.y -= 1;
+
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                }
+                else {
+                    song_unhighlight_cursor();
+                    song_unhighlight_column();
+
+                    cursor_song.x -= 1;
+
+                    song_highlight_cursor();
+                    song_highlight_column();
+                }
+            }
+            else {
+                if (can_move_y) {
+                    if (need_scroll) {
+                        cursor_song.y -= 1;
+                        scroll_song = cursor_song.y;
+
+                        song_draw_chart();
+                        song_highlight_cursor();
+                        song_highlight_column();
+                        song_highlight_row();
+                    }
+                    else {
+                        song_unhighlight_cursor();
+                        song_unhighlight_row();
+
+                        cursor_song.y -= 1;
+
+                        song_highlight_cursor();
+                        song_highlight_row();
+                    }
+                }
+            }
+
+            break;
+        default:
+            break;
+    }
+}
+
+void song_move_page(joystick_position_t joystick_position)
+{
+    bool can_move_y;
+    bool need_scroll;
+    bool is_out_of_bounds_y;
+    bool is_out_of_bounds_scroll;
+
+    switch (joystick_position) {
+        case JOYSTICK_POSITION_DOWN:
+            can_move_y = (cursor_song.y < SONG_CHART_ROW_COUNT - 1);
+            need_scroll = (scroll_song < SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN);
+            is_out_of_bounds_y = (cursor_song.y + 16 >= SONG_CHART_ROW_COUNT);
+            is_out_of_bounds_scroll = (scroll_song + 16 > SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN);
+
+            if (need_scroll) {
+                if (is_out_of_bounds_y)
+                    cursor_song.y = SONG_CHART_ROW_COUNT - 1;
+                else
+                    cursor_song.y += 16;
+
+                if (is_out_of_bounds_scroll)
+                    scroll_song = SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN;
+                else
+                    scroll_song += 16;
+
+                song_draw_chart();
+                song_highlight_cursor();
+                song_highlight_column();
+                song_highlight_row();
+            }
+            else if (can_move_y) {
+                song_unhighlight_cursor();
+                song_unhighlight_row();
+
+                if (is_out_of_bounds_y)
+                    cursor_song.y = SONG_CHART_ROW_COUNT - 1;
+                else
+                    cursor_song.y += 16;
+
+                song_highlight_cursor();
+                song_highlight_row();
+            }
+
+            break;
+        case JOYSTICK_POSITION_UP:
+            can_move_y = (cursor_song.y > 0);
+            need_scroll = (scroll_song > 0);
+            is_out_of_bounds_y = (cursor_song.y - 16 < 0);
+            is_out_of_bounds_scroll = (scroll_song - 16 < 0);
+
+            if (need_scroll) {
+                if (is_out_of_bounds_y)
+                    cursor_song.y = 0;
+                else
+                    cursor_song.y -= 16;
+
+                if (is_out_of_bounds_scroll)
+                    scroll_song = 0;
+                else
+                    scroll_song -= 16;
+
+                song_draw_chart();
+                song_highlight_cursor();
+                song_highlight_column();
+                song_highlight_row();
+            }
+            else if (can_move_y) {
+                song_unhighlight_cursor();
+                song_unhighlight_row();
+
+                if (is_out_of_bounds_y)
+                    cursor_song.y = 0;
+                else
+                    cursor_song.y -= 16;
+
+                song_highlight_cursor();
+                song_highlight_row();
+            }
+
+            break;
+        default:
+            break;
+    }
+}
+
+void song_insert_pattern(void)
+{
+
+}
+
+void song_insert_new_pattern(void)
+{
+
+}
+
+void song_delete_pattern(void)
+{
+
+}
+
+void song_change_pattern(joystick_position_t joystick_position)
+{
+
+}
+
+uint32_t song_get_selected_pattern(void)
+{
+    return data_get_song_chart_entry(cursor_song.x,cursor_song.y);
 }

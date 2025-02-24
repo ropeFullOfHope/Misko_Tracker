@@ -1,0 +1,8 @@
+../System/Src/button.c:32:6:button_scan	8	static
+../System/Src/button.c:123:6:is_button_idle	0	static
+../System/Src/button.c:140:6:is_button_held	0	static
+../System/Src/button.c:160:6:is_button_long_held	0	static
+../System/Src/button.c:176:6:is_button_pressed	0	static
+../System/Src/button.c:192:6:is_button_double_pressed	0	static
+../System/Src/button.c:205:6:is_button_released	0	static
+../System/Src/button.c:218:6:is_button_debouncing	0	static

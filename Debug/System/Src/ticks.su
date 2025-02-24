@@ -1,3 +1,3 @@
-../System/Src/ticks.c:4:6:ticks_init	4	static
-../System/Src/ticks.c:14:10:ticks	4	static
-../System/Src/ticks.c:20:6:delay_ticks	24	static
+../System/Src/ticks.c:4:6:ticks_init	0	static
+../System/Src/ticks.c:14:10:ticks	0	static
+../System/Src/ticks.c:20:6:delay_ticks	16	static

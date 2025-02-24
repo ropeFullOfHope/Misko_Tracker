@@ -5,6 +5,7 @@
 
 #define CHANNEL_COUNT 8
 #define SONG_CHART_ROW_COUNT 256
+#define SONG_CHART_ROWS_ON_SCREEN 24
 
 uint8_t data_get_song_chart_entry(int32_t channel, int32_t row);
 void data_set_song_chart_entry(int8_t data, int32_t channel, int32_t row);
