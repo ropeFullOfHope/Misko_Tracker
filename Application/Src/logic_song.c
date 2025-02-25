@@ -60,9 +60,6 @@ void song_draw_chart(void)
 
     /* Draw chart with row numbers */
     for (uint32_t y = 0; y < SONG_CHART_ROWS_ON_SCREEN; y++) {
-        const char hex_digit[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-
         uint32_t row_number = scroll_song + y;
 
         if (row_number > 0xFF) {
@@ -244,8 +241,8 @@ void song_move_cursor(joystick_position_t joystick_position)
                     song_highlight_row();
                 }
             }
-
             break;
+
         case JOYSTICK_POSITION_UP:
             can_move_y = (cursor_song.y - 1 >= 0);
             need_scroll = (cursor_song.y - 1 < scroll_song);
@@ -270,8 +267,8 @@ void song_move_cursor(joystick_position_t joystick_position)
                     song_highlight_row();
                 }
             }
-
             break;
+
         case JOYSTICK_POSITION_RIGHT:
             can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
 
@@ -284,8 +281,8 @@ void song_move_cursor(joystick_position_t joystick_position)
                 song_highlight_cursor();
                 song_highlight_column();
             }
-
             break;
+
         case JOYSTICK_POSITION_LEFT:
             can_move_x = (cursor_song.x - 1 >= 0);
 
@@ -298,264 +295,8 @@ void song_move_cursor(joystick_position_t joystick_position)
                 song_highlight_cursor();
                 song_highlight_column();
             }
-
             break;
-        case JOYSTICK_POSITION_DOWNRIGHT:
-            can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
-            can_move_y = (cursor_song.y + 1 < SONG_CHART_ROW_COUNT);
-            need_scroll = (cursor_song.y + 1 >= scroll_song + SONG_CHART_ROWS_ON_SCREEN);
 
-            if (can_move_x) {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.x += 1;
-                        cursor_song.y += 1;
-                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_column();
-                        song_unhighlight_row();
-
-                        cursor_song.x += 1;
-                        cursor_song.y += 1;
-
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                }
-                else {
-                    song_unhighlight_cursor();
-                    song_unhighlight_column();
-
-                    cursor_song.x += 1;
-
-                    song_highlight_cursor();
-                    song_highlight_column();
-                }
-            }
-            else {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.y += 1;
-                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_row();
-
-                        cursor_song.y += 1;
-
-                        song_highlight_cursor();
-                        song_highlight_row();
-                    }
-                }
-            }
-
-            break;
-        case JOYSTICK_POSITION_DOWNLEFT:
-            can_move_x = (cursor_song.x - 1 >= 0);
-            can_move_y = (cursor_song.y + 1 < SONG_CHART_ROW_COUNT);
-            need_scroll = (cursor_song.y + 1 >= scroll_song + SONG_CHART_ROWS_ON_SCREEN);
-
-            if (can_move_x) {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.x -= 1;
-                        cursor_song.y += 1;
-                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_column();
-                        song_unhighlight_row();
-
-                        cursor_song.x -= 1;
-                        cursor_song.y += 1;
-
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                }
-                else {
-                    song_unhighlight_cursor();
-                    song_unhighlight_column();
-
-                    cursor_song.x -= 1;
-
-                    song_highlight_cursor();
-                    song_highlight_column();
-                }
-            }
-            else {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.y += 1;
-                        scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_row();
-
-                        cursor_song.y += 1;
-
-                        song_highlight_cursor();
-                        song_highlight_row();
-                    }
-                }
-            }
-
-            break;
-        case JOYSTICK_POSITION_UPRIGHT:
-            can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
-            can_move_y = (cursor_song.y - 1 >= 0);
-            need_scroll = (cursor_song.y - 1 < scroll_song);
-
-            if (can_move_x) {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.x += 1;
-                        cursor_song.y -= 1;
-                        scroll_song = cursor_song.y;
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_column();
-                        song_unhighlight_row();
-
-                        cursor_song.x += 1;
-                        cursor_song.y -= 1;
-
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                }
-                else {
-                    song_unhighlight_cursor();
-                    song_unhighlight_column();
-
-                    cursor_song.x += 1;
-
-                    song_highlight_cursor();
-                    song_highlight_column();
-                }
-            }
-            else {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.y -= 1;
-                        scroll_song = cursor_song.y;
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_row();
-
-                        cursor_song.y -= 1;
-
-                        song_highlight_cursor();
-                        song_highlight_row();
-                    }
-                }
-            }
-
-            break;
-        case JOYSTICK_POSITION_UPLEFT:
-            can_move_x = (cursor_song.x - 1 >= 0);
-            can_move_y = (cursor_song.y - 1 >= 0);
-            need_scroll = (cursor_song.y - 1 < scroll_song);
-
-            if (can_move_x) {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.x -= 1;
-                        cursor_song.y -= 1;
-                        scroll_song = cursor_song.y;
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_column();
-                        song_unhighlight_row();
-
-                        cursor_song.x -= 1;
-                        cursor_song.y -= 1;
-
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                }
-                else {
-                    song_unhighlight_cursor();
-                    song_unhighlight_column();
-
-                    cursor_song.x -= 1;
-
-                    song_highlight_cursor();
-                    song_highlight_column();
-                }
-            }
-            else {
-                if (can_move_y) {
-                    if (need_scroll) {
-                        cursor_song.y -= 1;
-                        scroll_song = cursor_song.y;
-
-                        song_draw_chart();
-                        song_highlight_cursor();
-                        song_highlight_column();
-                        song_highlight_row();
-                    }
-                    else {
-                        song_unhighlight_cursor();
-                        song_unhighlight_row();
-
-                        cursor_song.y -= 1;
-
-                        song_highlight_cursor();
-                        song_highlight_row();
-                    }
-                }
-            }
-
-            break;
         default:
             break;
     }
@@ -603,8 +344,8 @@ void song_move_page(joystick_position_t joystick_position)
                 song_highlight_cursor();
                 song_highlight_row();
             }
-
             break;
+
         case JOYSTICK_POSITION_UP:
             can_move_y = (cursor_song.y > 0);
             need_scroll = (scroll_song > 0);
@@ -639,8 +380,8 @@ void song_move_page(joystick_position_t joystick_position)
                 song_highlight_cursor();
                 song_highlight_row();
             }
-
             break;
+
         default:
             break;
     }
