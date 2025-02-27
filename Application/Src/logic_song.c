@@ -8,8 +8,21 @@ typedef struct {
     int32_t y;
 } cursor_t;
 
-static cursor_t cursor_song = {0};
-static int32_t scroll_song = 0;
+static void song_draw_blank_space(void);
+static void song_draw_channels(void);
+static void song_draw_row_numbers(void);
+static void song_draw_pattern_chart(void);
+static void song_highlight_cursor(void);
+static void song_unhighlight_cursor(void);
+static void song_highlight_column(void);
+static void song_unhighlight_column(void);
+static void song_highlight_row(void);
+static void song_unhighlight_row(void);
+static void song_update_pattern(void);
+
+static cursor_t cursor = {0};
+static int32_t scroll = 0;
+static uint8_t copied_pattern = 0x01;
 
 void song_draw_title(void)
 {
@@ -27,111 +40,126 @@ void song_draw_title(void)
     }
 }
 
-void song_draw_chart(void)
+void song_draw_all(void)
 {
-    /* Draw channel labels */
-    const struct {
-        uint8_t tile;
-        color_t color;
-    } channels[32] = {
-        {' ', COLOR_NORMAL},    {' ', COLOR_NORMAL},    {' ', COLOR_NORMAL},
-        {'1', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'2', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'3', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'4', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'5', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'6', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'7', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},
-        {'8', COLOR_DARK_FADE}, {' ', COLOR_DARK_FADE},
-        {' ', COLOR_NORMAL},    {' ', COLOR_NORMAL},    {' ', COLOR_NORMAL},
-        {' ', COLOR_NORMAL},    {' ', COLOR_NORMAL},    {' ', COLOR_NORMAL}
-    };
+    song_draw_blank_space();
+    song_draw_channels();
+    song_draw_row_numbers();
+    song_draw_pattern_chart();
 
-    for (uint32_t x = 0; x < 32; x++) {
-        LCD_draw(channels[x].tile, x + 1, 4, channels[x].color);
+    song_highlight_cursor();
+    song_highlight_column();
+    song_highlight_row();
+}
+
+void song_draw_blank_space(void)
+{
+    // Channel row blank space
+    LCD_draw(' ', 1, 4, COLOR_NORMAL);
+    LCD_draw(' ', 2, 4, COLOR_NORMAL);
+    for (int32_t i = 0; i < CHANNEL_COUNT + 1; i++)
+        LCD_draw(' ', 3 * i + 3, 4, COLOR_NORMAL);
+    LCD_draw(' ', 1, 4, COLOR_NORMAL);
+    LCD_draw(' ', 2, 4, COLOR_NORMAL);
+
+    // Pattern chart blank space
+    for (int32_t y = 0; y < SONG_CHART_ROWS_ON_SCREEN; y++) {
+        uint8_t row = scroll + y;
+        for (int32_t x = 0; x < CHANNEL_COUNT + 1; x++) {
+            color_t color;
+
+            if (row % 4 == 0)
+                color = COLOR_DARK;
+            else
+                color = COLOR_NORMAL;
+
+            LCD_draw(' ' , 3 * x + 3, y + 5, color);
+        }
     }
+}
 
-    /* Draw chart with row numbers */
-    for (uint32_t y = 0; y < SONG_CHART_ROWS_ON_SCREEN; y++) {
-        uint32_t row_number = scroll_song + y;
+void song_draw_channels(void)
+{
+    for (int32_t i = 0; i < CHANNEL_COUNT; i++) {
+        LCD_draw('1' + i, 3 * i + 4, 4, COLOR_DARK_FADE);
+        LCD_draw(' ', 3 * i + 5, 4, COLOR_DARK);
+    }
+}
 
-        if (row_number > 0xFF) {
-            for (uint32_t x = 0; x < 32; x++) {
-                LCD_draw(' ', x + 1, y + 5, COLOR_NORMAL);
-            }
-            continue;
-        }
+void song_draw_row_numbers(void)
+{
+    for (int32_t i = 0; i < SONG_CHART_ROWS_ON_SCREEN; i++) {
+        uint8_t row = scroll + i;
+        color_t color;
 
-        uint8_t pattern[CHANNEL_COUNT];
+        if (row % 4 == 0)
+            color = COLOR_DARK_FADE;
+        else
+            color =COLOR_NORMAL_FADE;
 
-        for (uint32_t i = 0; i < CHANNEL_COUNT; i++)
-            pattern[i] = data_get_song_chart_entry(i, row_number);
+        // Left side
+        LCD_draw(hex_digit[row / 0x10], 1, i + 5, color);
+        LCD_draw(hex_digit[row % 0x10], 2, i + 5, color);
 
-        color_t color_normal;
-        color_t color_fade;
+        // Right side
+        LCD_draw(hex_digit[row / 0x10], 28, i + 5, color);
+        LCD_draw(hex_digit[row % 0x10], 29, i + 5, color);
+    }
+}
 
-        if (row_number % 4 == 0) {
-            color_normal = COLOR_DARK;
-            color_fade = COLOR_DARK_FADE;
-        }
-        else {
-            color_normal = COLOR_NORMAL;
-            color_fade = COLOR_NORMAL_FADE;
-        }
+void song_draw_pattern_chart(void)
+{
+    for (int32_t y = 0; y < SONG_CHART_ROWS_ON_SCREEN; y++) {
+        uint8_t row = scroll + y;
+        for (int32_t x = 0; x < CHANNEL_COUNT; x++) {
+            uint8_t pattern = data_get_song_chart_pattern(x, row);
+            color_t color;
 
-        LCD_draw(hex_digit[row_number / 0x10], 1, y + 5, color_fade);
-        LCD_draw(hex_digit[row_number % 0x10], 2, y + 5, color_fade);
-
-        LCD_draw(' ', 3, y + 5, color_normal);
-
-        for (uint32_t i = 0; i < CHANNEL_COUNT; i++) {
-            if (pattern[0] == 0) {
-                LCD_draw('-', i * 3 + 4, y + 5, color_fade);
-                LCD_draw('-', i * 3 + 5, y + 5, color_fade);
+            if (row % 4 == 0) {
+                if (pattern == 0x00)
+                    color = COLOR_DARK_FADE;
+                else
+                    color = COLOR_DARK;
             }
             else {
-                LCD_draw(hex_digit[pattern[0] / 0x10], i * 3 + 4, y + 5, color_normal);
-                LCD_draw(hex_digit[pattern[0] % 0x10], i * 3 + 5, y + 5, color_normal);
+                if (pattern == 0x00)
+                    color = COLOR_NORMAL_FADE;
+                else
+                    color = COLOR_NORMAL;
             }
 
-            LCD_draw(' ', i * 3 + 6, y + 5, color_normal);
+            if (pattern == 0x00) {
+                LCD_draw('-', 3 * x + 4, y + 5, color);
+                LCD_draw('-', 3 * x + 5, y + 5, color);
+            }
+            else {
+                LCD_draw(hex_digit[pattern / 0x10], 3 * x + 4, y + 5, color);
+                LCD_draw(hex_digit[pattern % 0x10], 3 * x + 5, y + 5, color);
+            }
         }
-
-        LCD_draw(hex_digit[row_number / 0x10], 28, y + 5, color_fade);
-        LCD_draw(hex_digit[row_number % 0x10], 29, y + 5, color_fade);
-
-        for (uint32_t x = 0; x < 3; x++)
-            LCD_draw(' ', x + 30, y + 5, COLOR_NORMAL);
     }
 }
 
 void song_highlight_cursor(void)
 {
-    int32_t highlighted_row = cursor_song.y - scroll_song;
+    int32_t highlighted_row = cursor.y - scroll;
 
-    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
+    if (cursor.x < 0 || CHANNEL_COUNT <= cursor.x)
         return;
 
     if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
-    LCD_change_color(COLOR_HIGHLIGHT, cursor_song.x * 3 + 4, highlighted_row + 5);
-    LCD_change_color(COLOR_HIGHLIGHT, cursor_song.x * 3 + 5, highlighted_row + 5);
+    LCD_change_color(COLOR_HIGHLIGHT, cursor.x * 3 + 4, highlighted_row + 5);
+    LCD_change_color(COLOR_HIGHLIGHT, cursor.x * 3 + 5, highlighted_row + 5);
 }
 
 void song_unhighlight_cursor(void)
 {
-    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
+    if (cursor.x < 0 || CHANNEL_COUNT <= cursor.x)
         return;
 
-    int32_t highlighted_row = cursor_song.y - scroll_song;
+    int32_t highlighted_row = cursor.y - scroll;
 
     if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
@@ -139,7 +167,7 @@ void song_unhighlight_cursor(void)
     color_t color_normal;
     color_t color_fade;
 
-    if (cursor_song.y % 4 == 0) {
+    if (cursor.y % 4 == 0) {
         color_normal = COLOR_DARK;
         color_fade = COLOR_DARK_FADE;
     }
@@ -148,55 +176,63 @@ void song_unhighlight_cursor(void)
         color_fade = COLOR_NORMAL_FADE;
     }
 
-    if (data_get_song_chart_entry(cursor_song.x, cursor_song.y) == 0x00) {
-        LCD_change_color(color_fade, cursor_song.x * 3 + 4, highlighted_row + 5);
-        LCD_change_color(color_fade, cursor_song.x * 3 + 5, highlighted_row + 5);
+    if (data_get_song_chart_pattern(cursor.x, cursor.y) == 0x00) {
+        LCD_change_color(color_fade, cursor.x * 3 + 4, highlighted_row + 5);
+        LCD_change_color(color_fade, cursor.x * 3 + 5, highlighted_row + 5);
     }
     else {
-        LCD_change_color(color_normal, cursor_song.x * 3 + 4, highlighted_row + 5);
-        LCD_change_color(color_normal, cursor_song.x * 3 + 5, highlighted_row + 5);
+        LCD_change_color(color_normal, cursor.x * 3 + 4, highlighted_row + 5);
+        LCD_change_color(color_normal, cursor.x * 3 + 5, highlighted_row + 5);
     }
 }
 
 void song_highlight_column(void)
 {
-    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
+    if (cursor.x < 0 || CHANNEL_COUNT <= cursor.x)
         return;
 
-    LCD_change_color(COLOR_HIGHLIGHT, cursor_song.x * 3 + 4, 4);
-    LCD_change_color(COLOR_HIGHLIGHT, cursor_song.x * 3 + 5, 4);
+    LCD_change_color(COLOR_DARK, cursor.x * 3 + 4, 4);
+    LCD_change_color(COLOR_DARK, cursor.x * 3 + 5, 4);
 }
 
 void song_unhighlight_column(void)
 {
-    if (cursor_song.x < 0 || CHANNEL_COUNT <= cursor_song.x)
+    if (cursor.x < 0 || CHANNEL_COUNT <= cursor.x)
         return;
 
-    LCD_change_color(COLOR_DARK_FADE, cursor_song.x * 3 + 4, 4);
-    LCD_change_color(COLOR_DARK_FADE, cursor_song.x * 3 + 5, 4);
+    LCD_change_color(COLOR_DARK_FADE, cursor.x * 3 + 4, 4);
+    LCD_change_color(COLOR_DARK_FADE, cursor.x * 3 + 5, 4);
 }
 
 void song_highlight_row(void)
 {
-    int32_t highlighted_row = cursor_song.y - scroll_song;
+    int32_t highlighted_row = cursor.y - scroll;
 
     if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
-    LCD_change_color(COLOR_HIGHLIGHT, 1,  highlighted_row + 5);
-    LCD_change_color(COLOR_HIGHLIGHT, 2,  highlighted_row + 5);
-    LCD_change_color(COLOR_HIGHLIGHT, 28, highlighted_row + 5);
-    LCD_change_color(COLOR_HIGHLIGHT, 29, highlighted_row + 5);
+    if (cursor.y % 4 == 0) {
+        LCD_change_color(COLOR_DARK, 1,  highlighted_row + 5);
+        LCD_change_color(COLOR_DARK, 2,  highlighted_row + 5);
+        LCD_change_color(COLOR_DARK, 28, highlighted_row + 5);
+        LCD_change_color(COLOR_DARK, 29, highlighted_row + 5);
+    }
+    else {
+        LCD_change_color(COLOR_NORMAL, 1,  highlighted_row + 5);
+        LCD_change_color(COLOR_NORMAL, 2,  highlighted_row + 5);
+        LCD_change_color(COLOR_NORMAL, 28, highlighted_row + 5);
+        LCD_change_color(COLOR_NORMAL, 29, highlighted_row + 5);
+    }
 }
 
 void song_unhighlight_row(void)
 {
-    int32_t highlighted_row = cursor_song.y - scroll_song;
+    int32_t highlighted_row = cursor.y - scroll;
 
     if (highlighted_row < 0 || SONG_CHART_ROWS_ON_SCREEN <= highlighted_row)
         return;
 
-    if (cursor_song.y % 4 == 0) {
+    if (cursor.y % 4 == 0) {
         LCD_change_color(COLOR_DARK_FADE, 1,  highlighted_row + 5);
         LCD_change_color(COLOR_DARK_FADE, 2,  highlighted_row + 5);
         LCD_change_color(COLOR_DARK_FADE, 28, highlighted_row + 5);
@@ -210,6 +246,20 @@ void song_unhighlight_row(void)
     }
 }
 
+void song_update_pattern(void)
+{
+    uint8_t pattern = data_get_song_chart_pattern(cursor.x, cursor.y);
+
+    if (pattern == 0x00) {
+        LCD_change_tile('-', 3 * cursor.x + 4, cursor.y + 5);
+        LCD_change_tile('-', 3 * cursor.x + 5, cursor.y + 5);
+    }
+    else {
+        LCD_change_tile(hex_digit[pattern / 0x10], 3 * cursor.x + 4, cursor.y + 5);
+        LCD_change_tile(hex_digit[pattern % 0x10], 3 * cursor.x + 5, cursor.y + 5);
+    }
+}
+
 void song_move_cursor(joystick_position_t joystick_position)
 {
     bool can_move_x;
@@ -218,24 +268,21 @@ void song_move_cursor(joystick_position_t joystick_position)
 
     switch (joystick_position) {
         case JOYSTICK_POSITION_DOWN:
-            can_move_y = (cursor_song.y + 1 < SONG_CHART_ROW_COUNT);
-            need_scroll = (cursor_song.y + 1 >= scroll_song + SONG_CHART_ROWS_ON_SCREEN);
+            can_move_y = (cursor.y + 1 < SONG_CHART_ROW_COUNT);
+            need_scroll = (cursor.y + 1 >= scroll + SONG_CHART_ROWS_ON_SCREEN);
 
             if (can_move_y) {
                 if (need_scroll) {
-                    cursor_song.y += 1;
-                    scroll_song = cursor_song.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
+                    cursor.y += 1;
+                    scroll = cursor.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
 
-                    song_draw_chart();
-                    song_highlight_cursor();
-                    song_highlight_column();
-                    song_highlight_row();
+                    song_draw_all();
                 }
                 else {
                     song_unhighlight_cursor();
                     song_unhighlight_row();
 
-                    cursor_song.y += 1;
+                    cursor.y += 1;
 
                     song_highlight_cursor();
                     song_highlight_row();
@@ -244,24 +291,21 @@ void song_move_cursor(joystick_position_t joystick_position)
             break;
 
         case JOYSTICK_POSITION_UP:
-            can_move_y = (cursor_song.y - 1 >= 0);
-            need_scroll = (cursor_song.y - 1 < scroll_song);
+            can_move_y = (cursor.y - 1 >= 0);
+            need_scroll = (cursor.y - 1 < scroll);
 
             if (can_move_y) {
                 if (need_scroll) {
-                    cursor_song.y -= 1;
-                    scroll_song = cursor_song.y;
+                    cursor.y -= 1;
+                    scroll = cursor.y;
 
-                    song_draw_chart();
-                    song_highlight_cursor();
-                    song_highlight_column();
-                    song_highlight_row();
+                    song_draw_all();
                 }
                 else {
                     song_unhighlight_cursor();
                     song_unhighlight_row();
 
-                    cursor_song.y -= 1;
+                    cursor.y -= 1;
 
                     song_highlight_cursor();
                     song_highlight_row();
@@ -270,13 +314,13 @@ void song_move_cursor(joystick_position_t joystick_position)
             break;
 
         case JOYSTICK_POSITION_RIGHT:
-            can_move_x = (cursor_song.x + 1 < CHANNEL_COUNT);
+            can_move_x = (cursor.x + 1 < CHANNEL_COUNT);
 
             if (can_move_x) {
                 song_unhighlight_cursor();
                 song_unhighlight_column();
 
-                cursor_song.x += 1;
+                cursor.x += 1;
 
                 song_highlight_cursor();
                 song_highlight_column();
@@ -284,13 +328,13 @@ void song_move_cursor(joystick_position_t joystick_position)
             break;
 
         case JOYSTICK_POSITION_LEFT:
-            can_move_x = (cursor_song.x - 1 >= 0);
+            can_move_x = (cursor.x - 1 >= 0);
 
             if (can_move_x) {
                 song_unhighlight_cursor();
                 song_unhighlight_column();
 
-                cursor_song.x -= 1;
+                cursor.x -= 1;
 
                 song_highlight_cursor();
                 song_highlight_column();
@@ -311,35 +355,32 @@ void song_move_page(joystick_position_t joystick_position)
 
     switch (joystick_position) {
         case JOYSTICK_POSITION_DOWN:
-            can_move_y = (cursor_song.y < SONG_CHART_ROW_COUNT - 1);
-            need_scroll = (scroll_song < SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN);
-            is_out_of_bounds_y = (cursor_song.y + 16 >= SONG_CHART_ROW_COUNT);
-            is_out_of_bounds_scroll = (scroll_song + 16 > SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN);
+            can_move_y = (cursor.y < SONG_CHART_ROW_COUNT - 1);
+            need_scroll = (scroll < SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN);
+            is_out_of_bounds_y = (cursor.y + 16 >= SONG_CHART_ROW_COUNT);
+            is_out_of_bounds_scroll = (scroll + 16 > SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN);
 
             if (need_scroll) {
                 if (is_out_of_bounds_y)
-                    cursor_song.y = SONG_CHART_ROW_COUNT - 1;
+                    cursor.y = SONG_CHART_ROW_COUNT - 1;
                 else
-                    cursor_song.y += 16;
+                    cursor.y += 16;
 
                 if (is_out_of_bounds_scroll)
-                    scroll_song = SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN;
+                    scroll = SONG_CHART_ROW_COUNT - SONG_CHART_ROWS_ON_SCREEN;
                 else
-                    scroll_song += 16;
+                    scroll += 16;
 
-                song_draw_chart();
-                song_highlight_cursor();
-                song_highlight_column();
-                song_highlight_row();
+                song_draw_all();
             }
             else if (can_move_y) {
                 song_unhighlight_cursor();
                 song_unhighlight_row();
 
                 if (is_out_of_bounds_y)
-                    cursor_song.y = SONG_CHART_ROW_COUNT - 1;
+                    cursor.y = SONG_CHART_ROW_COUNT - 1;
                 else
-                    cursor_song.y += 16;
+                    cursor.y += 16;
 
                 song_highlight_cursor();
                 song_highlight_row();
@@ -347,35 +388,32 @@ void song_move_page(joystick_position_t joystick_position)
             break;
 
         case JOYSTICK_POSITION_UP:
-            can_move_y = (cursor_song.y > 0);
-            need_scroll = (scroll_song > 0);
-            is_out_of_bounds_y = (cursor_song.y - 16 < 0);
-            is_out_of_bounds_scroll = (scroll_song - 16 < 0);
+            can_move_y = (cursor.y > 0);
+            need_scroll = (scroll > 0);
+            is_out_of_bounds_y = (cursor.y - 16 < 0);
+            is_out_of_bounds_scroll = (scroll - 16 < 0);
 
             if (need_scroll) {
                 if (is_out_of_bounds_y)
-                    cursor_song.y = 0;
+                    cursor.y = 0;
                 else
-                    cursor_song.y -= 16;
+                    cursor.y -= 16;
 
                 if (is_out_of_bounds_scroll)
-                    scroll_song = 0;
+                    scroll = 0;
                 else
-                    scroll_song -= 16;
+                    scroll -= 16;
 
-                song_draw_chart();
-                song_highlight_cursor();
-                song_highlight_column();
-                song_highlight_row();
+                song_draw_all();
             }
             else if (can_move_y) {
                 song_unhighlight_cursor();
                 song_unhighlight_row();
 
                 if (is_out_of_bounds_y)
-                    cursor_song.y = 0;
+                    cursor.y = 0;
                 else
-                    cursor_song.y -= 16;
+                    cursor.y -= 16;
 
                 song_highlight_cursor();
                 song_highlight_row();
@@ -387,9 +425,17 @@ void song_move_page(joystick_position_t joystick_position)
     }
 }
 
-void song_insert_pattern(void)
+void song_insert_pattern()
 {
+    uint8_t selected_pattern = data_get_song_chart_pattern(cursor.x, cursor.y);
 
+    if (selected_pattern == 0x00) {
+        data_set_song_chart_pattern(copied_pattern, cursor.x, cursor.y);
+        song_update_pattern();
+    }
+    else {
+        copied_pattern = selected_pattern;
+    }
 }
 
 void song_insert_new_pattern(void)
@@ -399,15 +445,73 @@ void song_insert_new_pattern(void)
 
 void song_delete_pattern(void)
 {
+    uint8_t pattern = data_get_song_chart_pattern(cursor.x, cursor.y);
 
+    if (pattern == 0x00)
+        return;
+
+    copied_pattern = pattern;
+
+    data_set_song_chart_pattern(0x00, cursor.x, cursor.y);
+    song_update_pattern();
 }
 
 void song_change_pattern(joystick_position_t joystick_position)
 {
+    int32_t pattern = (int32_t) data_get_song_chart_pattern(cursor.x, cursor.y);
 
+    if (pattern == 0x00)
+        return;
+
+    switch (joystick_position) {
+        case JOYSTICK_POSITION_UP:
+            if (pattern + 1 <= 0xFF) {
+                data_set_song_chart_pattern(pattern + 1, cursor.x, cursor.y);
+                song_update_pattern();
+                copied_pattern = pattern + 1;
+            }
+            break;
+
+        case JOYSTICK_POSITION_DOWN:
+            if (pattern - 1 >= 0x01) {
+                data_set_song_chart_pattern(pattern - 1, cursor.x, cursor.y);
+                song_update_pattern();
+                copied_pattern = pattern - 1;
+            }
+            break;
+
+        case JOYSTICK_POSITION_RIGHT:
+            if (pattern + 16 <= 0xFF) {
+                data_set_song_chart_pattern(pattern + 16, cursor.x, cursor.y);
+                song_update_pattern();
+                copied_pattern = pattern + 16;
+            }
+            else if (pattern < 0xFF) {
+                data_set_song_chart_pattern(0xFF, cursor.x, cursor.y);
+                song_update_pattern();
+                copied_pattern = 0xFF;
+            }
+            break;
+
+        case JOYSTICK_POSITION_LEFT:
+            if (pattern - 16 >= 0x01) {
+                data_set_song_chart_pattern(pattern - 16, cursor.x, cursor.y);
+                song_update_pattern();
+                copied_pattern = pattern - 16;
+            }
+            else if (pattern > 0x01) {
+                data_set_song_chart_pattern(0x01, cursor.x, cursor.y);
+                song_update_pattern();
+                copied_pattern = 0x01;
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 uint32_t song_get_selected_pattern(void)
 {
-    return data_get_song_chart_entry(cursor_song.x,cursor_song.y);
+    return data_get_song_chart_pattern(cursor.x,cursor.y);
 }

@@ -1,5 +1,5 @@
-../Application/Src/data.c:21:9:data_get_song_chart_entry	0	static
-../Application/Src/data.c:30:6:data_set_song_chart_entry	0	static
+../Application/Src/data.c:21:9:data_get_song_chart_pattern	0	static
+../Application/Src/data.c:30:6:data_set_song_chart_pattern	0	static
 ../Application/Src/data.c:37:9:data_get_setting_joystick_delay_initial	0	static
 ../Application/Src/data.c:42:6:data_set_setting_joystick_delay_initial	0	static
 ../Application/Src/data.c:47:9:data_get_setting_joystick_delay_repeat	0	static

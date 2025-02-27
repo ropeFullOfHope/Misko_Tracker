@@ -43,7 +43,7 @@ void app_main(void)
     static uint32_t last_logic_update_time = 0;
     uint32_t current_time = millis();
 
-    if (current_time - last_logic_update_time >= 20) {
+    if (current_time - last_logic_update_time >= 1000 / 50) {
         last_logic_update_time = current_time;
 
         logic_update();

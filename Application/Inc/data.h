@@ -9,8 +9,8 @@
 
 extern const char hex_digit[16];
 
-uint8_t data_get_song_chart_entry(int32_t channel, int32_t row);
-void data_set_song_chart_entry(int8_t data, int32_t channel, int32_t row);
+uint8_t data_get_song_chart_pattern(int32_t channel, int32_t row);
+void data_set_song_chart_pattern(int8_t data, int32_t channel, int32_t row);
 
 int32_t data_get_setting_joystick_delay_initial (void);
 void data_set_setting_joystick_delay_initial (int32_t delay);

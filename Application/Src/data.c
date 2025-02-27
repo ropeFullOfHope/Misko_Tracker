@@ -18,16 +18,16 @@ static project_settings_t project_settings = {
 const char hex_digit[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
                             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-uint8_t data_get_song_chart_entry(int32_t channel, int32_t row)
+uint8_t data_get_song_chart_pattern(int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
         if (0 <= row && row < SONG_CHART_ROW_COUNT)
             return project_data.song_chart[channel][row];
 
-    return 0;
+    return 0x00;
 }
 
-void data_set_song_chart_entry(int8_t data, int32_t channel, int32_t row)
+void data_set_song_chart_pattern(int8_t data, int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
         if (0 <= row && row < SONG_CHART_ROW_COUNT)

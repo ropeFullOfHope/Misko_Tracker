@@ -70,11 +70,12 @@ void logic_joystick_auto_repeat(void)
 
 logic_state_t logic_state_song_init(void)
 {
+    for (int32_t y = 0; y < SONG_CHART_ROW_COUNT; y++)
+        for (int32_t x = 0; x < CHANNEL_COUNT; x++)
+            data_set_song_chart_pattern((uint8_t) y, x, y);
+
     song_draw_title();
-    song_draw_chart();
-    song_highlight_column();
-    song_highlight_row();
-    song_highlight_cursor();
+    song_draw_all();
     draw_sidebar();
     draw_map();
 
@@ -106,13 +107,14 @@ logic_state_t logic_state_song_main(void)
     else {
         if (is_joystick_triggered)
             song_move_cursor(joystick_get_position()); // Move
-
+#if 0
         if (is_button_double_pressed(BUTTON_RIGHT))
             song_insert_new_pattern(); // A + A
         else if (is_button_pressed(BUTTON_RIGHT))
             song_insert_pattern(); // A
-
-
+#endif
+        if (is_button_pressed(BUTTON_RIGHT))
+            song_insert_pattern();
     }
 
     return LOGIC_STATE_SONG_MAIN;
