@@ -17,6 +17,7 @@ bool is_button_held(button_t button);
 bool is_button_long_held(button_t button);
 bool is_button_pressed(button_t button);
 bool is_button_double_pressed(button_t button);
+bool is_button_triple_pressed(button_t button);
 bool is_button_released(button_t button);
 bool is_button_debouncing(button_t button);
 
