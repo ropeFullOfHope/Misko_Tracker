@@ -8,6 +8,8 @@ typedef struct {
     int32_t y;
 } cursor_t;
 
+static void song_draw_title(void);
+static void song_draw_editor(void);
 static void song_draw_blank_space(void);
 static void song_draw_channels(void);
 static void song_draw_row_numbers(void);
@@ -24,32 +26,36 @@ static cursor_t cursor = {0};
 static int32_t scroll = 0;
 static uint8_t copied_pattern = 0x01;
 
-void song_draw_title(void)
+void song_init(void)
 {
-    const char title_tiles[2][32] = {
-        {'S','o','n','g',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',
-         ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',},
-        {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',
-         ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',}
-    };
+    song_draw_title();
+    song_draw_editor();
 
-    for (uint32_t y = 0; y < 2; y++) {
-        for (uint32_t x = 0; x < 32; x++) {
-            LCD_draw(title_tiles[y][x], x + 1, y + 1, COLOR_NORMAL);
-        }
-    }
+    song_highlight_cursor();
+    song_highlight_column();
+    song_highlight_row();
 }
 
-void song_draw_all(void)
+void song_draw_title(void)
+{
+    const uint8_t title[4] = {'S','o','n','g'};
+
+    for (int32_t i = 0; i < 4; i++)
+        LCD_draw(title[i], i + 1, 1, COLOR_NORMAL);
+
+    for (int32_t i = 4; i < 32; i++)
+        LCD_draw(' ', i + 1, 1, COLOR_NORMAL);
+
+    for (int32_t i = 0; i < 32; i++)
+        LCD_draw(' ', i + 1, 2, COLOR_NORMAL);
+}
+
+void song_draw_editor(void)
 {
     song_draw_blank_space();
     song_draw_channels();
     song_draw_row_numbers();
     song_draw_pattern_chart();
-
-    song_highlight_cursor();
-    song_highlight_column();
-    song_highlight_row();
 }
 
 void song_draw_blank_space(void)
@@ -192,7 +198,6 @@ void song_highlight_column(void)
         return;
 
     LCD_change_color(COLOR_DARK, cursor.x * 3 + 4, 4);
-    LCD_change_color(COLOR_DARK, cursor.x * 3 + 5, 4);
 }
 
 void song_unhighlight_column(void)
@@ -201,7 +206,6 @@ void song_unhighlight_column(void)
         return;
 
     LCD_change_color(COLOR_DARK_FADE, cursor.x * 3 + 4, 4);
-    LCD_change_color(COLOR_DARK_FADE, cursor.x * 3 + 5, 4);
 }
 
 void song_highlight_row(void)
@@ -276,7 +280,11 @@ void song_move_cursor(joystick_position_t joystick_position)
                     cursor.y += 1;
                     scroll = cursor.y - (SONG_CHART_ROWS_ON_SCREEN - 1);
 
-                    song_draw_all();
+                    song_draw_blank_space();
+                    song_draw_row_numbers();
+                    song_draw_pattern_chart();
+                    song_highlight_cursor();
+                    song_highlight_row();
                 }
                 else {
                     song_unhighlight_cursor();
@@ -299,7 +307,11 @@ void song_move_cursor(joystick_position_t joystick_position)
                     cursor.y -= 1;
                     scroll = cursor.y;
 
-                    song_draw_all();
+                    song_draw_blank_space();
+                    song_draw_row_numbers();
+                    song_draw_pattern_chart();
+                    song_highlight_cursor();
+                    song_highlight_row();
                 }
                 else {
                     song_unhighlight_cursor();
@@ -371,7 +383,11 @@ void song_move_page(joystick_position_t joystick_position)
                 else
                     scroll += 16;
 
-                song_draw_all();
+                song_draw_blank_space();
+                song_draw_row_numbers();
+                song_draw_pattern_chart();
+                song_highlight_cursor();
+                song_highlight_row();
             }
             else if (can_move_y) {
                 song_unhighlight_cursor();
@@ -404,7 +420,11 @@ void song_move_page(joystick_position_t joystick_position)
                 else
                     scroll -= 16;
 
-                song_draw_all();
+                song_draw_blank_space();
+                song_draw_row_numbers();
+                song_draw_pattern_chart();
+                song_highlight_cursor();
+                song_highlight_row();
             }
             else if (can_move_y) {
                 song_unhighlight_cursor();

@@ -1,4 +1,5 @@
-../Application/Src/logic.c:81:15:logic_state_pattern_init	1
-../Application/Src/logic.c:51:15:logic_state_song_main	9
-../Application/Src/logic.c:38:15:logic_state_song_init	1
-../Application/Src/logic.c:30:6:logic_update	1
+../Application/Src/logic.c:131:15:logic_state_pattern_main	6
+../Application/Src/logic.c:124:15:logic_state_pattern_init	1
+../Application/Src/logic.c:84:15:logic_state_song_main	13
+../Application/Src/logic.c:75:15:logic_state_song_init	1
+../Application/Src/logic.c:39:6:logic_update	4

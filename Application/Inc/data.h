@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#define ENGINE_TICK_RATE 60
 #define CHANNEL_COUNT 8
 #define SONG_CHART_ROW_COUNT 256
 #define SONG_CHART_ROWS_ON_SCREEN 24
@@ -12,7 +13,7 @@
 #define INSTRUMENT_COUNT 127
 
 extern const uint8_t hex_digit[16];
-extern const uint8_t note[9 * 12][3];
+extern const uint8_t note_name[9 * 12][3];
 
 uint8_t data_get_song_chart_pattern(int32_t channel, int32_t row);
 void data_set_song_chart_pattern(uint8_t pattern, int32_t channel, int32_t row);

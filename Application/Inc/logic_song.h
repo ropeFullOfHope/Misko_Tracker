@@ -1,10 +1,10 @@
 #ifndef INC_LOGIC_SONG_H_
 #define INC_LOGIC_SONG_H_
 
+#include <stdint.h>
 #include "joystick.h"
 
-void song_draw_title(void);
-void song_draw_all(void);
+void song_init(void);
 void song_move_cursor(joystick_position_t joystick_position);
 void song_move_page(joystick_position_t joystick_position);
 void song_insert_pattern();

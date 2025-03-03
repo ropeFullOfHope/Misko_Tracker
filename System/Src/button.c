@@ -5,9 +5,9 @@
 #define USE_CALL_BASED_HANDLING // Comment this out to use time based handling.
 
 #ifdef USE_CALL_BASED_HANDLING
-    #define DEBOUNCING_TIME    2
-    #define DOUBLE_PRESS_DELAY 12
-    #define LONG_HOLD_TIME     50
+    #define DEBOUNCING_TIME    3
+    #define DOUBLE_PRESS_DELAY 15
+    #define LONG_HOLD_TIME     60
 #else
     #define DEBOUNCING_TIME    50
     #define DOUBLE_PRESS_DELAY 250

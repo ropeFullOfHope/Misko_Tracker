@@ -1,5 +1,6 @@
-../Application/Src/logic.c:121:15:logic_state_pattern_init	0	static
-../Application/Src/logic.c:81:15:logic_state_song_main	8	static
-../Application/Src/logic.c:71:15:logic_state_song_init	8	static
-../Application/Src/logic.c:45:6:logic_joystick_auto_repeat	8	static
-../Application/Src/logic.c:35:6:logic_update	8	static
+../Application/Src/logic.c:131:15:logic_state_pattern_main	8	static
+../Application/Src/logic.c:124:15:logic_state_pattern_init	8	static
+../Application/Src/logic.c:84:15:logic_state_song_main	8	static
+../Application/Src/logic.c:75:15:logic_state_song_init	8	static
+../Application/Src/logic.c:49:6:logic_joystick_auto_repeat	8	static
+../Application/Src/logic.c:39:6:logic_update	8	static

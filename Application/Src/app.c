@@ -1,7 +1,9 @@
 #include "app.h"
+#include <stdint.h>
 #include "logic.h"
 #include "video.h"
 #include "audio.h"
+#include "data.h"
 #include "ticks.h"
 #include "millis.h"
 #include "backlight.h"
@@ -41,9 +43,9 @@ void app_init(void)
 void app_main(void)
 {
     static uint32_t last_logic_update_time = 0;
-    uint32_t current_time = millis();
+    uint32_t current_time = ticks();
 
-    if (current_time - last_logic_update_time >= 1000 / 50) {
+    if (current_time - last_logic_update_time >= CPU_FREQUENCY / ENGINE_TICK_RATE) {
         last_logic_update_time = current_time;
 
         logic_update();

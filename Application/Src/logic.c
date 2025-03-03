@@ -1,6 +1,7 @@
 #include "logic.h"
 #include <stdbool.h>
 #include "logic_song.h"
+#include "logic_pattern.h"
 #include "data.h"
 #include "button.h"
 #include "joystick.h"
@@ -16,17 +17,20 @@ typedef enum {
     LOGIC_STATE_SONG_INIT,
     LOGIC_STATE_SONG_MAIN,
     LOGIC_STATE_PATTERN_INIT,
+    LOGIC_STATE_PATTERN_MAIN,
     LOGIC_STATE_MAX
 } logic_state_t;
 
 static logic_state_t logic_state_song_init(void);
 static logic_state_t logic_state_song_main(void);
 static logic_state_t logic_state_pattern_init(void);
+static logic_state_t logic_state_pattern_main(void);
 
 static logic_state_t (*logic_state_table[LOGIC_STATE_MAX]) (void) = {
     [LOGIC_STATE_SONG_INIT]    = logic_state_song_init,
     [LOGIC_STATE_SONG_MAIN]    = logic_state_song_main,
-    [LOGIC_STATE_PATTERN_INIT] = logic_state_pattern_init
+    [LOGIC_STATE_PATTERN_INIT] = logic_state_pattern_init,
+    [LOGIC_STATE_PATTERN_MAIN] = logic_state_pattern_main
 };
 
 static logic_state_t current_logic_state;
@@ -70,8 +74,7 @@ void logic_joystick_auto_repeat(void)
 
 logic_state_t logic_state_song_init(void)
 {
-    song_draw_title();
-    song_draw_all();
+    song_init();
     draw_sidebar();
     draw_map();
 
@@ -120,7 +123,32 @@ logic_state_t logic_state_song_main(void)
 
 logic_state_t logic_state_pattern_init(void)
 {
-    return LOGIC_STATE_SONG_MAIN;
+    pattern_init(song_get_selected_pattern());
+
+    return LOGIC_STATE_PATTERN_MAIN;
+}
+
+logic_state_t logic_state_pattern_main(void)
+{
+    if (is_button_held(BUTTON_RIGHT)) {
+        ;
+    }
+    else if (is_button_held(BUTTON_DOWN)) {
+        ;
+    }
+    else if (is_button_held(BUTTON_UP)) {
+        if (is_joystick_triggered)
+            if (joystick_get_position() == JOYSTICK_POSITION_LEFT)
+                return LOGIC_STATE_SONG_INIT; // Hold X + Left
+    }
+    else if (is_button_held(BUTTON_LEFT)) {
+        ;
+    }
+    else {
+        ;
+    }
+
+    return LOGIC_STATE_PATTERN_MAIN;
 }
 
 void draw_sidebar(void)

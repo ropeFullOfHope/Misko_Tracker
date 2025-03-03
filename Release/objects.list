@@ -2,6 +2,7 @@
 "./Application/Src/audio.o"
 "./Application/Src/data.o"
 "./Application/Src/logic.o"
+"./Application/Src/logic_pattern.o"
 "./Application/Src/logic_song.o"
 "./Application/Src/video.o"
 "./Core/Src/main.o"

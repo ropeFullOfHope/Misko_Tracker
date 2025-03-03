@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define CPU_FREQUENCY 170000000
+
 void ticks_init(void);
 uint32_t ticks(void);
 void delay_ticks(uint32_t delay);
