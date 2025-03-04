@@ -47,7 +47,7 @@ const uint8_t note_name[9 * 12][3] = {
     "C-8", "C#8", "D-8", "D#8", "E-8", "F-8", "F#8", "G-8", "G#8", "A-8", "A#8", "B-8"
 };
 
-uint8_t data_get_song_chart_pattern(int32_t channel, int32_t row)
+uint8_t data_get_song_chart_chain(int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
         if (0 <= row && row < SONG_CHART_ROW_COUNT)
@@ -56,11 +56,11 @@ uint8_t data_get_song_chart_pattern(int32_t channel, int32_t row)
     return 0x00;
 }
 
-void data_set_song_chart_pattern(uint8_t pattern, int32_t channel, int32_t row)
+void data_set_song_chart_chain(uint8_t chain, int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
         if (0 <= row && row < SONG_CHART_ROW_COUNT)
-            project_data.song_chart[channel][row] = pattern;
+            project_data.song_chart[channel][row] = chain;
 }
 
 uint8_t data_get_chain_phrase(uint8_t chain, int32_t row)

@@ -1,0 +1,15 @@
+../Application/Src/logic_chain.c:61:6:chain_draw_title	24	static
+../Application/Src/logic_chain.c:121:6:chain_draw_chain_labels	8	static
+../Application/Src/logic_chain.c:135:6:chain_draw_chain_row_numbers	8	static
+../Application/Src/logic_chain.c:150:6:chain_draw_chain_blank_space	16	static
+../Application/Src/logic_chain.c:204:6:chain_draw_phrase_blank	16	static
+../Application/Src/logic_chain.c:211:6:chain_draw_phrase_labels	8	static
+../Application/Src/logic_chain.c:242:6:chain_draw_phrase_row_numbers	8	static
+../Application/Src/logic_chain.c:257:6:chain_draw_phrase_blank_space	16	static
+../Application/Src/logic_chain.c:106:6:chain_draw_blank_space	16	static
+../Application/Src/logic_chain.c:166:6:chain_draw_chain_data	40	static
+../Application/Src/logic_chain.c:85:6:chain_draw_chain	8	static
+../Application/Src/logic_chain.c:276:6:chain_draw_phrase_data	48	static
+../Application/Src/logic_chain.c:93:6:chain_draw_phrase	8	static
+../Application/Src/logic_chain.c:78:6:chain_draw_editor	8	static
+../Application/Src/logic_chain.c:49:6:chain_init	8	static

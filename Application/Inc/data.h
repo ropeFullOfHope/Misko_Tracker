@@ -15,8 +15,8 @@
 extern const uint8_t hex_digit[16];
 extern const uint8_t note_name[9 * 12][3];
 
-uint8_t data_get_song_chart_pattern(int32_t channel, int32_t row);
-void data_set_song_chart_pattern(uint8_t pattern, int32_t channel, int32_t row);
+uint8_t data_get_song_chart_chain(int32_t channel, int32_t row);
+void data_set_song_chart_chain(uint8_t chain, int32_t channel, int32_t row);
 uint8_t data_get_chain_phrase(uint8_t chain, int32_t row);
 void data_set_chain_phrase(uint8_t phrase, uint8_t chain, int32_t row);
 int8_t data_get_chain_transpose(uint8_t chain, int32_t row);

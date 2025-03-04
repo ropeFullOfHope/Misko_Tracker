@@ -1,4 +1,5 @@
-#include "logic_pattern.h"
+#if 0
+#include "logic_phrase.h"
 #include "data.h"
 #include "lcd.h"
 
@@ -47,8 +48,6 @@ static void pattern_draw_phrase_row_numbers(void);
 static void pattern_draw_phrase_data(void);
 static void pattern_chain_highlight_cursor(void);
 static void pattern_chain_unhighlight_cursor(void);
-static void pattern_chain_highlight_phrase(void);
-static void pattern_chain_unhighlight_phrase(void);
 static void pattern_chain_highlight_column(void);
 static void pattern_chain_unhighlight_column(void);
 static void pattern_chain_highlight_row(void);
@@ -59,6 +58,10 @@ static void pattern_phrase_highlight_column(void);
 static void pattern_phrase_unhighlight_column(void);
 static void pattern_phrase_highlight_row(void);
 static void pattern_phrase_unhighlight_row(void);
+static void pattern_chain_brighten_phrase(void);
+static void pattern_chain_fade_phrase(void);
+static void pattern_chain_brighten_unselected_phrases(void);
+static void pattern_chain_fade_unselected_phrases(void);
 static uint8_t pattern_get_selected_phrase(void);
 
 static cursor_chain_t cursor_chain = {0};
@@ -70,16 +73,12 @@ void pattern_init(uint8_t pattern)
 {
     selected_pattern = pattern;
 
-    active_page = PAGE_CHAIN;
-
     pattern_draw_title();
     pattern_draw_editor();
-    pattern_draw_chain();
-    pattern_draw_phrase();
-    pattern_draw_command_description();
 
     pattern_chain_highlight_cursor();
-    pattern_chain_highlight_phrase();
+    pattern_chain_highlight_column();
+    pattern_chain_highlight_row();
 }
 
 void pattern_draw_title(void)
@@ -460,50 +459,90 @@ void pattern_chain_unhighlight_cursor(void)
     }
 }
 
-void pattern_chain_highlight_phrase(void)
-{
-    if (cursor_chain.y < 0 || 16 <= cursor_chain.y)
-        return;
-
-    color_t color;
-
-    if (cursor_chain.y % 4 == 0)
-        color = COLOR_DARK;
-    else
-        color = COLOR_NORMAL;
-
-    LCD_change_color(color, 3, cursor_chain.y + 5);
-    LCD_change_color(color, 4, cursor_chain.y + 5);
-}
-
-void pattern_chain_unhighlight_phrase(void)
-{
-
-}
-
 void pattern_chain_highlight_column(void)
 {
+    if (cursor_chain.x < 0 || CHAIN_COLUMN_COUNT <= cursor_chain.x)
+        return;
 
+    switch (cursor_chain.x) {
+        case CHAIN_COLUMN_PHRASE:
+            LCD_change_color(COLOR_DARK, 3, 4);
+            break;
+
+        case CHAIN_COLUMN_TRANSPOSE:
+            LCD_change_color(COLOR_DARK, 6, 4);
+            break;
+
+        default:
+            break;
+    }
 }
 
 void pattern_chain_unhighlight_column(void)
 {
+    if (cursor_chain.x < 0 || CHAIN_COLUMN_COUNT <= cursor_chain.x)
+        return;
 
+    switch (cursor_chain.x) {
+        case CHAIN_COLUMN_PHRASE:
+            LCD_change_color(COLOR_DARK_FADE, 3, 4);
+            break;
+
+        case CHAIN_COLUMN_TRANSPOSE:
+            LCD_change_color(COLOR_DARK_FADE, 6, 4);
+            break;
+
+        default:
+            break;
+    }
 }
 
 void pattern_chain_highlight_row(void)
 {
+    if (cursor_chain.y < 0 || 16 <= cursor_chain.y)
+        return;
 
+    if (cursor_chain.y % 4 == 0)
+        LCD_change_color(COLOR_DARK, 1, cursor_chain.y + 5);
+
+    else
+        LCD_change_color(COLOR_NORMAL, 1, cursor_chain.y + 5);
 }
 
 void pattern_chain_unhighlight_row(void)
 {
+    if (cursor_chain.y < 0 || 16 <= cursor_chain.y)
+        return;
 
+    if (cursor_chain.y % 4 == 0)
+        LCD_change_color(COLOR_DARK_FADE, 1, cursor_chain.y + 5);
+
+    else
+        LCD_change_color(COLOR_NORMAL_FADE, 1, cursor_chain.y + 5);
 }
 
 void pattern_phrase_highlight_cursor(void)
 {
+    if (cursor_chain.x < 0 || CHAIN_COLUMN_COUNT <= cursor_chain.x)
+        return;
 
+    if (cursor_chain.y < 0 || 16 <= cursor_chain.y)
+        return;
+
+    switch(cursor_chain.x) {
+        case CHAIN_COLUMN_PHRASE:
+            LCD_change_color(COLOR_HIGHLIGHT, 3, cursor_chain.y + 5);
+            LCD_change_color(COLOR_HIGHLIGHT, 4, cursor_chain.y + 5);
+            break;
+
+        case CHAIN_COLUMN_TRANSPOSE:
+            LCD_change_color(COLOR_HIGHLIGHT, 6, cursor_chain.y + 5);
+            LCD_change_color(COLOR_HIGHLIGHT, 7, cursor_chain.y + 5);
+            break;
+
+        default:
+            break;
+    }
 }
 
 void pattern_phrase_unhighlight_cursor(void)
@@ -531,7 +570,79 @@ void pattern_phrase_unhighlight_row(void)
 
 }
 
+void pattern_chain_brighten_phrase(void)
+{
+    if (cursor_chain.y < 0 || 16 <= cursor_chain.y)
+        return;
+
+    color_t color;
+
+    if (cursor_chain.y % 4 == 0)
+        color = COLOR_DARK;
+    else
+        color = COLOR_NORMAL;
+
+    LCD_change_color(color, 3, cursor_chain.y + 5);
+    LCD_change_color(color, 4, cursor_chain.y + 5);
+}
+
+void pattern_chain_fade_phrase(void)
+{
+    if (cursor_chain.y < 0 || 16 <= cursor_chain.y)
+        return;
+
+    color_t color;
+
+    if (cursor_chain.y % 4 == 0)
+        color = COLOR_DARK_FADE;
+    else
+        color = COLOR_NORMAL_FADE;
+
+    LCD_change_color(color, 3, cursor_chain.y + 5);
+    LCD_change_color(color, 4, cursor_chain.y + 5);
+}
+
+void pattern_chain_brighten_unselected_phrases(void)
+{
+    color_t color;
+
+    for (int32_t i = 0; i < 16; i++) {
+        if (i == cursor_chain.y)
+            continue;
+
+        if (data_get_chain_phrase(selected_pattern, i) == 0x00)
+            continue;
+
+        if (i % 4 == 0)
+            color = COLOR_DARK;
+        else
+            color = COLOR_NORMAL;
+
+        LCD_change_color(color, 3, cursor_chain.y + 5);
+        LCD_change_color(color, 4, cursor_chain.y + 5);
+    }
+}
+
+void pattern_chain_fade_unselected_phrases(void)
+{
+    color_t color;
+
+    for (int32_t i = 0; i < 16; i++) {
+        if (i == cursor_chain.y)
+            continue;
+
+        if (i % 4 == 0)
+            color = COLOR_DARK_FADE;
+        else
+            color = COLOR_NORMAL_FADE;
+
+        LCD_change_color(color, 3, cursor_chain.y + 5);
+        LCD_change_color(color, 4, cursor_chain.y + 5);
+    }
+}
+
 uint8_t pattern_get_selected_phrase(void)
 {
     return data_get_chain_phrase(selected_pattern, cursor_chain.y);
 }
+#endif
