@@ -1,7 +1,0 @@
-../Application/Src/logic_pattern.c:175:6:pattern_draw_chain_blank_space	3
-../Application/Src/logic_pattern.c:260:6:pattern_draw_phrase_blank_space	4
-../Application/Src/logic_pattern.c:287:6:pattern_draw_phrase_labels	1
-../Application/Src/logic_pattern.c:222:6:pattern_draw_chain_data	4
-../Application/Src/logic_pattern.c:322:6:pattern_draw_phrase_data	7
-../Application/Src/logic_pattern.c:151:6:pattern_draw_command_description	3
-../Application/Src/logic_pattern.c:71:6:pattern_init	19

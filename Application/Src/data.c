@@ -1,20 +1,20 @@
 #include "data.h"
 
 typedef struct {
-    uint8_t phrase[16];
-    int8_t transpose[16];
+    uint8_t phrase[CHAIN_ROW_COUNT];
+    uint8_t transpose[CHAIN_ROW_COUNT];
 } chain_t;
 
 typedef struct {
-    uint8_t note[16];
-    uint8_t instrument[16];
-    uint8_t volume[16];
-    uint8_t command[16][COMMAND_COUNT];
-    uint8_t parameter[16][COMMAND_COUNT];
+    uint8_t note[PHRASE_ROW_COUNT];
+    uint8_t instrument[PHRASE_ROW_COUNT];
+    uint8_t volume[PHRASE_ROW_COUNT];
+    uint8_t command[PHRASE_ROW_COUNT][COMMAND_COUNT];
+    uint8_t parameter[PHRASE_ROW_COUNT][COMMAND_COUNT];
 } phrase_t;
 
 typedef struct {
-    uint8_t song_chart[CHANNEL_COUNT][SONG_CHART_ROW_COUNT];
+    uint8_t song[CHANNEL_COUNT][SONG_ROW_COUNT];
     chain_t chain[CHAIN_COUNT];
     phrase_t phrase[PHRASE_COUNT];
 } project_data_t;
@@ -47,20 +47,20 @@ const uint8_t note_name[9 * 12][3] = {
     "C-8", "C#8", "D-8", "D#8", "E-8", "F-8", "F#8", "G-8", "G#8", "A-8", "A#8", "B-8"
 };
 
-uint8_t data_get_song_chart_chain(int32_t channel, int32_t row)
+uint8_t data_get_song_chain(int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
-            return project_data.song_chart[channel][row];
+        if (0 <= row && row < SONG_ROW_COUNT)
+            return project_data.song[channel][row];
 
     return 0x00;
 }
 
-void data_set_song_chart_chain(uint8_t chain, int32_t channel, int32_t row)
+void data_set_song_chain(uint8_t chain, int32_t channel, int32_t row)
 {
     if (0 <= channel && channel < CHANNEL_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
-            project_data.song_chart[channel][row] = chain;
+        if (0 <= row && row < SONG_ROW_COUNT)
+            project_data.song[channel][row] = chain;
 }
 
 uint8_t data_get_chain_phrase(uint8_t chain, int32_t row)
@@ -68,7 +68,7 @@ uint8_t data_get_chain_phrase(uint8_t chain, int32_t row)
     chain -= 1;
 
     if (chain < CHAIN_COUNT)
-        if (0 <= row && row < 16)
+        if (0 <= row && row < CHAIN_ROW_COUNT)
             return project_data.chain[chain].phrase[row];
 
     return 0x00;
@@ -79,27 +79,27 @@ void data_set_chain_phrase(uint8_t phrase, uint8_t chain, int32_t row)
     chain -= 1;
 
     if (chain < CHAIN_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
+        if (0 <= row && row < CHAIN_ROW_COUNT)
             project_data.chain[chain].phrase[row] = phrase;
 }
 
-int8_t data_get_chain_transpose(uint8_t chain, int32_t row)
+uint8_t data_get_chain_transpose(uint8_t chain, int32_t row)
 {
     chain -= 1;
 
     if (chain < CHAIN_COUNT)
-        if (0 <= row && row < 16)
+        if (0 <= row && row < CHAIN_ROW_COUNT)
             return project_data.chain[chain].transpose[row];
 
     return 0;
 }
 
-void data_set_chain_transpose(int8_t transpose, uint8_t chain, int32_t row)
+void data_set_chain_transpose(uint8_t transpose, uint8_t chain, int32_t row)
 {
     chain -= 1;
 
     if (chain < CHAIN_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
+        if (0 <= row && row < CHAIN_ROW_COUNT)
             project_data.chain[chain].transpose[row] = transpose;
 }
 
@@ -119,7 +119,7 @@ void data_set_phrase_note(uint8_t note, uint8_t phrase, int32_t row)
     phrase -= 1;
 
     if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
+        if (0 <= row && row < 16)
             project_data.phrase[phrase].note[row] = note;
 }
 
@@ -139,7 +139,7 @@ void data_set_phrase_instrument(uint8_t instrument, uint8_t phrase, int32_t row)
     phrase -= 1;
 
     if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
+        if (0 <= row && row < 16)
             project_data.phrase[phrase].instrument[row] = instrument;
 }
 
@@ -159,7 +159,7 @@ void data_set_phrase_volume(uint8_t volume, uint8_t phrase, int32_t row)
     phrase -= 1;
 
     if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < SONG_CHART_ROW_COUNT)
+        if (0 <= row && row < 16)
             project_data.phrase[phrase].volume[row] = volume;
 }
 
@@ -181,7 +181,7 @@ void data_set_phrase_command(uint8_t command, uint8_t command_number, uint8_t ph
 
     if (command_number < COMMAND_COUNT)
         if (phrase < PHRASE_COUNT)
-            if (0 <= row && row < SONG_CHART_ROW_COUNT)
+            if (0 <= row && row < 16)
                 project_data.phrase[phrase].command[row][command_number] = command;
 }
 
@@ -203,7 +203,7 @@ void data_set_phrase_parameter(uint8_t parameter, uint8_t command_number, uint8_
 
     if (command_number < COMMAND_COUNT)
         if (phrase < PHRASE_COUNT)
-            if (0 <= row && row < SONG_CHART_ROW_COUNT)
+            if (0 <= row && row < 16)
                 project_data.phrase[phrase].parameter[row][command_number] = parameter;
 }
 

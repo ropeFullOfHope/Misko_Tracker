@@ -1,7 +1,9 @@
-../Application/Src/logic_chain.c:175:6:pattern_draw_chain_blank_space	16	static
-../Application/Src/logic_chain.c:260:6:pattern_draw_phrase_blank_space	16	static
-../Application/Src/logic_chain.c:287:6:pattern_draw_phrase_labels	8	static
-../Application/Src/logic_chain.c:222:6:pattern_draw_chain_data	40	static
-../Application/Src/logic_chain.c:322:6:pattern_draw_phrase_data	56	static
-../Application/Src/logic_chain.c:151:6:pattern_draw_command_description	16	static
-../Application/Src/logic_chain.c:71:6:pattern_init	32	static
+../Application/Src/logic_chain.c:263:6:chain_draw_phrase_data	48	static
+../Application/Src/logic_chain.c:458:6:chain_update_value	16	static
+../Application/Src/logic_chain.c:85:6:chain_draw_phrase.part.0	16	static
+../Application/Src/logic_chain.c:44:6:chain_init	48	static
+../Application/Src/logic_chain.c:494:6:chain_update_phrase_preview	16	static
+../Application/Src/logic_chain.c:508:6:chain_move_cursor	24	static
+../Application/Src/logic_chain.c:552:6:chain_insert_value	16	static
+../Application/Src/logic_chain.c:587:6:chain_delete_value	24	static
+../Application/Src/logic_chain.c:624:6:chain_change_value	24	static

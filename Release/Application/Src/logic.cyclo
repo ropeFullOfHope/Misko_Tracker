@@ -1,5 +1,5 @@
-../Application/Src/logic.c:131:15:logic_state_chain_main	6
-../Application/Src/logic.c:124:15:logic_state_chain_init	1
-../Application/Src/logic.c:84:15:logic_state_song_main	13
-../Application/Src/logic.c:75:15:logic_state_song_init	1
-../Application/Src/logic.c:39:6:logic_update	4
+../Application/Src/logic.c:139:15:logic_state_chain_main	11
+../Application/Src/logic.c:132:15:logic_state_chain_init	1
+../Application/Src/logic.c:92:15:logic_state_song_main	13
+../Application/Src/logic.c:83:15:logic_state_song_init	1
+../Application/Src/logic.c:40:6:logic_update	5

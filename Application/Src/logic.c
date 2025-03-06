@@ -3,6 +3,7 @@
 #include "logic_song.h"
 #include "logic_chain.h"
 #include "data.h"
+#include "ticks.h"
 #include "button.h"
 #include "joystick.h"
 
@@ -38,12 +39,19 @@ static logic_state_t current_logic_state;
 
 void logic_update(void)
 {
-    button_scan();
-    joystick_scan();
+    static uint32_t last_logic_update_time = 0;
+    uint32_t current_time = ticks();
 
-    logic_joystick_auto_repeat();
+    if (current_time - last_logic_update_time >= CPU_FREQUENCY / ENGINE_TICK_RATE) {
+        last_logic_update_time += CPU_FREQUENCY / ENGINE_TICK_RATE;
 
-    current_logic_state = logic_state_table[current_logic_state]();
+        button_scan();
+        joystick_scan();
+
+        logic_joystick_auto_repeat();
+
+        current_logic_state = logic_state_table[current_logic_state]();
+    }
 }
 
 void logic_joystick_auto_repeat(void)
@@ -131,10 +139,12 @@ logic_state_t logic_state_chain_init(void)
 logic_state_t logic_state_chain_main(void)
 {
     if (is_button_held(BUTTON_RIGHT)) {
-        ;
+        if (is_joystick_triggered)
+            chain_change_value(joystick_get_position());
     }
     else if (is_button_held(BUTTON_DOWN)) {
-        ;
+        if (is_button_pressed(BUTTON_RIGHT))
+            chain_delete_value();
     }
     else if (is_button_held(BUTTON_UP)) {
         if (is_joystick_triggered)
@@ -145,7 +155,11 @@ logic_state_t logic_state_chain_main(void)
         ;
     }
     else {
-        ;
+        if (is_joystick_triggered)
+            chain_move_cursor(joystick_get_position());
+
+        if (is_button_pressed(BUTTON_RIGHT))
+            chain_insert_value();
     }
 
     return LOGIC_STATE_CHAIN_MAIN;

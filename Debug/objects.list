@@ -1,6 +1,7 @@
 "./Application/Src/app.o"
 "./Application/Src/audio.o"
 "./Application/Src/data.o"
+"./Application/Src/helper_functions.o"
 "./Application/Src/logic.o"
 "./Application/Src/logic_chain.o"
 "./Application/Src/logic_phrase.o"
