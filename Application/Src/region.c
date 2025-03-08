@@ -1,4 +1,4 @@
-#include "layout.h"
+#include "region.h"
 
 const region_t REGION_SIDEBAR = {.start = {34,  1}, .size = {5, 13}};
 const region_t REGION_MAP     = {.start = {34, 15}, .size = {5,  5}};

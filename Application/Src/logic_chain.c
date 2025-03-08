@@ -1,24 +1,23 @@
 #include "logic_chain.h"
 #include <stdbool.h>
 #include "data.h"
-#include "layout.h"
-#include "lcd.h"
+#include "region.h"
 #include "helper_functions.h"
 
 static void chain_draw_title(void);
-static void chain_draw_editor(void);
-static void chain_draw_chain(void);
-static void chain_draw_phrase(void);
-static void chain_draw_blank_space(void);
-static void chain_draw_chain_blank_space(void);
-static void chain_draw_chain_labels(void);
-static void chain_draw_chain_row_numbers(void);
-static void chain_draw_chain_data(void);
-static void chain_draw_phrase_blank(void);
-static void chain_draw_phrase_labels(void);
-static void chain_draw_phrase_row_numbers(void);
-static void chain_draw_phrase_blank_space(void);
-static void chain_draw_phrase_data(void);
+static void chain_draw_editor_chain(void);
+static void chain_draw_editor_phrase_preview(void);
+static void chain_draw_editor_chain_labels(void);
+static void chain_draw_editor_chain_row_numbers(void);
+static void chain_draw_editor_chain_spacing(void);
+static void chain_draw_editor_chain_data(void);
+static void chain_draw_editor_phrase_preview_labels(void);
+static void chain_draw_editor_phrase_preview_row_numbers(void);
+static void chain_draw_editor_phrase_preview_spacing(void);
+static void chain_draw_editor_phrase_preview_data(void);
+static void chain_clear_title(void);
+static void chain_clear_editor_chain(void);
+static void chain_clear_editor_phrase_preview(void);
 static void chain_highlight_cursor(void);
 static void chain_unhighlight_cursor(void);
 static void chain_highlight_label(void);
@@ -47,124 +46,103 @@ void chain_init(uint8_t chain)
     selected_chain = chain;
 
     chain_draw_title();
-    chain_draw_editor();
+    chain_draw_editor_chain();
+    chain_draw_editor_phrase_preview();
 
     chain_highlight_cursor();
     chain_highlight_label();
     chain_highlight_row_number();
 }
 
+void chain_deinit(void)
+{
+    chain_clear_title();
+    chain_clear_editor_chain();
+    chain_clear_editor_phrase_preview();
+}
+
 void chain_draw_title(void)
 {
-    const uint8_t TITLE[6] = {'C', 'h', 'a', 'i', 'n', ' '};
+    const region_t *REGION = &REGION_CHAIN_TITLE;
+    const uint8_t TITLE[] = {'C', 'h', 'a', 'i', 'n'};
+    const uint8_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
 
-    for (int32_t i = 0; i < 6; i++)
-        LCD_draw(TITLE[i], i + 1, 1, COLOR_NORMAL);
+    for (int32_t i = 0; i < TITLE_LENGTH; i++)
+        region_draw(REGION, TITLE[i], i, 0, COLOR_NORMAL);
 
-    LCD_draw(HEX_DIGIT[selected_chain / 0x10], 7, 1, COLOR_NORMAL);
-    LCD_draw(HEX_DIGIT[selected_chain % 0x10], 8, 1, COLOR_NORMAL);
-
-    for (int32_t i = 9; i <= 32; i++)
-        LCD_draw(' ', i, 1, COLOR_NORMAL);
+    region_draw(REGION, HEX_DIGIT[selected_chain / 0x10], TITLE_LENGTH + 1, 0, COLOR_NORMAL);
+    region_draw(REGION, HEX_DIGIT[selected_chain % 0x10], TITLE_LENGTH + 2, 0, COLOR_NORMAL);
 }
 
-void chain_draw_editor(void)
+void chain_draw_editor_chain(void)
 {
-    chain_draw_chain();
-    chain_draw_phrase();
-    chain_draw_blank_space();
+    chain_draw_editor_chain_labels();
+    chain_draw_editor_chain_row_numbers();
+    chain_draw_editor_chain_spacing();
+    chain_draw_editor_chain_data();
 }
 
-void chain_draw_chain(void)
+void chain_draw_editor_phrase_preview(void)
 {
-    chain_draw_chain_labels();
-    chain_draw_chain_row_numbers();
-    chain_draw_chain_blank_space();
-    chain_draw_chain_data();
-}
+    const uint8_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
-void chain_draw_phrase(void)
-{
-    uint8_t phrase = data_get_chain_phrase(selected_chain, cursor.y);
+    previewed_phrase = PHRASE;
 
-    previewed_phrase = phrase;
-
-    if (phrase == 0x00) {
-        chain_draw_phrase_blank();
+    if (PHRASE == 0x00) {
+        chain_clear_editor_phrase_preview();
     }
     else {
-        chain_draw_phrase_labels();
-        chain_draw_phrase_row_numbers();
-        chain_draw_phrase_blank_space();
-        chain_draw_phrase_data();
+        chain_draw_editor_phrase_preview_labels();
+        chain_draw_editor_phrase_preview_row_numbers();
+        chain_draw_editor_phrase_preview_spacing();
+        chain_draw_editor_phrase_preview_data();
     }
 }
 
-void chain_draw_blank_space(void)
+void chain_draw_editor_chain_labels(void)
 {
-    for (int32_t y = 3; y <= 19; y++) {
-        for (int32_t x = 8; x <= 9; x++)
-            LCD_draw(' ', x, y, COLOR_NORMAL);
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
-        for (int32_t x = 21; x <= 32; x++)
-            LCD_draw(' ', x, y, COLOR_NORMAL);
-    }
+    region_draw(REGION, 'P', 2, 0, COLOR_DARK_FADE);
+    region_draw(REGION, ' ', 3, 0, COLOR_DARK_FADE);
 
-    for (int32_t y = 20; y <= 28; y++)
-        for (int32_t x = 1; x <= 32; x++)
-            LCD_draw(' ', x, y, COLOR_NORMAL);
+    region_draw(REGION, 'T', 5, 0, COLOR_DARK_FADE);
+    region_draw(REGION, ' ', 6, 0, COLOR_DARK_FADE);
 }
 
-void chain_draw_chain_labels(void)
+void chain_draw_editor_chain_row_numbers(void)
 {
-    LCD_draw(' ', 1, 3, COLOR_NORMAL);
-    LCD_draw(' ', 2, 3, COLOR_NORMAL);
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
-    LCD_draw('P', 3, 3, COLOR_DARK_FADE);
-    LCD_draw(' ', 4, 3, COLOR_DARK_FADE);
-
-    LCD_draw(' ', 5, 3, COLOR_NORMAL);
-
-    LCD_draw('T', 6, 3, COLOR_DARK_FADE);
-    LCD_draw(' ', 7, 3, COLOR_DARK_FADE);
-}
-
-void chain_draw_chain_row_numbers(void)
-{
     for (int32_t i = 0; i < 16; i++) {
         color_t color;
 
         if (i % 4 == 0)
             color = COLOR_DARK_FADE;
-
         else
             color = COLOR_NORMAL_FADE;
 
-        LCD_draw(HEX_DIGIT[i], 1, i + 4, color);
+        region_draw(REGION, HEX_DIGIT[i], 0, i + 1, color);
     }
 }
 
-void chain_draw_chain_blank_space(void)
+void chain_draw_editor_chain_spacing(void)
 {
-    for (int32_t i = 0; i < 16; i++) {
-        color_t color;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
-        if (i % 4 == 0)
-            color = COLOR_DARK;
-
-        else
-            color = COLOR_NORMAL;
-
-        LCD_draw(' ', 2, i + 4, color);
-        LCD_draw(' ', 5, i + 4, color);
+    for (int32_t i = 0; i < 4; i++) {
+        region_draw(REGION, ' ', 1, i * 4 + 1, COLOR_DARK);
+        region_draw(REGION, ' ', 4, i * 4 + 1, COLOR_DARK);
     }
 }
 
-void chain_draw_chain_data(void)
+void chain_draw_editor_chain_data(void)
 {
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
+
     for (int32_t i = 0; i < 16; i++) {
-        uint8_t phrase = data_get_chain_phrase(selected_chain, i);
-        uint8_t transpose = data_get_chain_transpose(selected_chain, i);
+        const uint8_t PHRASE = data_get_chain_phrase(selected_chain, i);
+        const uint8_t TRANSPOSE = data_get_chain_transpose(selected_chain, i);
 
         color_t color_normal;
         color_t color_fade;
@@ -178,97 +156,82 @@ void chain_draw_chain_data(void)
             color_fade = COLOR_NORMAL_FADE;
         }
 
-        if (phrase == 0x00) {
-            LCD_draw('-', 3, i + 4, color_fade);
-            LCD_draw('-', 4, i + 4, color_fade);
+        if (PHRASE == 0x00) {
+            region_draw(REGION, '-', 2, i + 1, color_fade);
+            region_draw(REGION, '-', 3, i + 1, color_fade);
         }
         else {
-            LCD_draw(HEX_DIGIT[phrase / 0x10], 3, i + 4, color_normal);
-            LCD_draw(HEX_DIGIT[phrase % 0x10], 4, i + 4, color_normal);
+            region_draw(REGION, HEX_DIGIT[PHRASE / 0x10], 2, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[PHRASE % 0x10], 3, i + 1, color_normal);
         }
 
-        if (transpose == 0x00) {
-            LCD_draw('-', 6, i + 4, color_fade);
-            LCD_draw('-', 7, i + 4, color_fade);
+        if (TRANSPOSE == 0x00) {
+            region_draw(REGION, '-', 5, i + 1, color_fade);
+            region_draw(REGION, '-', 6, i + 1, color_fade);
         }
-        else if (transpose == 0x80) {
-            LCD_draw('8', 6, i + 4, color_fade);
-            LCD_draw('0', 7, i + 4, color_fade);
+        else if (TRANSPOSE == 0x80) {
+            region_draw(REGION, '8', 5, i + 1, color_fade);
+            region_draw(REGION, '0', 6, i + 1, color_fade);
         }
         else {
-            LCD_draw(HEX_DIGIT[transpose / 0x10], 6, i + 4, color_normal);
-            LCD_draw(HEX_DIGIT[transpose % 0x10], 7, i + 4, color_normal);
+            region_draw(REGION, HEX_DIGIT[TRANSPOSE / 0x10], 5, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[TRANSPOSE % 0x10], 6, i + 1, color_normal);
         }
     }
 }
 
-void chain_draw_phrase_blank(void)
+void chain_draw_editor_phrase_preview_labels(void)
 {
-    for (int32_t y = 3; y <= 19; y++)
-        for(int32_t x = 10; x <= 20; x++)
-            LCD_draw(' ', x, y, COLOR_NORMAL);
+    const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
+
+    region_draw(REGION, 'N',  2, 0, COLOR_DARK_FADE);
+    region_draw(REGION, ' ',  3, 0, COLOR_DARK_FADE);
+    region_draw(REGION, ' ',  4, 0, COLOR_DARK_FADE);
+
+    region_draw(REGION, 'I',  6, 0, COLOR_DARK_FADE);
+    region_draw(REGION, ' ',  7, 0, COLOR_DARK_FADE);
+
+    region_draw(REGION, 'V',  9, 0, COLOR_DARK_FADE);
+    region_draw(REGION, ' ', 10, 0, COLOR_DARK_FADE);
 }
 
-void chain_draw_phrase_labels(void)
+void chain_draw_editor_phrase_preview_row_numbers(void)
 {
-    LCD_draw(' ', 10, 3, COLOR_NORMAL);
-    LCD_draw(' ', 11, 3, COLOR_NORMAL);
+    const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-    LCD_draw('N', 12, 3, COLOR_DARK_FADE);
-    LCD_draw(' ', 13, 3, COLOR_DARK_FADE);
-    LCD_draw(' ', 14, 3, COLOR_DARK_FADE);
-
-    LCD_draw(' ', 15, 3, COLOR_NORMAL);
-
-    LCD_draw('I', 16, 3, COLOR_DARK_FADE);
-    LCD_draw(' ', 17, 3, COLOR_DARK_FADE);
-
-    LCD_draw(' ', 18, 3, COLOR_NORMAL);
-
-    LCD_draw('V', 19, 3, COLOR_DARK_FADE);
-    LCD_draw(' ', 20, 3, COLOR_DARK_FADE);
-}
-
-void chain_draw_phrase_row_numbers(void)
-{
     for (int32_t i = 0; i < 16; i++) {
         color_t color;
 
         if (i % 4 == 0)
             color = COLOR_DARK_FADE;
-
         else
             color = COLOR_NORMAL_FADE;
 
-        LCD_draw(HEX_DIGIT[i], 10, i + 4, color);
+        region_draw(REGION, HEX_DIGIT[i], 0, i + 1, color);
     }
 }
 
-void chain_draw_phrase_blank_space(void)
+void chain_draw_editor_phrase_preview_spacing(void)
 {
-    for (int32_t i = 0; i < 16; i++) {
-        color_t color;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-        if (i % 4 == 0)
-            color = COLOR_DARK;
-
-        else
-            color = COLOR_NORMAL;
-
-        LCD_draw(' ', 11, i + 4, color);
-        LCD_draw(' ', 15, i + 4, color);
-        LCD_draw(' ', 18, i + 4, color);
+    for (int32_t i = 0; i < 4; i++) {
+        region_draw(REGION, ' ', 1, i * 4 + 1, COLOR_DARK);
+        region_draw(REGION, ' ', 5, i * 4 + 1, COLOR_DARK);
+        region_draw(REGION, ' ', 8, i * 4 + 1, COLOR_DARK);
     }
 }
 
-void chain_draw_phrase_data(void)
+void chain_draw_editor_phrase_preview_data(void)
 {
-    for (int32_t i = 0; i < 16; i++) {
-        uint8_t phrase = data_get_chain_phrase(selected_chain, i);
+    const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-        uint8_t note = data_get_phrase_note(phrase, i);
-        uint8_t instrument = data_get_phrase_instrument(phrase, i);
-        uint8_t volume = data_get_phrase_volume(phrase, i);
+    for (int32_t i = 0; i < 16; i++) {
+        const uint8_t PHRASE = data_get_chain_phrase(selected_chain, i);
+
+        const uint8_t NOTE = data_get_phrase_note(PHRASE, i);
+        const uint8_t INSTRUMENT = data_get_phrase_instrument(PHRASE, i);
+        const uint8_t VOLUME = data_get_phrase_volume(PHRASE, i);
 
         color_t color_normal;
         color_t color_fade;
@@ -282,54 +245,71 @@ void chain_draw_phrase_data(void)
             color_fade = COLOR_NORMAL_FADE;
         }
 
-        if (note == 0x00) {
-            LCD_draw('-', 12, i + 4, color_fade);
-            LCD_draw('-', 13, i + 4, color_fade);
-            LCD_draw('-', 14, i + 4, color_fade);
+        if (NOTE == 0x00) {
+            region_draw(REGION, '-', 2, i + 1, color_fade);
+            region_draw(REGION, '-', 3, i + 1, color_fade);
+            region_draw(REGION, '-', 4, i + 1, color_fade);
         }
         else {
-            LCD_draw(NOTE_NAME[note][0], 12, i + 4, color_normal);
-            LCD_draw(NOTE_NAME[note][1], 13, i + 4, color_normal);
-            LCD_draw(NOTE_NAME[note][2], 14, i + 4, color_normal);
+            region_draw(REGION, NOTE_NAME[NOTE][0], 2, i + 1, color_normal);
+            region_draw(REGION, NOTE_NAME[NOTE][1], 3, i + 1, color_normal);
+            region_draw(REGION, NOTE_NAME[NOTE][2], 4, i + 1, color_normal);
         }
 
-        if (instrument == 0x00) {
-            LCD_draw('-', 16, i + 4, color_fade);
-            LCD_draw('-', 17, i + 4, color_fade);
+        if (INSTRUMENT == 0x00) {
+            region_draw(REGION, '-', 6, i + 1, color_fade);
+            region_draw(REGION, '-', 7, i + 1, color_fade);
         }
         else {
-            LCD_draw(HEX_DIGIT[instrument / 0x10], 16, i + 4, color_normal);
-            LCD_draw(HEX_DIGIT[instrument % 0x10], 17, i + 4, color_normal);
+            region_draw(REGION, HEX_DIGIT[INSTRUMENT / 0x10], 6, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[INSTRUMENT % 0x10], 7, i + 1, color_normal);
         }
 
-        if (volume == 0x00) {
-            LCD_draw('-', 19, i + 4, color_fade);
-            LCD_draw('-', 20, i + 4, color_fade);
+        if (VOLUME == 0x00) {
+            region_draw(REGION, '-',  9, i + 1, color_fade);
+            region_draw(REGION, '-', 10, i + 1, color_fade);
         }
         else {
-            LCD_draw(HEX_DIGIT[volume / 0x10], 19, i + 4, color_normal);
-            LCD_draw(HEX_DIGIT[volume % 0x10], 20, i + 4, color_normal);
+            region_draw(REGION, HEX_DIGIT[VOLUME / 0x10],  9, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[VOLUME % 0x10], 10, i + 1, color_normal);
         }
     }
+}
+
+void chain_clear_title(void)
+{
+    const region_t *REGION = &REGION_CHAIN_TITLE;
+
+    region_fill(REGION, ' ', COLOR_NORMAL);
+}
+
+void chain_clear_editor_chain(void)
+{
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
+
+    region_fill(REGION, ' ', COLOR_NORMAL);
+}
+
+void chain_clear_editor_phrase_preview(void)
+{
+    const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
+
+    region_fill(REGION, ' ', COLOR_NORMAL);
 }
 
 void chain_highlight_cursor(void)
 {
-    if (cursor.x < 0 || CHAIN_COLUMN_COUNT <= cursor.x)
-        return;
-
-    if (cursor.y < 0 || 16 <= cursor.y)
-        return;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     switch(cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            LCD_change_color(COLOR_HIGHLIGHT, 3, cursor.y + 4);
-            LCD_change_color(COLOR_HIGHLIGHT, 4, cursor.y + 4);
+            region_change_color(REGION, COLOR_HIGHLIGHT, 2, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, 3, cursor.y + 1);
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            LCD_change_color(COLOR_HIGHLIGHT, 6, cursor.y + 4);
-            LCD_change_color(COLOR_HIGHLIGHT, 7, cursor.y + 4);
+            region_change_color(REGION, COLOR_HIGHLIGHT, 5, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, 6, cursor.y + 1);
             break;
 
         default:
@@ -339,11 +319,7 @@ void chain_highlight_cursor(void)
 
 void chain_unhighlight_cursor(void)
 {
-    if (cursor.x < 0 || CHAIN_COLUMN_COUNT <= cursor.x)
-        return;
-
-    if (cursor.y < 0 || 16 <= cursor.y)
-        return;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     color_t color_normal;
     color_t color_fade;
@@ -359,25 +335,28 @@ void chain_unhighlight_cursor(void)
 
     switch(cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            if (data_get_chain_phrase(selected_chain, cursor.y) == 0x00) {
-                LCD_change_color(color_fade, 3, cursor.y + 4);
-                LCD_change_color(color_fade, 4, cursor.y + 4);
+            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+
+            if (SELECTED_PHRASE == 0x00) {
+                region_change_color(REGION, color_fade, 2, cursor.y + 1);
+                region_change_color(REGION, color_fade, 3, cursor.y + 1);
             }
             else {
-                LCD_change_color(color_normal, 3, cursor.y + 4);
-                LCD_change_color(color_normal, 4, cursor.y + 4);
+                region_change_color(REGION, color_normal, 2, cursor.y + 1);
+                region_change_color(REGION, color_normal, 3, cursor.y + 1);
             }
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            uint8_t transpose = data_get_chain_transpose(selected_chain, cursor.y);
-            if (transpose == 0x00 || transpose == 0x80) {
-                LCD_change_color(color_fade, 6, cursor.y + 4);
-                LCD_change_color(color_fade, 7, cursor.y + 4);
+            const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+
+            if (SELECTED_TRANSPOSE == 0x00 || SELECTED_TRANSPOSE == 0x80) {
+                region_change_color(REGION, color_fade, 5, cursor.y + 1);
+                region_change_color(REGION, color_fade, 6, cursor.y + 1);
             }
             else {
-                LCD_change_color(color_normal, 6, cursor.y + 4);
-                LCD_change_color(color_normal, 7, cursor.y + 4);
+                region_change_color(REGION, color_normal, 5, cursor.y + 1);
+                region_change_color(REGION, color_normal, 6, cursor.y + 1);
             }
             break;
 
@@ -388,16 +367,15 @@ void chain_unhighlight_cursor(void)
 
 void chain_highlight_label(void)
 {
-    if (cursor.x < 0 || CHAIN_COLUMN_COUNT <= cursor.x)
-        return;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            LCD_change_color(COLOR_DARK, 3, 3);
+            region_change_color(REGION, COLOR_DARK, 2, 0);
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            LCD_change_color(COLOR_DARK, 6, 3);
+            region_change_color(REGION, COLOR_DARK, 5, 0);
             break;
 
         default:
@@ -407,16 +385,15 @@ void chain_highlight_label(void)
 
 void chain_unhighlight_label(void)
 {
-    if (cursor.x < 0 || CHAIN_COLUMN_COUNT <= cursor.x)
-        return;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            LCD_change_color(COLOR_DARK_FADE, 3, 3);
+            region_change_color(REGION, COLOR_DARK_FADE, 2, 0);
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            LCD_change_color(COLOR_DARK_FADE, 6, 3);
+            region_change_color(REGION, COLOR_DARK_FADE, 5, 0);
             break;
 
         default:
@@ -426,65 +403,61 @@ void chain_unhighlight_label(void)
 
 void chain_highlight_row_number(void)
 {
-    if (cursor.y < 0 || 16 <= cursor.y)
-        return;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     color_t color;
 
     if (cursor.y % 4 == 0)
         color = COLOR_DARK;
-
     else
         color = COLOR_NORMAL;
 
-    LCD_change_color(color, 1, cursor.y + 4);
+    region_change_color(REGION, color, 0, cursor.y + 1);
 }
 
 void chain_unhighlight_row_number(void)
 {
-    if (cursor.y < 0 || 16 <= cursor.y)
-        return;
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     color_t color;
 
     if (cursor.y % 4 == 0)
         color = COLOR_DARK_FADE;
-
     else
         color = COLOR_NORMAL_FADE;
 
-    LCD_change_color(color, 1, cursor.y + 4);
+    region_change_color(REGION, color, 0, cursor.y + 1);
 }
 
 void chain_update_value(void)
 {
+    const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
+
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            uint8_t phrase = data_get_chain_phrase(selected_chain, cursor.y);
+            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
-            if (phrase == 0x00) {
-                LCD_change_tile('-', 3, cursor.y + 4);
-                LCD_change_tile('-', 4, cursor.y + 4);
+            if (SELECTED_PHRASE == 0x00) {
+                region_change_tile(REGION, '-', 2, cursor.y + 1);
+                region_change_tile(REGION, '-', 3, cursor.y + 1);
             }
             else {
-                LCD_change_tile(HEX_DIGIT[phrase / 0x10], 3, cursor.y + 4);
-                LCD_change_tile(HEX_DIGIT[phrase % 0x10], 4, cursor.y + 4);
+                region_change_tile(REGION, HEX_DIGIT[SELECTED_PHRASE / 0x10], 2, cursor.y + 1);
+                region_change_tile(REGION, HEX_DIGIT[SELECTED_PHRASE % 0x10], 3, cursor.y + 1);
             }
-
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            uint8_t transpose = data_get_chain_transpose(selected_chain, cursor.y);
+            const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
-            if (transpose == 0x00) {
-                LCD_change_tile('-', 6, cursor.y + 4);
-                LCD_change_tile('-', 7, cursor.y + 4);
+            if (SELECTED_TRANSPOSE == 0x00) {
+                region_change_tile(REGION, '-', 5, cursor.y + 1);
+                region_change_tile(REGION, '-', 6, cursor.y + 1);
             }
             else {
-                LCD_change_tile(HEX_DIGIT[transpose / 0x10], 6, cursor.y + 4);
-                LCD_change_tile(HEX_DIGIT[transpose % 0x10], 7, cursor.y + 4);
+                region_change_tile(REGION, HEX_DIGIT[SELECTED_TRANSPOSE / 0x10], 5, cursor.y + 1);
+                region_change_tile(REGION, HEX_DIGIT[SELECTED_TRANSPOSE % 0x10], 6, cursor.y + 1);
             }
-
             break;
 
         default:
@@ -494,16 +467,15 @@ void chain_update_value(void)
 
 void chain_update_phrase_preview(void)
 {
-    uint8_t selected_phrase = data_get_chain_phrase(selected_chain, cursor.y);
+    const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
-    if (selected_phrase == previewed_phrase)
+    if (SELECTED_PHRASE == previewed_phrase)
         return;
 
-    if (selected_phrase == 0x00 || previewed_phrase == 0x00)
-        chain_draw_phrase();
-
+    if (SELECTED_PHRASE == 0x00 || previewed_phrase == 0x00)
+        chain_draw_editor_phrase_preview();
     else
-        chain_draw_phrase_data();
+        chain_draw_editor_phrase_preview_data();
 }
 
 void chain_move_cursor(joystick_position_t joystick_position)
@@ -556,28 +528,28 @@ void chain_insert_value()
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            uint8_t selected_phrase = data_get_chain_phrase(selected_chain, cursor.y);
+            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
-            if (selected_phrase == 0x00) {
+            if (SELECTED_PHRASE == 0x00) {
                 data_set_chain_phrase(copied_phrase, selected_chain, cursor.y);
                 chain_update_value();
                 chain_update_phrase_preview();
             }
             else {
-                copied_phrase = selected_phrase;
+                copied_phrase = SELECTED_PHRASE;
             }
 
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            uint8_t selected_transpose = data_get_chain_transpose(selected_chain, cursor.y);
+            const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
-            if (selected_transpose == 0x00) {
+            if (SELECTED_TRANSPOSE == 0x00) {
                 data_set_chain_transpose(copied_transpose, selected_chain, cursor.y);
                 chain_update_value();
             }
             else {
-                copied_transpose = selected_transpose;
+                copied_transpose = SELECTED_TRANSPOSE;
             }
 
             break;
@@ -591,12 +563,12 @@ void chain_delete_value()
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            uint8_t selected_phrase = data_get_chain_phrase(selected_chain, cursor.y);
+            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
-            if (selected_phrase == 0x00)
+            if (SELECTED_PHRASE == 0x00)
                 return;
 
-            copied_phrase = selected_phrase;
+            copied_phrase = SELECTED_PHRASE;
 
             data_set_chain_phrase(0x00, selected_chain, cursor.y);
 
@@ -606,12 +578,12 @@ void chain_delete_value()
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            uint8_t selected_transpose = data_get_chain_transpose(selected_chain, cursor.y);
+            uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
-            if (selected_transpose == 0x00)
+            if (SELECTED_TRANSPOSE == 0x00)
                 return;
 
-            copied_transpose = selected_transpose;
+            copied_transpose = SELECTED_TRANSPOSE;
 
             data_set_chain_transpose(0x00, selected_chain, cursor.y);
 
@@ -628,34 +600,34 @@ void chain_change_value(joystick_position_t joystick_position)
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
-            int32_t selected_phrase = (int32_t) data_get_chain_phrase(selected_chain, cursor.y);
-            int32_t new_phrase = selected_phrase;
+            const int32_t SELECTED_PHRASE = (int32_t) data_get_chain_phrase(selected_chain, cursor.y);
+            int32_t new_phrase = SELECTED_PHRASE;
 
-            if (selected_phrase == 0x00)
+            if (SELECTED_PHRASE == 0x00)
                 return;
 
             switch (joystick_position) {
                 case JOYSTICK_POSITION_UP:
-                    new_phrase = change_value_within_bounds(selected_phrase, +1, 0x01, PHRASE_COUNT);
+                    new_phrase = change_value_within_bounds(SELECTED_PHRASE, +1, 0x01, PHRASE_COUNT);
                     break;
 
                 case JOYSTICK_POSITION_DOWN:
-                    new_phrase = change_value_within_bounds(selected_phrase, -1, 0x01, PHRASE_COUNT);
+                    new_phrase = change_value_within_bounds(SELECTED_PHRASE, -1, 0x01, PHRASE_COUNT);
                     break;
 
                 case JOYSTICK_POSITION_RIGHT:
-                    new_phrase = change_value_within_bounds(selected_phrase, +16, 0x01, PHRASE_COUNT);
+                    new_phrase = change_value_within_bounds(SELECTED_PHRASE, +16, 0x01, PHRASE_COUNT);
                     break;
 
                 case JOYSTICK_POSITION_LEFT:
-                    new_phrase = change_value_within_bounds(selected_phrase, -16, 0x01, PHRASE_COUNT);
+                    new_phrase = change_value_within_bounds(SELECTED_PHRASE, -16, 0x01, PHRASE_COUNT);
                     break;
 
                 default:
                     return;
             }
 
-            if (new_phrase != selected_phrase) {
+            if (new_phrase != SELECTED_PHRASE) {
                 data_set_chain_phrase((uint8_t) new_phrase, selected_chain, cursor.y);
                 chain_update_value();
                 chain_update_phrase_preview();
@@ -664,34 +636,34 @@ void chain_change_value(joystick_position_t joystick_position)
             break;
 
         case CHAIN_COLUMN_TRANSPOSE:
-            int32_t selected_transpose = (int32_t) data_get_chain_transpose(selected_chain, cursor.y);
-            int32_t new_transpose = selected_transpose;
+            const int32_t SELECTED_TRANSPOSE = (int32_t) data_get_chain_transpose(selected_chain, cursor.y);
+            int32_t new_transpose = SELECTED_TRANSPOSE;
 
-            if (selected_transpose == 0x00)
+            if (SELECTED_TRANSPOSE == 0x00)
                 return;
 
             switch (joystick_position) {
                 case JOYSTICK_POSITION_UP:
-                    new_transpose = change_value_within_bounds(selected_transpose, +1, 0x01, 0xFF);
+                    new_transpose = change_value_within_bounds(SELECTED_TRANSPOSE, +1, 0x01, 0xFF);
                     break;
 
                 case JOYSTICK_POSITION_DOWN:
-                    new_transpose = change_value_within_bounds(selected_transpose, -1, 0x01, 0xFF);
+                    new_transpose = change_value_within_bounds(SELECTED_TRANSPOSE, -1, 0x01, 0xFF);
                     break;
 
                 case JOYSTICK_POSITION_RIGHT:
-                    new_transpose = change_value_within_bounds(selected_transpose, +12, 0x01, 0xFF);
+                    new_transpose = change_value_within_bounds(SELECTED_TRANSPOSE, +12, 0x01, 0xFF);
                     break;
 
                 case JOYSTICK_POSITION_LEFT:
-                    new_transpose = change_value_within_bounds(selected_transpose, -12, 0x01, 0xFF);
+                    new_transpose = change_value_within_bounds(SELECTED_TRANSPOSE, -12, 0x01, 0xFF);
                     break;
 
                 default:
                     return;
             }
 
-            if (new_transpose != selected_transpose) {
+            if (new_transpose != SELECTED_TRANSPOSE) {
                 data_set_chain_transpose((uint8_t) new_transpose, selected_chain, cursor.y);
                 chain_update_value();
                 copied_transpose = (uint8_t) new_transpose;

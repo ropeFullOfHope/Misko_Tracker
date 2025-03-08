@@ -5,6 +5,7 @@
 #include "joystick.h"
 
 void chain_init(uint8_t pattern);
+void chain_deinit(void);
 void chain_move_cursor(joystick_position_t joystick_position);
 void chain_insert_value(void);
 void chain_delete_value(void);

@@ -1,5 +1,5 @@
-#ifndef INC_LAYOUT_H_
-#define INC_LAYOUT_H_
+#ifndef INC_REGION_H_
+#define INC_REGION_H_
 
 #include <stdint.h>
 #include "lcd.h"
@@ -26,4 +26,4 @@ extern const region_t REGION_CHAIN_TITLE;
 extern const region_t REGION_CHAIN_EDITOR_CHAIN;
 extern const region_t REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-#endif /* INC_LAYOUT_H_ */
+#endif /* INC_REGION_H_ */

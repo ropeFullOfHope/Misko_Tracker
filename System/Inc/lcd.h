@@ -8,11 +8,10 @@
 
 typedef enum {
     COLOR_NORMAL,
-    COLOR_DARK,
-    COLOR_HIGHLIGHT,
     COLOR_NORMAL_FADE,
+    COLOR_DARK,
     COLOR_DARK_FADE,
-    COLOR_HIGHLIGHT_FADE
+    COLOR_HIGHLIGHT
 } color_t;
 
 void LCD_init(void);

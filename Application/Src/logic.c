@@ -145,7 +145,7 @@ logic_state_t logic_state_chain(void)
     else if (is_button_held(BUTTON_UP)) {
         if (is_joystick_triggered) {
             if (joystick_get_position() == JOYSTICK_POSITION_LEFT) {
-                //chain_deinit();
+                chain_deinit();
                 song_init();
                 return LOGIC_STATE_SONG; // Hold X + Left
             }

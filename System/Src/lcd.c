@@ -1,5 +1,5 @@
 #include "lcd.h"
-#include "LCD_tileset.h"
+#include "lcd_tileset.h"
 #include "ili9341.h"
 #include "backlight.h"
 #include "millis.h"

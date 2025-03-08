@@ -1,8 +1,7 @@
 #include "logic_song.h"
 #include <stdbool.h>
 #include "data.h"
-#include "layout.h"
-#include "lcd.h"
+#include "region.h"
 #include "helper_functions.h"
 
 static void song_draw_title(void);
@@ -48,9 +47,9 @@ void song_deinit(void)
 
 void song_draw_title(void)
 {
+    const region_t *REGION = &REGION_SONG_TITLE;
     const uint8_t TITLE[] = {'S','o','n','g'};
     const int32_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
-    const region_t *REGION = &REGION_SONG_TITLE;
 
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
         region_draw(REGION, TITLE[i], i, 0, COLOR_NORMAL);
