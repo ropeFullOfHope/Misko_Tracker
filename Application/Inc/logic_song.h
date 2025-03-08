@@ -5,6 +5,7 @@
 #include "joystick.h"
 
 void song_init(void);
+void song_deinit(void);
 void song_move_cursor(joystick_position_t joystick_position);
 void song_move_page(joystick_position_t joystick_position);
 void song_insert_chain();

@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (12.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
@@ -9,6 +9,7 @@ C_SRCS += \
 ../Application/Src/audio.c \
 ../Application/Src/data.c \
 ../Application/Src/helper_functions.c \
+../Application/Src/layout.c \
 ../Application/Src/logic.c \
 ../Application/Src/logic_chain.c \
 ../Application/Src/logic_phrase.c \
@@ -20,6 +21,7 @@ OBJS += \
 ./Application/Src/audio.o \
 ./Application/Src/data.o \
 ./Application/Src/helper_functions.o \
+./Application/Src/layout.o \
 ./Application/Src/logic.o \
 ./Application/Src/logic_chain.o \
 ./Application/Src/logic_phrase.o \
@@ -31,6 +33,7 @@ C_DEPS += \
 ./Application/Src/audio.d \
 ./Application/Src/data.d \
 ./Application/Src/helper_functions.d \
+./Application/Src/layout.d \
 ./Application/Src/logic.d \
 ./Application/Src/logic_chain.d \
 ./Application/Src/logic_phrase.d \
@@ -45,7 +48,7 @@ Application/Src/%.o Application/Src/%.su Application/Src/%.cyclo: ../Application
 clean: clean-Application-2f-Src
 
 clean-Application-2f-Src:
-	-$(RM) ./Application/Src/app.cyclo ./Application/Src/app.d ./Application/Src/app.o ./Application/Src/app.su ./Application/Src/audio.cyclo ./Application/Src/audio.d ./Application/Src/audio.o ./Application/Src/audio.su ./Application/Src/data.cyclo ./Application/Src/data.d ./Application/Src/data.o ./Application/Src/data.su ./Application/Src/helper_functions.cyclo ./Application/Src/helper_functions.d ./Application/Src/helper_functions.o ./Application/Src/helper_functions.su ./Application/Src/logic.cyclo ./Application/Src/logic.d ./Application/Src/logic.o ./Application/Src/logic.su ./Application/Src/logic_chain.cyclo ./Application/Src/logic_chain.d ./Application/Src/logic_chain.o ./Application/Src/logic_chain.su ./Application/Src/logic_phrase.cyclo ./Application/Src/logic_phrase.d ./Application/Src/logic_phrase.o ./Application/Src/logic_phrase.su ./Application/Src/logic_song.cyclo ./Application/Src/logic_song.d ./Application/Src/logic_song.o ./Application/Src/logic_song.su ./Application/Src/video.cyclo ./Application/Src/video.d ./Application/Src/video.o ./Application/Src/video.su
+	-$(RM) ./Application/Src/app.cyclo ./Application/Src/app.d ./Application/Src/app.o ./Application/Src/app.su ./Application/Src/audio.cyclo ./Application/Src/audio.d ./Application/Src/audio.o ./Application/Src/audio.su ./Application/Src/data.cyclo ./Application/Src/data.d ./Application/Src/data.o ./Application/Src/data.su ./Application/Src/helper_functions.cyclo ./Application/Src/helper_functions.d ./Application/Src/helper_functions.o ./Application/Src/helper_functions.su ./Application/Src/layout.cyclo ./Application/Src/layout.d ./Application/Src/layout.o ./Application/Src/layout.su ./Application/Src/logic.cyclo ./Application/Src/logic.d ./Application/Src/logic.o ./Application/Src/logic.su ./Application/Src/logic_chain.cyclo ./Application/Src/logic_chain.d ./Application/Src/logic_chain.o ./Application/Src/logic_chain.su ./Application/Src/logic_phrase.cyclo ./Application/Src/logic_phrase.d ./Application/Src/logic_phrase.o ./Application/Src/logic_phrase.su ./Application/Src/logic_song.cyclo ./Application/Src/logic_song.d ./Application/Src/logic_song.o ./Application/Src/logic_song.su ./Application/Src/video.cyclo ./Application/Src/video.d ./Application/Src/video.o ./Application/Src/video.su
 
 .PHONY: clean-Application-2f-Src
 

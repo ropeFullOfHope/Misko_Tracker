@@ -96,13 +96,13 @@ void pattern_draw_editor(void)
 
 void pattern_draw_title_chain(void)
 {
-    const uint8_t title[7] = {'C', 'h', 'a', 'i', 'n', ' ', ' '};
+    const uint8_t TITLE[7] = {'C', 'h', 'a', 'i', 'n', ' ', ' '};
 
     for (int32_t i = 0; i < 7; i++)
-        LCD_draw(title[i], i + 1, 1, COLOR_NORMAL);
+        LCD_draw(TITLE[i], i + 1, 1, COLOR_NORMAL);
 
-    LCD_draw(hex_digit[selected_pattern / 0x10], 8, 1, COLOR_NORMAL);
-    LCD_draw(hex_digit[selected_pattern % 0x10], 9, 1, COLOR_NORMAL);
+    LCD_draw(HEX_DIGIT[selected_pattern / 0x10], 8, 1, COLOR_NORMAL);
+    LCD_draw(HEX_DIGIT[selected_pattern % 0x10], 9, 1, COLOR_NORMAL);
 
     for (int32_t i = 10; i < 32; i++)
         LCD_draw(' ', i, 1, COLOR_NORMAL);
@@ -117,13 +117,13 @@ void pattern_draw_title_phrase(void)
             LCD_draw(' ', i + 1, 2, COLOR_NORMAL);
     }
     else {
-        const uint8_t title[7] = {'P', 'h', 'r', 'a', 's', 'e', ' '};
+        const uint8_t TITLE[7] = {'P', 'h', 'r', 'a', 's', 'e', ' '};
 
         for (int32_t i = 0; i < 7; i++)
-            LCD_draw(title[i], i + 1, 2, COLOR_NORMAL);
+            LCD_draw(TITLE[i], i + 1, 2, COLOR_NORMAL);
 
-        LCD_draw(hex_digit[phrase / 0x10], 8, 1, COLOR_NORMAL);
-        LCD_draw(hex_digit[phrase % 0x10], 9, 1, COLOR_NORMAL);
+        LCD_draw(HEX_DIGIT[phrase / 0x10], 8, 1, COLOR_NORMAL);
+        LCD_draw(HEX_DIGIT[phrase % 0x10], 9, 1, COLOR_NORMAL);
 
         for (int32_t i = 10; i < 32; i++)
             LCD_draw(' ', i, 1, COLOR_NORMAL);
@@ -213,7 +213,7 @@ void pattern_draw_chain_row_numbers(void)
         else
             color = COLOR_NORMAL_FADE;
 
-        LCD_draw(hex_digit[i], 1, i + 5, color);
+        LCD_draw(HEX_DIGIT[i], 1, i + 5, color);
     }
 }
 
@@ -240,8 +240,8 @@ void pattern_draw_chain_data(void)
             LCD_draw('-', 4, i + 5, color_fade);
         }
         else {
-            LCD_draw(hex_digit[phrase / 0x10], 3, i + 5, color_normal);
-            LCD_draw(hex_digit[phrase % 0x10], 4, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[phrase / 0x10], 3, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[phrase % 0x10], 4, i + 5, color_normal);
         }
 
         if (transpose == 0x00) {
@@ -249,8 +249,8 @@ void pattern_draw_chain_data(void)
             LCD_draw('-', 7, i + 5, color_fade);
         }
         else {
-            LCD_draw(hex_digit[transpose / 0x10], 6, i + 5, color_normal);
-            LCD_draw(hex_digit[transpose % 0x10], 7, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[transpose / 0x10], 6, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[transpose % 0x10], 7, i + 5, color_normal);
         }
     }
 }
@@ -313,7 +313,7 @@ void pattern_draw_phrase_row_numbers(void)
         else
             color = COLOR_NORMAL_FADE;
 
-        LCD_draw(hex_digit[i], 10, i + 5, color);
+        LCD_draw(HEX_DIGIT[i], 10, i + 5, color);
     }
 }
 
@@ -351,9 +351,9 @@ void pattern_draw_phrase_data(void)
             LCD_draw('-', 14, i + 5, color_fade);
         }
         else {
-            LCD_draw(note_name[note][0], 12, i + 5, color_normal);
-            LCD_draw(note_name[note][1], 13, i + 5, color_normal);
-            LCD_draw(note_name[note][2], 14, i + 5, color_normal);
+            LCD_draw(NOTE_NAME[note][0], 12, i + 5, color_normal);
+            LCD_draw(NOTE_NAME[note][1], 13, i + 5, color_normal);
+            LCD_draw(NOTE_NAME[note][2], 14, i + 5, color_normal);
         }
 
         if (instrument == 0x00) {
@@ -361,15 +361,15 @@ void pattern_draw_phrase_data(void)
             LCD_draw('-', 17, i + 5, color_fade);
         }
         else {
-            LCD_draw(hex_digit[instrument / 0x10], 16, i + 5, color_normal);
-            LCD_draw(hex_digit[instrument % 0x10], 17, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[instrument / 0x10], 16, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[instrument % 0x10], 17, i + 5, color_normal);
         }
 
         if (volume == 0x00) {
             LCD_draw('-', 19, i + 5, color_fade);
         }
         else {
-            LCD_draw(hex_digit[volume % 0x10], 19, i + 5, color_normal);
+            LCD_draw(HEX_DIGIT[volume % 0x10], 19, i + 5, color_normal);
         }
 
         for (int32_t j = 0; j < COMMAND_COUNT; j++) {
@@ -380,8 +380,8 @@ void pattern_draw_phrase_data(void)
             }
             else {
                 LCD_draw('A', 4 * j + 21, i + 5, color_normal); // TODO: Add proper command labeling.
-                LCD_draw(hex_digit[parameter[j] / 0x10], 4 * j + 22, i + 5, color_fade);
-                LCD_draw(hex_digit[parameter[j] % 0x10], 4 * j + 23, i + 5, color_fade);
+                LCD_draw(HEX_DIGIT[parameter[j] / 0x10], 4 * j + 22, i + 5, color_fade);
+                LCD_draw(HEX_DIGIT[parameter[j] % 0x10], 4 * j + 23, i + 5, color_fade);
             }
         }
     }

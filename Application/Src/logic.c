@@ -15,23 +15,20 @@ static bool is_joystick_triggered = false;
 
 /* Finite State Machine definitions */
 typedef enum {
-    LOGIC_STATE_SONG_INIT,
-    LOGIC_STATE_SONG_MAIN,
-    LOGIC_STATE_CHAIN_INIT,
-    LOGIC_STATE_CHAIN_MAIN,
+    LOGIC_STATE_INIT,
+    LOGIC_STATE_SONG,
+    LOGIC_STATE_CHAIN,
     LOGIC_STATE_COUNT
 } logic_state_t;
 
-static logic_state_t logic_state_song_init(void);
-static logic_state_t logic_state_song_main(void);
-static logic_state_t logic_state_chain_init(void);
-static logic_state_t logic_state_chain_main(void);
+static logic_state_t logic_state_init(void);
+static logic_state_t logic_state_song(void);
+static logic_state_t logic_state_chain(void);
 
 static logic_state_t (*logic_state_table[LOGIC_STATE_COUNT]) (void) = {
-    [LOGIC_STATE_SONG_INIT]  = logic_state_song_init,
-    [LOGIC_STATE_SONG_MAIN]  = logic_state_song_main,
-    [LOGIC_STATE_CHAIN_INIT] = logic_state_chain_init,
-    [LOGIC_STATE_CHAIN_MAIN] = logic_state_chain_main
+    [LOGIC_STATE_INIT]  = logic_state_init,
+    [LOGIC_STATE_SONG]  = logic_state_song,
+    [LOGIC_STATE_CHAIN] = logic_state_chain
 };
 
 static logic_state_t current_logic_state;
@@ -80,16 +77,16 @@ void logic_joystick_auto_repeat(void)
     previous_joystick_position = current_joystick_position;
 }
 
-logic_state_t logic_state_song_init(void)
+logic_state_t logic_state_init(void)
 {
     song_init();
     draw_sidebar();
     draw_map();
 
-    return LOGIC_STATE_SONG_MAIN;
+    return LOGIC_STATE_SONG;
 }
 
-logic_state_t logic_state_song_main(void)
+logic_state_t logic_state_song(void)
 {
     if (is_button_held(BUTTON_RIGHT)) {
         if (is_joystick_triggered)
@@ -103,10 +100,16 @@ logic_state_t logic_state_song_main(void)
             song_delete_chain(); // Hold B + A
     }
     else if (is_button_held(BUTTON_UP)) {
-        if (is_joystick_triggered)
-            if (joystick_get_position() == JOYSTICK_POSITION_RIGHT)
-                if (song_get_selected_chain() != 0x00)
-                    return LOGIC_STATE_CHAIN_INIT; // Hold X + Right
+        if (is_joystick_triggered) {
+            if (joystick_get_position() == JOYSTICK_POSITION_RIGHT) {
+                if (song_get_selected_chain() != 0x00) {
+                    song_deinit(); // Hold X + Right
+                    chain_init(song_get_selected_chain());
+                    return LOGIC_STATE_CHAIN;
+                }
+            }
+        }
+
     }
     else if (is_button_held(BUTTON_LEFT)) {
 
@@ -126,17 +129,10 @@ logic_state_t logic_state_song_main(void)
             song_insert_chain();
     }
 
-    return LOGIC_STATE_SONG_MAIN;
+    return LOGIC_STATE_SONG;
 }
 
-logic_state_t logic_state_chain_init(void)
-{
-    chain_init(song_get_selected_chain());
-
-    return LOGIC_STATE_CHAIN_MAIN;
-}
-
-logic_state_t logic_state_chain_main(void)
+logic_state_t logic_state_chain(void)
 {
     if (is_button_held(BUTTON_RIGHT)) {
         if (is_joystick_triggered)
@@ -147,9 +143,14 @@ logic_state_t logic_state_chain_main(void)
             chain_delete_value();
     }
     else if (is_button_held(BUTTON_UP)) {
-        if (is_joystick_triggered)
-            if (joystick_get_position() == JOYSTICK_POSITION_LEFT)
-                return LOGIC_STATE_SONG_INIT; // Hold X + Left
+        if (is_joystick_triggered) {
+            if (joystick_get_position() == JOYSTICK_POSITION_LEFT) {
+                //chain_deinit();
+                song_init();
+                return LOGIC_STATE_SONG; // Hold X + Left
+            }
+        }
+
     }
     else if (is_button_held(BUTTON_LEFT)) {
         ;
@@ -162,7 +163,7 @@ logic_state_t logic_state_chain_main(void)
             chain_insert_value();
     }
 
-    return LOGIC_STATE_CHAIN_MAIN;
+    return LOGIC_STATE_CHAIN;
 }
 
 void draw_sidebar(void)

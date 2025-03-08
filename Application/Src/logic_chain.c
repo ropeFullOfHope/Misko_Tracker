@@ -1,17 +1,9 @@
 #include "logic_chain.h"
 #include <stdbool.h>
 #include "data.h"
+#include "layout.h"
 #include "lcd.h"
 #include "helper_functions.h"
-
-typedef struct {
-    enum {
-        CHAIN_COLUMN_PHRASE,
-        CHAIN_COLUMN_TRANSPOSE,
-        CHAIN_COLUMN_COUNT
-    } x;
-    int32_t y;
-} cursor_t;
 
 static void chain_draw_title(void);
 static void chain_draw_editor(void);
@@ -35,6 +27,15 @@ static void chain_highlight_row_number(void);
 static void chain_unhighlight_row_number(void);
 static void chain_update_value(void);
 
+typedef struct {
+    enum {
+        CHAIN_COLUMN_PHRASE,
+        CHAIN_COLUMN_TRANSPOSE,
+        CHAIN_COLUMN_COUNT
+    } x;
+    int32_t y;
+} cursor_t;
+
 static cursor_t cursor = {0};
 static uint8_t selected_chain = 0x01;
 static uint8_t previewed_phrase = 0x00;
@@ -55,13 +56,13 @@ void chain_init(uint8_t chain)
 
 void chain_draw_title(void)
 {
-    const uint8_t title[6] = {'C', 'h', 'a', 'i', 'n', ' '};
+    const uint8_t TITLE[6] = {'C', 'h', 'a', 'i', 'n', ' '};
 
     for (int32_t i = 0; i < 6; i++)
-        LCD_draw(title[i], i + 1, 1, COLOR_NORMAL);
+        LCD_draw(TITLE[i], i + 1, 1, COLOR_NORMAL);
 
-    LCD_draw(hex_digit[selected_chain / 0x10], 7, 1, COLOR_NORMAL);
-    LCD_draw(hex_digit[selected_chain % 0x10], 8, 1, COLOR_NORMAL);
+    LCD_draw(HEX_DIGIT[selected_chain / 0x10], 7, 1, COLOR_NORMAL);
+    LCD_draw(HEX_DIGIT[selected_chain % 0x10], 8, 1, COLOR_NORMAL);
 
     for (int32_t i = 9; i <= 32; i++)
         LCD_draw(' ', i, 1, COLOR_NORMAL);
@@ -139,7 +140,7 @@ void chain_draw_chain_row_numbers(void)
         else
             color = COLOR_NORMAL_FADE;
 
-        LCD_draw(hex_digit[i], 1, i + 4, color);
+        LCD_draw(HEX_DIGIT[i], 1, i + 4, color);
     }
 }
 
@@ -182,8 +183,8 @@ void chain_draw_chain_data(void)
             LCD_draw('-', 4, i + 4, color_fade);
         }
         else {
-            LCD_draw(hex_digit[phrase / 0x10], 3, i + 4, color_normal);
-            LCD_draw(hex_digit[phrase % 0x10], 4, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[phrase / 0x10], 3, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[phrase % 0x10], 4, i + 4, color_normal);
         }
 
         if (transpose == 0x00) {
@@ -195,8 +196,8 @@ void chain_draw_chain_data(void)
             LCD_draw('0', 7, i + 4, color_fade);
         }
         else {
-            LCD_draw(hex_digit[transpose / 0x10], 6, i + 4, color_normal);
-            LCD_draw(hex_digit[transpose % 0x10], 7, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[transpose / 0x10], 6, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[transpose % 0x10], 7, i + 4, color_normal);
         }
     }
 }
@@ -239,7 +240,7 @@ void chain_draw_phrase_row_numbers(void)
         else
             color = COLOR_NORMAL_FADE;
 
-        LCD_draw(hex_digit[i], 10, i + 4, color);
+        LCD_draw(HEX_DIGIT[i], 10, i + 4, color);
     }
 }
 
@@ -287,9 +288,9 @@ void chain_draw_phrase_data(void)
             LCD_draw('-', 14, i + 4, color_fade);
         }
         else {
-            LCD_draw(note_name[note][0], 12, i + 4, color_normal);
-            LCD_draw(note_name[note][1], 13, i + 4, color_normal);
-            LCD_draw(note_name[note][2], 14, i + 4, color_normal);
+            LCD_draw(NOTE_NAME[note][0], 12, i + 4, color_normal);
+            LCD_draw(NOTE_NAME[note][1], 13, i + 4, color_normal);
+            LCD_draw(NOTE_NAME[note][2], 14, i + 4, color_normal);
         }
 
         if (instrument == 0x00) {
@@ -297,8 +298,8 @@ void chain_draw_phrase_data(void)
             LCD_draw('-', 17, i + 4, color_fade);
         }
         else {
-            LCD_draw(hex_digit[instrument / 0x10], 16, i + 4, color_normal);
-            LCD_draw(hex_digit[instrument % 0x10], 17, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[instrument / 0x10], 16, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[instrument % 0x10], 17, i + 4, color_normal);
         }
 
         if (volume == 0x00) {
@@ -306,8 +307,8 @@ void chain_draw_phrase_data(void)
             LCD_draw('-', 20, i + 4, color_fade);
         }
         else {
-            LCD_draw(hex_digit[volume / 0x10], 19, i + 4, color_normal);
-            LCD_draw(hex_digit[volume % 0x10], 20, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[volume / 0x10], 19, i + 4, color_normal);
+            LCD_draw(HEX_DIGIT[volume % 0x10], 20, i + 4, color_normal);
         }
     }
 }
@@ -466,8 +467,8 @@ void chain_update_value(void)
                 LCD_change_tile('-', 4, cursor.y + 4);
             }
             else {
-                LCD_change_tile(hex_digit[phrase / 0x10], 3, cursor.y + 4);
-                LCD_change_tile(hex_digit[phrase % 0x10], 4, cursor.y + 4);
+                LCD_change_tile(HEX_DIGIT[phrase / 0x10], 3, cursor.y + 4);
+                LCD_change_tile(HEX_DIGIT[phrase % 0x10], 4, cursor.y + 4);
             }
 
             break;
@@ -480,8 +481,8 @@ void chain_update_value(void)
                 LCD_change_tile('-', 7, cursor.y + 4);
             }
             else {
-                LCD_change_tile(hex_digit[transpose / 0x10], 6, cursor.y + 4);
-                LCD_change_tile(hex_digit[transpose % 0x10], 7, cursor.y + 4);
+                LCD_change_tile(HEX_DIGIT[transpose / 0x10], 6, cursor.y + 4);
+                LCD_change_tile(HEX_DIGIT[transpose % 0x10], 7, cursor.y + 4);
             }
 
             break;
@@ -537,6 +538,8 @@ void chain_move_cursor(joystick_position_t joystick_position)
             chain_unhighlight_row_number();
             cursor.y = new_cursor.y;
             chain_highlight_row_number();
+
+            chain_update_phrase_preview();
         }
 
         if (new_cursor.x != cursor.x) {

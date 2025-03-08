@@ -30,12 +30,12 @@ static project_settings_t project_settings = {
     .joystick_delay_repeat = 2
 };
 
-const uint8_t hex_digit[16] = {
+const uint8_t HEX_DIGIT[16] = {
     '0', '1', '2', '3', '4', '5', '6', '7',
     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 };
 
-const uint8_t note_name[9 * 12][3] = {
+const uint8_t NOTE_NAME[9 * 12][3] = {
     "C-0", "C#0", "D-0", "D#0", "E-0", "F-0", "F#0", "G-0", "G#0", "A-0", "A#0", "B-0",
     "C-1", "C#1", "D-1", "D#1", "E-1", "F-1", "F#1", "G-1", "G#1", "A-1", "A#1", "B-1",
     "C-2", "C#2", "D-2", "D#2", "E-2", "F-2", "F#2", "G-2", "G#2", "A-2", "A#2", "B-2",

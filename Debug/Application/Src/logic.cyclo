@@ -1,6 +1,5 @@
-../Application/Src/logic.c:139:15:logic_state_chain_main	11
-../Application/Src/logic.c:132:15:logic_state_chain_init	1
-../Application/Src/logic.c:92:15:logic_state_song_main	13
-../Application/Src/logic.c:83:15:logic_state_song_init	1
-../Application/Src/logic.c:57:6:logic_joystick_auto_repeat	4
-../Application/Src/logic.c:40:6:logic_update	2
+../Application/Src/logic.c:80:15:logic_state_init	1
+../Application/Src/logic.c:135:15:logic_state_chain	11
+../Application/Src/logic.c:89:15:logic_state_song	13
+../Application/Src/logic.c:54:6:logic_joystick_auto_repeat	4
+../Application/Src/logic.c:37:6:logic_update	2
