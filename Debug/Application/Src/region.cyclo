@@ -1,4 +1,4 @@
-../Application/Src/region.c:13:6:region_draw	5
-../Application/Src/region.c:22:6:region_change_tile	5
-../Application/Src/region.c:32:6:region_change_color	5
-../Application/Src/region.c:42:6:region_fill	3
+../Application/Src/region.c:17:6:region_draw	5
+../Application/Src/region.c:26:6:region_change_symbol	5
+../Application/Src/region.c:36:6:region_change_color	5
+../Application/Src/region.c:46:6:region_fill	3

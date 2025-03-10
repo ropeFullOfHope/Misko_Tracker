@@ -1,0 +1,17 @@
+../Application/Src/logic_phrase.c:63:6:phrase_draw_title	2
+../Application/Src/logic_phrase.c:89:6:phrase_draw_editor_phrase_labels	2
+../Application/Src/logic_phrase.c:112:6:phrase_draw_editor_phrase_row_numbers	3
+../Application/Src/logic_phrase.c:128:6:phrase_draw_editor_phrase_spacing	3
+../Application/Src/logic_phrase.c:143:6:phrase_draw_editor_phrase_data	9
+../Application/Src/logic_phrase.c:76:6:phrase_draw_editor_phrase	1
+../Application/Src/logic_phrase.c:241:6:phrase_highlight_cursor	1
+../Application/Src/logic_phrase.c:220:6:phrase_clear_title	1
+../Application/Src/logic_phrase.c:227:6:phrase_clear_editor_phrase	1
+../Application/Src/logic_phrase.c:234:6:phrase_clear_editor_command_description	1
+../Application/Src/logic_phrase.c:45:6:phrase_init	1
+../Application/Src/logic_phrase.c:56:6:phrase_deinit	1
+../Application/Src/logic_phrase.c:340:6:phrase_move_cursor	1
+../Application/Src/logic_phrase.c:345:6:phrase_insert_value	1
+../Application/Src/logic_phrase.c:350:6:phrase_delete_value	1
+../Application/Src/logic_phrase.c:355:6:phrase_change_value	1
+../Application/Src/logic_phrase.c:360:9:phrase_get_selected_instrument	1

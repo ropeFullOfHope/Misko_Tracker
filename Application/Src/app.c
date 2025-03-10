@@ -34,7 +34,7 @@ void app_init(void)
 
     for (uint32_t x = 0; x < COLUMN_COUNT; x++) {
         for (uint32_t y = 0; y < ROW_COUNT; y++) {
-            LCD_draw(' ', x, y, COLOR_NORMAL);
+            LCD_draw(' ', COLOR_NORMAL, x, y);
         }
     }
     LCD_update_screen();

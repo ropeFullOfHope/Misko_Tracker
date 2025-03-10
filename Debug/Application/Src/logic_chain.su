@@ -1,10 +1,10 @@
 ../Application/Src/logic_chain.c:64:6:chain_draw_title	40	static
 ../Application/Src/logic_chain.c:102:6:chain_draw_editor_chain_labels	24	static
 ../Application/Src/logic_chain.c:113:6:chain_draw_editor_chain_row_numbers	16	static
-../Application/Src/logic_chain.c:129:6:chain_draw_editor_chain_spacing	32	static
+../Application/Src/logic_chain.c:129:6:chain_draw_editor_chain_spacing	24	static
 ../Application/Src/logic_chain.c:183:6:chain_draw_editor_phrase_preview_labels	24	static
 ../Application/Src/logic_chain.c:198:6:chain_draw_editor_phrase_preview_row_numbers	16	static
-../Application/Src/logic_chain.c:214:6:chain_draw_editor_phrase_preview_spacing	32	static
+../Application/Src/logic_chain.c:214:6:chain_draw_editor_phrase_preview_spacing	24	static
 ../Application/Src/logic_chain.c:139:6:chain_draw_editor_chain_data	48	static
 ../Application/Src/logic_chain.c:77:6:chain_draw_editor_chain	8	static
 ../Application/Src/logic_chain.c:293:6:chain_clear_editor_phrase_preview	8	static
@@ -26,3 +26,4 @@
 ../Application/Src/logic_chain.c:527:6:chain_insert_value	8	static
 ../Application/Src/logic_chain.c:562:6:chain_delete_value	8	static
 ../Application/Src/logic_chain.c:599:6:chain_change_value	16	static
+../Application/Src/logic_chain.c:678:9:chain_get_selected_phrase	8	static

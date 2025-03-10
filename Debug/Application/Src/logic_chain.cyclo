@@ -26,3 +26,4 @@
 ../Application/Src/logic_chain.c:527:6:chain_insert_value	5
 ../Application/Src/logic_chain.c:562:6:chain_delete_value	5
 ../Application/Src/logic_chain.c:599:6:chain_change_value	15
+../Application/Src/logic_chain.c:678:9:chain_get_selected_phrase	1

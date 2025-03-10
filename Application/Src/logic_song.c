@@ -52,7 +52,7 @@ void song_draw_title(void)
     const int32_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
 
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
-        region_draw(REGION, TITLE[i], i, 0, COLOR_NORMAL);
+        region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
 }
 
 void song_draw_editor_song(void)
@@ -68,8 +68,8 @@ void song_draw_editor_song_channel_labels(void)
     const region_t *REGION = &REGION_SONG_EDITOR_SONG;
 
     for (int32_t i = 0; i < CHANNEL_COUNT; i++) {
-        region_draw(REGION, (uint8_t) i + '1', i * 3 + 3, 0, COLOR_DARK_FADE);
-        region_draw(REGION, (uint8_t) ' ', i * 3 + 4, 0, COLOR_DARK_FADE);
+        region_draw(REGION, (uint8_t) i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
+        region_draw(REGION, (uint8_t) ' ', COLOR_DARK_FADE, i * 3 + 4, 0);
     }
 }
 
@@ -88,12 +88,12 @@ void song_draw_editor_song_row_numbers(void)
             color = COLOR_NORMAL_FADE;
 
         // Left side
-        region_draw(REGION, HEX_DIGIT[row / 0x10], 0, i + 1, color);
-        region_draw(REGION, HEX_DIGIT[row % 0x10], 1, i + 1, color);
+        region_draw(REGION, HEX_DIGIT[row / 0x10], color, 0, i + 1);
+        region_draw(REGION, HEX_DIGIT[row % 0x10], color, 1, i + 1);
 
         // Right side
-        region_draw(REGION, HEX_DIGIT[row / 0x10], CHANNEL_COUNT * 3 + 3, i + 1, color);
-        region_draw(REGION, HEX_DIGIT[row % 0x10], CHANNEL_COUNT * 3 + 4, i + 1, color);
+        region_draw(REGION, HEX_DIGIT[row / 0x10], color, CHANNEL_COUNT * 3 + 3, i + 1);
+        region_draw(REGION, HEX_DIGIT[row % 0x10], color, CHANNEL_COUNT * 3 + 4, i + 1);
     }
 }
 
@@ -112,7 +112,7 @@ void song_draw_editor_song_spacing(void)
             color = COLOR_NORMAL;
 
         for (int32_t x = 0; x < CHANNEL_COUNT + 1; x++)
-            region_draw(REGION, ' ', x * 3 + 2, y + 1, color);
+            region_draw(REGION, ' ', color, x * 3 + 2, y + 1);
     }
 }
 
@@ -142,12 +142,12 @@ void song_draw_editor_song_data(void)
             }
 
             if (chain == 0x00) {
-                region_draw(REGION, '-', x * 3 + 3, y + 1, color);
-                region_draw(REGION, '-', x * 3 + 4, y + 1, color);
+                region_draw(REGION, '-', color, x * 3 + 3, y + 1);
+                region_draw(REGION, '-', color, x * 3 + 4, y + 1);
             }
             else {
-                region_draw(REGION, HEX_DIGIT[chain / 0x10], x * 3 + 3, y + 1, color);
-                region_draw(REGION, HEX_DIGIT[chain % 0x10], x * 3 + 4, y + 1, color);
+                region_draw(REGION, HEX_DIGIT[chain / 0x10], color, x * 3 + 3, y + 1);
+                region_draw(REGION, HEX_DIGIT[chain % 0x10], color, x * 3 + 4, y + 1);
             }
         }
     }
@@ -183,26 +183,13 @@ void song_unhighlight_cursor(void)
     const int32_t RELATIVE_ROW = cursor.y - scroll;
     const uint8_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
 
-    color_t color_normal;
-    color_t color_fade;
+    const color_t COLOR_DEFAULT = cursor.y % 4 == 0 ? COLOR_DARK : COLOR_NORMAL;
+    const color_t COLOR_FADE    = cursor.y % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE;
 
-    if (cursor.y % 4 == 0) {
-        color_normal = COLOR_DARK;
-        color_fade = COLOR_DARK_FADE;
-    }
-    else {
-        color_normal = COLOR_NORMAL;
-        color_fade = COLOR_NORMAL_FADE;
-    }
+    const color_t COLOR = SELECTED_CHAIN == 0x00 ? COLOR_FADE : COLOR_DEFAULT;
 
-    if (SELECTED_CHAIN == 0x00) {
-        region_change_color(REGION, color_fade, cursor.x * 3 + 3, RELATIVE_ROW + 1);
-        region_change_color(REGION, color_fade, cursor.x * 3 + 4, RELATIVE_ROW + 1);
-    }
-    else {
-        region_change_color(REGION, color_normal, cursor.x * 3 + 3, RELATIVE_ROW + 1);
-        region_change_color(REGION, color_normal, cursor.x * 3 + 4, RELATIVE_ROW + 1);
-    }
+    region_change_color(REGION, COLOR, cursor.x * 3 + 3, RELATIVE_ROW + 1);
+    region_change_color(REGION, COLOR, cursor.x * 3 + 4, RELATIVE_ROW + 1);
 }
 
 void song_highlight_channel_label(void)
@@ -268,12 +255,12 @@ void song_update_chain(void)
     const uint8_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
 
     if (SELECTED_CHAIN == 0x00) {
-        region_change_tile(REGION, '-', cursor.x * 3 + 3, RELATIVE_ROW + 1);
-        region_change_tile(REGION, '-', cursor.x * 3 + 4, RELATIVE_ROW + 1);
+        region_change_symbol(REGION, '-', cursor.x * 3 + 3, RELATIVE_ROW + 1);
+        region_change_symbol(REGION, '-', cursor.x * 3 + 4, RELATIVE_ROW + 1);
     }
     else {
-        region_change_tile(REGION, HEX_DIGIT[SELECTED_CHAIN / 0x10], cursor.x * 3 + 3, RELATIVE_ROW + 1);
-        region_change_tile(REGION, HEX_DIGIT[SELECTED_CHAIN % 0x10], cursor.x * 3 + 4, RELATIVE_ROW + 1);
+        region_change_symbol(REGION, HEX_DIGIT[SELECTED_CHAIN / 0x10], cursor.x * 3 + 3, RELATIVE_ROW + 1);
+        region_change_symbol(REGION, HEX_DIGIT[SELECTED_CHAIN % 0x10], cursor.x * 3 + 4, RELATIVE_ROW + 1);
     }
 }
 

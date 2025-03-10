@@ -7,10 +7,9 @@
 #define QUEUE_SIZE (ROW_COUNT * COLUMN_COUNT)
 
 typedef struct {
-    uint8_t tile;
-    color_t color;
-    uint8_t dirty;
-} tile_t;
+    tile_t tile[ROW_COUNT][COLUMN_COUNT];
+    uint8_t dirty[ROW_COUNT][COLUMN_COUNT];
+} screen_t;
 
 typedef struct {
     uint8_t x;
@@ -20,7 +19,7 @@ typedef struct {
 static void LCD_enqueue_tile(coordinates_t coordinates);
 static coordinates_t LCD_dequeue_tile(void);
 
-static tile_t screen[ROW_COUNT][COLUMN_COUNT] = {0};
+static screen_t screen = {0};
 static coordinates_t queue[QUEUE_SIZE] = {0};
 static uint32_t queued_tiles = 0;
 static uint32_t queue_read_head = 0;
@@ -47,36 +46,36 @@ void LCD_init(void)
     backlight_set_brightness(50);
 }
 
-void LCD_draw(uint8_t tile, uint32_t x, uint32_t y, color_t color)
+void LCD_draw(uint8_t symbol, color_t color, uint32_t x, uint32_t y)
 {
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
-    if (tile == screen[y][x].tile && color == screen[y][x].color)
+    if (symbol == screen.tile[y][x].symbol && color == screen.tile[y][x].color)
         return;
 
-    screen[y][x].tile  = tile;
-    screen[y][x].color = color;
+    screen.tile[y][x].symbol = symbol;
+    screen.tile[y][x].color = color;
 
-    if (screen[y][x].dirty == 0) {
-        screen[y][x].dirty = 1;
+    if (screen.dirty[y][x] == 0) {
+        screen.dirty[y][x] = 1;
 
         LCD_enqueue_tile((coordinates_t){x, y});
     }
 }
 
-void LCD_change_tile(uint8_t tile, uint32_t x, uint32_t y)
+void LCD_change_symbol(uint8_t symbol, uint32_t x, uint32_t y)
 {
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
-    if (tile == screen[y][x].tile)
+    if (symbol == screen.tile[y][x].symbol)
         return;
 
-    screen[y][x].tile = tile;
+    screen.tile[y][x].symbol = symbol;
 
-    if (screen[y][x].dirty == 0) {
-        screen[y][x].dirty = 1;
+    if (screen.dirty[y][x] == 0) {
+        screen.dirty[y][x] = 1;
 
         LCD_enqueue_tile((coordinates_t){x, y});
     }
@@ -87,13 +86,13 @@ void LCD_change_color(color_t color, uint32_t x, uint32_t y)
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
-    if (color == screen[y][x].color)
+    if (color == screen.tile[y][x].color)
         return;
 
-    screen[y][x].color = color;
+    screen.tile[y][x].color = color;
 
-    if (screen[y][x].dirty == 0) {
-        screen[y][x].dirty = 1;
+    if (screen.dirty[y][x] == 0) {
+        screen.dirty[y][x] = 1;
 
         LCD_enqueue_tile((coordinates_t){x, y});
     }
@@ -120,7 +119,7 @@ void LCD_update_tile(uint32_t x, uint32_t y)
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
-    if (screen[y][x].dirty == 0)
+    if (screen.dirty[y][x] == 0)
         return;
 
     ILI9341_column_address_set(x * 8, x * 8 + 7);
@@ -129,14 +128,14 @@ void LCD_update_tile(uint32_t x, uint32_t y)
 
     while (LCD_is_DMA_ready() == 0);
 
-    ILI9341_send_data_DMA((uint16_t*) tileset[screen[y][x].color][screen[y][x].tile], 8 * 8);
+    ILI9341_send_data_DMA((uint16_t*) tileset[screen.tile[y][x].color][screen.tile[y][x].symbol], 8 * 8);
 
-    screen[y][x].dirty = 0;
+    screen.dirty[y][x] = 0;
 }
 
 uint32_t LCD_is_DMA_ready(void)
 {
-    return ILI9341_is_DMA_ready();
+    return ILI9341_is_DMA_ready() ? true : false;
 }
 
 void LCD_enqueue_tile(coordinates_t coordinates)

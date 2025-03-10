@@ -1,5 +1,9 @@
-../Application/Src/logic.c:80:15:logic_state_init	8	static
-../Application/Src/logic.c:135:15:logic_state_chain	8	static
-../Application/Src/logic.c:89:15:logic_state_song	8	static
-../Application/Src/logic.c:54:6:logic_joystick_auto_repeat	8	static
-../Application/Src/logic.c:37:6:logic_update	8	static
+../Application/Src/logic.c:371:15:logic_state_instrument	0	static
+../Application/Src/logic.c:376:15:logic_state_project	0	static
+../Application/Src/logic.c:381:15:logic_state_groove	0	static
+../Application/Src/logic.c:278:15:logic_state_phrase	8	static
+../Application/Src/logic.c:93:15:logic_state_init	8	static
+../Application/Src/logic.c:190:15:logic_state_chain	16	static
+../Application/Src/logic.c:102:15:logic_state_song	8	static
+../Application/Src/logic.c:67:6:logic_joystick_auto_repeat	8	static
+../Application/Src/logic.c:50:6:logic_update	8	static

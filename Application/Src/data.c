@@ -9,8 +9,8 @@ typedef struct {
     uint8_t note[PHRASE_ROW_COUNT];
     uint8_t instrument[PHRASE_ROW_COUNT];
     uint8_t volume[PHRASE_ROW_COUNT];
-    uint8_t command[PHRASE_ROW_COUNT][COMMAND_COUNT];
-    uint8_t parameter[PHRASE_ROW_COUNT][COMMAND_COUNT];
+    uint8_t command[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
+    uint8_t parameter[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
 } phrase_t;
 
 typedef struct {
@@ -35,7 +35,7 @@ const uint8_t HEX_DIGIT[16] = {
     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 };
 
-const uint8_t NOTE_NAME[9 * 12][3] = {
+const uint8_t NOTE_NAME[NOTE_COUNT][3] = {
     "C-0", "C#0", "D-0", "D#0", "E-0", "F-0", "F#0", "G-0", "G#0", "A-0", "A#0", "B-0",
     "C-1", "C#1", "D-1", "D#1", "E-1", "F-1", "F#1", "G-1", "G#1", "A-1", "A#1", "B-1",
     "C-2", "C#2", "D-2", "D#2", "E-2", "F-2", "F#2", "G-2", "G#2", "A-2", "A#2", "B-2",

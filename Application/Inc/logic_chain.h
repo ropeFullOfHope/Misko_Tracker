@@ -10,5 +10,6 @@ void chain_move_cursor(joystick_position_t joystick_position);
 void chain_insert_value(void);
 void chain_delete_value(void);
 void chain_change_value(joystick_position_t joystick_position);
+uint8_t chain_get_selected_phrase(void);
 
 #endif /* INC_LOGIC_CHAIN_H_ */

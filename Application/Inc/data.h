@@ -2,6 +2,7 @@
 #define INC_DATA_H_
 
 #include <stdint.h>
+#include "data_commands.h"
 
 #define ENGINE_TICK_RATE 60
 
@@ -11,8 +12,10 @@
 #define CHAIN_ROW_COUNT  16
 #define PHRASE_COUNT     255
 #define PHRASE_ROW_COUNT 16
-#define COMMAND_COUNT    3
 #define INSTRUMENT_COUNT 127
+#define COMMANDS_PER_ROW 3
+
+#define NOTE_COUNT (9 * 12)
 
 extern const uint8_t HEX_DIGIT[16];
 extern const uint8_t NOTE_NAME[9 * 12][3];

@@ -68,10 +68,10 @@ void chain_draw_title(void)
     const uint8_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
 
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
-        region_draw(REGION, TITLE[i], i, 0, COLOR_NORMAL);
+        region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
 
-    region_draw(REGION, HEX_DIGIT[selected_chain / 0x10], TITLE_LENGTH + 1, 0, COLOR_NORMAL);
-    region_draw(REGION, HEX_DIGIT[selected_chain % 0x10], TITLE_LENGTH + 2, 0, COLOR_NORMAL);
+    region_draw(REGION, HEX_DIGIT[selected_chain / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
+    region_draw(REGION, HEX_DIGIT[selected_chain % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
 }
 
 void chain_draw_editor_chain(void)
@@ -103,11 +103,11 @@ void chain_draw_editor_chain_labels(void)
 {
     const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
-    region_draw(REGION, 'P', 2, 0, COLOR_DARK_FADE);
-    region_draw(REGION, ' ', 3, 0, COLOR_DARK_FADE);
+    region_draw(REGION, 'P', COLOR_DARK_FADE, 2, 0);
+    region_draw(REGION, ' ', COLOR_DARK_FADE, 3, 0);
 
-    region_draw(REGION, 'T', 5, 0, COLOR_DARK_FADE);
-    region_draw(REGION, ' ', 6, 0, COLOR_DARK_FADE);
+    region_draw(REGION, 'T', COLOR_DARK_FADE, 5, 0);
+    region_draw(REGION, ' ', COLOR_DARK_FADE, 6, 0);
 }
 
 void chain_draw_editor_chain_row_numbers(void)
@@ -122,7 +122,7 @@ void chain_draw_editor_chain_row_numbers(void)
         else
             color = COLOR_NORMAL_FADE;
 
-        region_draw(REGION, HEX_DIGIT[i], 0, i + 1, color);
+        region_draw(REGION, HEX_DIGIT[i], color, 0, i + 1);
     }
 }
 
@@ -131,8 +131,8 @@ void chain_draw_editor_chain_spacing(void)
     const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     for (int32_t i = 0; i < 4; i++) {
-        region_draw(REGION, ' ', 1, i * 4 + 1, COLOR_DARK);
-        region_draw(REGION, ' ', 4, i * 4 + 1, COLOR_DARK);
+        region_draw(REGION, ' ', COLOR_DARK, 1, i * 4 + 1);
+        region_draw(REGION, ' ', COLOR_DARK, 4, i * 4 + 1);
     }
 }
 
@@ -141,7 +141,7 @@ void chain_draw_editor_chain_data(void)
     const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     for (int32_t i = 0; i < 16; i++) {
-        const uint8_t PHRASE = data_get_chain_phrase(selected_chain, i);
+        const uint8_t PHRASE    = data_get_chain_phrase(selected_chain, i);
         const uint8_t TRANSPOSE = data_get_chain_transpose(selected_chain, i);
 
         color_t color_normal;
@@ -157,25 +157,25 @@ void chain_draw_editor_chain_data(void)
         }
 
         if (PHRASE == 0x00) {
-            region_draw(REGION, '-', 2, i + 1, color_fade);
-            region_draw(REGION, '-', 3, i + 1, color_fade);
+            region_draw(REGION, '-', color_fade, 2, i + 1);
+            region_draw(REGION, '-', color_fade, 3, i + 1);
         }
         else {
-            region_draw(REGION, HEX_DIGIT[PHRASE / 0x10], 2, i + 1, color_normal);
-            region_draw(REGION, HEX_DIGIT[PHRASE % 0x10], 3, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[PHRASE / 0x10], color_normal, 2, i + 1);
+            region_draw(REGION, HEX_DIGIT[PHRASE % 0x10], color_normal, 3, i + 1);
         }
 
         if (TRANSPOSE == 0x00) {
-            region_draw(REGION, '-', 5, i + 1, color_fade);
-            region_draw(REGION, '-', 6, i + 1, color_fade);
+            region_draw(REGION, '-', color_fade, 5, i + 1);
+            region_draw(REGION, '-', color_fade, 6, i + 1);
         }
         else if (TRANSPOSE == 0x80) {
-            region_draw(REGION, '8', 5, i + 1, color_fade);
-            region_draw(REGION, '0', 6, i + 1, color_fade);
+            region_draw(REGION, '8', color_fade, 5, i + 1);
+            region_draw(REGION, '0', color_fade, 6, i + 1);
         }
         else {
-            region_draw(REGION, HEX_DIGIT[TRANSPOSE / 0x10], 5, i + 1, color_normal);
-            region_draw(REGION, HEX_DIGIT[TRANSPOSE % 0x10], 6, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[TRANSPOSE / 0x10], color_normal, 5, i + 1);
+            region_draw(REGION, HEX_DIGIT[TRANSPOSE % 0x10], color_normal, 6, i + 1);
         }
     }
 }
@@ -184,15 +184,15 @@ void chain_draw_editor_phrase_preview_labels(void)
 {
     const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-    region_draw(REGION, 'N',  2, 0, COLOR_DARK_FADE);
-    region_draw(REGION, ' ',  3, 0, COLOR_DARK_FADE);
-    region_draw(REGION, ' ',  4, 0, COLOR_DARK_FADE);
+    region_draw(REGION, 'N', COLOR_DARK_FADE,  2, 0);
+    region_draw(REGION, ' ', COLOR_DARK_FADE,  3, 0);
+    region_draw(REGION, ' ', COLOR_DARK_FADE,  4, 0);
 
-    region_draw(REGION, 'I',  6, 0, COLOR_DARK_FADE);
-    region_draw(REGION, ' ',  7, 0, COLOR_DARK_FADE);
+    region_draw(REGION, 'I', COLOR_DARK_FADE,  6, 0);
+    region_draw(REGION, ' ', COLOR_DARK_FADE,  7, 0);
 
-    region_draw(REGION, 'V',  9, 0, COLOR_DARK_FADE);
-    region_draw(REGION, ' ', 10, 0, COLOR_DARK_FADE);
+    region_draw(REGION, 'V', COLOR_DARK_FADE,  9, 0);
+    region_draw(REGION, ' ', COLOR_DARK_FADE, 10, 0);
 }
 
 void chain_draw_editor_phrase_preview_row_numbers(void)
@@ -207,7 +207,7 @@ void chain_draw_editor_phrase_preview_row_numbers(void)
         else
             color = COLOR_NORMAL_FADE;
 
-        region_draw(REGION, HEX_DIGIT[i], 0, i + 1, color);
+        region_draw(REGION, HEX_DIGIT[i], color, 0, i + 1);
     }
 }
 
@@ -216,9 +216,9 @@ void chain_draw_editor_phrase_preview_spacing(void)
     const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
     for (int32_t i = 0; i < 4; i++) {
-        region_draw(REGION, ' ', 1, i * 4 + 1, COLOR_DARK);
-        region_draw(REGION, ' ', 5, i * 4 + 1, COLOR_DARK);
-        region_draw(REGION, ' ', 8, i * 4 + 1, COLOR_DARK);
+        region_draw(REGION, ' ', COLOR_DARK, 1, i * 4 + 1);
+        region_draw(REGION, ' ', COLOR_DARK, 5, i * 4 + 1);
+        region_draw(REGION, ' ', COLOR_DARK, 8, i * 4 + 1);
     }
 }
 
@@ -246,32 +246,32 @@ void chain_draw_editor_phrase_preview_data(void)
         }
 
         if (NOTE == 0x00) {
-            region_draw(REGION, '-', 2, i + 1, color_fade);
-            region_draw(REGION, '-', 3, i + 1, color_fade);
-            region_draw(REGION, '-', 4, i + 1, color_fade);
+            region_draw(REGION, '-', color_fade, 2, i + 1);
+            region_draw(REGION, '-', color_fade, 3, i + 1);
+            region_draw(REGION, '-', color_fade, 4, i + 1);
         }
         else {
-            region_draw(REGION, NOTE_NAME[NOTE][0], 2, i + 1, color_normal);
-            region_draw(REGION, NOTE_NAME[NOTE][1], 3, i + 1, color_normal);
-            region_draw(REGION, NOTE_NAME[NOTE][2], 4, i + 1, color_normal);
+            region_draw(REGION, NOTE_NAME[NOTE][0], color_normal, 2, i + 1);
+            region_draw(REGION, NOTE_NAME[NOTE][1], color_normal, 3, i + 1);
+            region_draw(REGION, NOTE_NAME[NOTE][2], color_normal, 4, i + 1);
         }
 
         if (INSTRUMENT == 0x00) {
-            region_draw(REGION, '-', 6, i + 1, color_fade);
-            region_draw(REGION, '-', 7, i + 1, color_fade);
+            region_draw(REGION, '-', color_fade, 6, i + 1);
+            region_draw(REGION, '-', color_fade, 7, i + 1);
         }
         else {
-            region_draw(REGION, HEX_DIGIT[INSTRUMENT / 0x10], 6, i + 1, color_normal);
-            region_draw(REGION, HEX_DIGIT[INSTRUMENT % 0x10], 7, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[INSTRUMENT / 0x10], color_normal, 6, i + 1);
+            region_draw(REGION, HEX_DIGIT[INSTRUMENT % 0x10], color_normal, 7, i + 1);
         }
 
         if (VOLUME == 0x00) {
-            region_draw(REGION, '-',  9, i + 1, color_fade);
-            region_draw(REGION, '-', 10, i + 1, color_fade);
+            region_draw(REGION, '-', color_fade,  9, i + 1);
+            region_draw(REGION, '-', color_fade, 10, i + 1);
         }
         else {
-            region_draw(REGION, HEX_DIGIT[VOLUME / 0x10],  9, i + 1, color_normal);
-            region_draw(REGION, HEX_DIGIT[VOLUME % 0x10], 10, i + 1, color_normal);
+            region_draw(REGION, HEX_DIGIT[VOLUME / 0x10], color_normal,  9, i + 1);
+            region_draw(REGION, HEX_DIGIT[VOLUME % 0x10], color_normal, 10, i + 1);
         }
     }
 }
@@ -301,7 +301,7 @@ void chain_highlight_cursor(void)
 {
     const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
-    switch(cursor.x) {
+    switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE:
             region_change_color(REGION, COLOR_HIGHLIGHT, 2, cursor.y + 1);
             region_change_color(REGION, COLOR_HIGHLIGHT, 3, cursor.y + 1);
@@ -438,12 +438,12 @@ void chain_update_value(void)
             const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
             if (SELECTED_PHRASE == 0x00) {
-                region_change_tile(REGION, '-', 2, cursor.y + 1);
-                region_change_tile(REGION, '-', 3, cursor.y + 1);
+                region_change_symbol(REGION, '-', 2, cursor.y + 1);
+                region_change_symbol(REGION, '-', 3, cursor.y + 1);
             }
             else {
-                region_change_tile(REGION, HEX_DIGIT[SELECTED_PHRASE / 0x10], 2, cursor.y + 1);
-                region_change_tile(REGION, HEX_DIGIT[SELECTED_PHRASE % 0x10], 3, cursor.y + 1);
+                region_change_symbol(REGION, HEX_DIGIT[SELECTED_PHRASE / 0x10], 2, cursor.y + 1);
+                region_change_symbol(REGION, HEX_DIGIT[SELECTED_PHRASE % 0x10], 3, cursor.y + 1);
             }
             break;
 
@@ -451,12 +451,12 @@ void chain_update_value(void)
             const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
             if (SELECTED_TRANSPOSE == 0x00) {
-                region_change_tile(REGION, '-', 5, cursor.y + 1);
-                region_change_tile(REGION, '-', 6, cursor.y + 1);
+                region_change_symbol(REGION, '-', 5, cursor.y + 1);
+                region_change_symbol(REGION, '-', 6, cursor.y + 1);
             }
             else {
-                region_change_tile(REGION, HEX_DIGIT[SELECTED_TRANSPOSE / 0x10], 5, cursor.y + 1);
-                region_change_tile(REGION, HEX_DIGIT[SELECTED_TRANSPOSE % 0x10], 6, cursor.y + 1);
+                region_change_symbol(REGION, HEX_DIGIT[SELECTED_TRANSPOSE / 0x10], 5, cursor.y + 1);
+                region_change_symbol(REGION, HEX_DIGIT[SELECTED_TRANSPOSE % 0x10], 6, cursor.y + 1);
             }
             break;
 
@@ -673,4 +673,9 @@ void chain_change_value(joystick_position_t joystick_position)
         default:
             break;
     }
+}
+
+uint8_t chain_get_selected_phrase(void)
+{
+    return data_get_chain_phrase(selected_chain, cursor.y);
 }
