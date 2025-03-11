@@ -1,4 +1,5 @@
 #include "region.h"
+#include <stddef.h>
 
 const region_t REGION_SIDEBAR = {.start = {34,  1}, .size = {5, 13}};
 const region_t REGION_MAP     = {.start = {34, 15}, .size = {5,  5}};
@@ -16,6 +17,9 @@ const region_t REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION = {.start = {1, 21}, .si
 
 void region_draw(const region_t *p_region, uint8_t symbol, color_t color, int32_t x, int32_t y)
 {
+    if (p_region == NULL)
+        return;
+
     if (0 <= x && x < p_region->size.x &&
         0 <= y && y < p_region->size.y)
     {
@@ -25,6 +29,9 @@ void region_draw(const region_t *p_region, uint8_t symbol, color_t color, int32_
 
 void region_change_symbol(const region_t *p_region, uint8_t symbol, int32_t x, int32_t y)
 {
+    if (p_region == NULL)
+        return;
+
     if (0 <= x && x < p_region->size.x &&
         0 <= y && y < p_region->size.y)
     {
@@ -35,6 +42,9 @@ void region_change_symbol(const region_t *p_region, uint8_t symbol, int32_t x, i
 
 void region_change_color(const region_t *p_region, color_t color, int32_t x, int32_t y)
 {
+    if (p_region == NULL)
+        return;
+
     if (0 <= x && x < p_region->size.x &&
         0 <= y && y < p_region->size.y)
     {
@@ -45,6 +55,9 @@ void region_change_color(const region_t *p_region, color_t color, int32_t x, int
 
 void region_fill(const region_t *p_region, uint8_t symbol, color_t color)
 {
+    if (p_region == NULL)
+        return;
+
     for (int32_t y = 0; y < p_region->size.y; y++)
         for (int32_t x = 0; x < p_region->size.x; x++)
             LCD_draw(symbol, color, p_region->start.x + x, p_region->start.y + y);

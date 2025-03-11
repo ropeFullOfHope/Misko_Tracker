@@ -62,7 +62,7 @@ void phrase_deinit(void)
 
 void phrase_draw_title(void)
 {
-    const region_t *REGION = &REGION_PHRASE_TITLE;
+    static const region_t *REGION = &REGION_PHRASE_TITLE;
     const uint8_t TITLE[] = {'P', 'h', 'r', 'a', 's', 'e'};
     const uint8_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
 
@@ -88,7 +88,7 @@ void phrase_draw_editor_command_description(void)
 
 void phrase_draw_editor_phrase_labels(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     region_draw(REGION, 'N', COLOR_DARK_FADE, 2, 0);
     region_draw(REGION, ' ', COLOR_DARK_FADE, 3, 0);
@@ -111,7 +111,7 @@ void phrase_draw_editor_phrase_labels(void)
 
 void phrase_draw_editor_phrase_row_numbers(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     for (int32_t i = 0; i < 16; i++) {
         color_t color;
@@ -127,7 +127,7 @@ void phrase_draw_editor_phrase_row_numbers(void)
 
 void phrase_draw_editor_phrase_spacing(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     for (int32_t i = 0; i < 4; i++) {
         region_draw(REGION, ' ', COLOR_DARK, 1,  i * 4 + 1);
@@ -142,7 +142,7 @@ void phrase_draw_editor_phrase_spacing(void)
 
 void phrase_draw_editor_phrase_data(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     for (int32_t i = 0; i < 16; i++) {
         const uint8_t NOTE       = data_get_phrase_note(selected_phrase, i);
@@ -219,28 +219,28 @@ void phrase_draw_editor_phrase_data(void)
 
 void phrase_clear_title(void)
 {
-    const region_t *REGION = &REGION_PHRASE_TITLE;
+    static const region_t *REGION = &REGION_PHRASE_TITLE;
 
     region_fill(REGION, ' ', COLOR_NORMAL);
 }
 
 void phrase_clear_editor_phrase(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     region_fill(REGION, ' ', COLOR_NORMAL);
 }
 
 void phrase_clear_editor_command_description(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION;
 
     region_fill(REGION, ' ', COLOR_NORMAL);
 }
 
 void phrase_highlight_cursor(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     switch (cursor.x) {
         case PHRASE_COLUMN_NOTE:
@@ -277,7 +277,7 @@ void phrase_highlight_cursor(void)
 
 void phrase_unhighlight_cursor(void)
 {
-    const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     color_t color_normal;
     color_t color_fade;
@@ -359,5 +359,5 @@ void phrase_change_value(joystick_position_t joystick_position)
 
 uint8_t phrase_get_selected_instrument(void)
 {
-    data_get_phrase_instrument(selected_phrase, cursor.y);
+    return data_get_phrase_instrument(selected_phrase, cursor.y);
 }

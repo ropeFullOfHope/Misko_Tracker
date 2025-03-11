@@ -22,7 +22,7 @@ typedef struct {
 
 void LCD_init(void);
 void LCD_draw(uint8_t symbol, color_t color, uint32_t x, uint32_t y);
-void LCD_change_tile(uint8_t tile, uint32_t x, uint32_t y);
+void LCD_change_symbol(uint8_t tile, uint32_t x, uint32_t y);
 void LCD_change_color(color_t color, uint32_t x, uint32_t y);
 void LCD_update_screen(void);
 void LCD_update_one_tile(void);
