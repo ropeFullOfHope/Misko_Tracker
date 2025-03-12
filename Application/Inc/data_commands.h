@@ -4,7 +4,9 @@
 #include "lcd.h"
 
 typedef enum {
+    COMMAND_NULL,
     COMMAND_ARP,
+    COMMAND_PCH,
     COMMAND_COUNT
 } command_id_t;
 
@@ -15,6 +17,7 @@ typedef enum {
 
 typedef struct {
     uint8_t name[3];
+    uint8_t *full_name;
     parameter_type_t parameter_type;
     struct {
         uint8_t *general;

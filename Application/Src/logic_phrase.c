@@ -36,11 +36,11 @@ typedef struct {
 static cursor_t cursor = {0};
 static int32_t selected_command = 0;
 static uint8_t selected_phrase = 0x01;
-static uint8_t copied_note = 0x01;
+static uint8_t copied_note = 0x31;
 static uint8_t copied_instrument = 0x01;
-static uint8_t copied_volume = 0x88;
+static uint8_t copied_volume = 0x80;
 static uint8_t copied_command = 0x01;
-static uint8_t copied_parameter = 0x01;
+static uint8_t copied_parameter = 0x00;
 
 void phrase_init(uint8_t phrase)
 {
@@ -114,14 +114,9 @@ void phrase_draw_editor_phrase_row_numbers(void)
     static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     for (int32_t i = 0; i < 16; i++) {
-        color_t color;
+        const color_t COLOR = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
-        if (i % 4 == 0)
-            color = COLOR_DARK_FADE;
-        else
-            color = COLOR_NORMAL_FADE;
-
-        region_draw(REGION, HEX_DIGIT[i], color, 0, i + 1);
+        region_draw(REGION, HEX_DIGIT[i], COLOR, 0, i + 1);
     }
 }
 
@@ -151,68 +146,72 @@ void phrase_draw_editor_phrase_data(void)
 
         uint8_t command[COMMANDS_PER_ROW];
         uint8_t parameter[COMMANDS_PER_ROW];
-
         for (int32_t j = 0; j < COMMANDS_PER_ROW; j++) {
             command[j]   = data_get_phrase_command(j, selected_phrase, i);
-            parameter[j] = data_get_phrase_command(j, selected_phrase, i);
+            parameter[j] = data_get_phrase_parameter(j, selected_phrase, i);
         }
 
-        color_t color_normal;
-        color_t color_fade;
+        const bool IS_NOTE_NULL = (NOTE == 0x00);
+        const bool IS_INSTRUMENT_NULL = (INSTRUMENT == 0x00);
+        const bool IS_VOLUME_NULL = (VOLUME == 0x00);
 
-        if (i % 4 == 0) {
-            color_normal = COLOR_DARK;
-            color_fade = COLOR_DARK_FADE;
-        }
-        else {
-            color_normal = COLOR_NORMAL;
-            color_fade = COLOR_NORMAL_FADE;
+        bool is_command_null[COMMANDS_PER_ROW];
+        for (int32_t j = 0; j < COMMANDS_PER_ROW; j++)
+            is_command_null[j] = (command[j] == 0x00);
+
+        const color_t COLOR_VALUE = (i % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
+        const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
+
+        const uint8_t SYMBOL_NOTE[3] = {
+            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][0]),
+            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][1]),
+            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][2])
+        };
+        const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
+
+        const uint8_t SYMBOL_INSTRUMENT[2] = {
+            (IS_INSTRUMENT_NULL ? '-' : HEX_DIGIT[INSTRUMENT / 0x10]),
+            (IS_INSTRUMENT_NULL ? '-' : HEX_DIGIT[INSTRUMENT % 0x10])
+        };
+        const color_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
+
+        const uint8_t SYMBOL_VOLUME[2] = {
+            (IS_VOLUME_NULL ? '-' : HEX_DIGIT[VOLUME / 0x10]),
+            (IS_VOLUME_NULL ? '-' : HEX_DIGIT[VOLUME % 0x10])
+        };
+        const color_t COLOR_VOLUME = (IS_VOLUME_NULL ? COLOR_NULL : COLOR_VALUE);
+
+        uint8_t symbol_command[COMMANDS_PER_ROW][3];
+        uint8_t symbol_parameter[COMMANDS_PER_ROW][2];
+        color_t color_command[COMMANDS_PER_ROW];
+        color_t color_parameter[COMMANDS_PER_ROW];
+        for (int32_t j = 0; j < COMMANDS_PER_ROW; j++) {
+            symbol_command[j][0]   = (is_command_null[j] ? '-' : COMMAND_METADATA[command[j]].name[0]);
+            symbol_command[j][1]   = (is_command_null[j] ? '-' : COMMAND_METADATA[command[j]].name[1]);
+            symbol_command[j][2]   = (is_command_null[j] ? '-' : COMMAND_METADATA[command[j]].name[2]);
+            symbol_parameter[j][0] = (is_command_null[j] ? '-' : HEX_DIGIT[parameter[j] / 0x10]);
+            symbol_parameter[j][1] = (is_command_null[j] ? '-' : HEX_DIGIT[parameter[j] % 0x10]);
+
+            color_command[j] = (is_command_null[j] ? COLOR_NULL : COLOR_VALUE);
+            color_parameter[j] = COLOR_NULL;
         }
 
-        if (NOTE == 0x00) {
-            region_draw(REGION, '-', color_fade, 2, i + 1);
-            region_draw(REGION, '-', color_fade, 3, i + 1);
-            region_draw(REGION, '-', color_fade, 4, i + 1);
-        }
-        else {
-            region_draw(REGION, NOTE_NAME[NOTE][0], color_normal, 2, i + 1);
-            region_draw(REGION, NOTE_NAME[NOTE][1], color_normal, 3, i + 1);
-            region_draw(REGION, NOTE_NAME[NOTE][2], color_normal, 4, i + 1);
-        }
+        region_draw(REGION, SYMBOL_NOTE[0], COLOR_NOTE, 2, i + 1);
+        region_draw(REGION, SYMBOL_NOTE[1], COLOR_NOTE, 3, i + 1);
+        region_draw(REGION, SYMBOL_NOTE[2], COLOR_NOTE, 4, i + 1);
 
-        if (INSTRUMENT == 0x00) {
-            region_draw(REGION, '-', color_fade, 6, i + 1);
-            region_draw(REGION, '-', color_fade, 7, i + 1);
-        }
-        else {
-            region_draw(REGION, HEX_DIGIT[INSTRUMENT / 0x10], color_normal, 6, i + 1);
-            region_draw(REGION, HEX_DIGIT[INSTRUMENT % 0x10], color_normal, 7, i + 1);
-        }
+        region_draw(REGION, SYMBOL_INSTRUMENT[0], COLOR_INSTRUMENT, 6, i + 1);
+        region_draw(REGION, SYMBOL_INSTRUMENT[1], COLOR_INSTRUMENT, 7, i + 1);
 
-        if (VOLUME == 0x00) {
-            region_draw(REGION, '-', color_fade, 9,  i + 1);
-            region_draw(REGION, '-', color_fade, 10, i + 1);
-        }
-        else {
-            region_draw(REGION, HEX_DIGIT[VOLUME / 0x10], color_normal, 9,  i + 1);
-            region_draw(REGION, HEX_DIGIT[VOLUME % 0x10], color_normal, 10, i + 1);
-        }
+        region_draw(REGION, SYMBOL_VOLUME[0], COLOR_VOLUME, 9,  i + 1);
+        region_draw(REGION, SYMBOL_VOLUME[1], COLOR_VOLUME, 10, i + 1);
 
         for (int32_t j = 0; j < COMMANDS_PER_ROW; j++) {
-            if (command[j] == 0x00) {
-                region_draw(REGION, '-', color_fade, j * 6 + 13, i + 1);
-                region_draw(REGION, '-', color_fade, j * 6 + 14, i + 1);
-                region_draw(REGION, '-', color_fade, j * 6 + 15, i + 1);
-                region_draw(REGION, '-', color_fade, j * 6 + 16, i + 1);
-                region_draw(REGION, '-', color_fade, j * 6 + 17, i + 1);
-            }
-            else {
-                region_draw(REGION, COMMAND_METADATA[command[j]].name[0], color_fade, j * 6 + 13, i + 1);
-                region_draw(REGION, COMMAND_METADATA[command[j]].name[1], color_fade, j * 6 + 14, i + 1);
-                region_draw(REGION, COMMAND_METADATA[command[j]].name[2], color_fade, j * 6 + 15, i + 1);
-                region_draw(REGION, HEX_DIGIT[parameter[j] / 0x10], color_normal, j * 6 + 16,  i + 1);
-                region_draw(REGION, HEX_DIGIT[parameter[j] % 0x10], color_normal, j * 6 + 17, i + 1);
-            }
+            region_draw(REGION, symbol_command[j][0],   color_command[j], j * 6 + 13, i + 1);
+            region_draw(REGION, symbol_command[j][1],   color_command[j], j * 6 + 14, i + 1);
+            region_draw(REGION, symbol_command[j][2],   color_command[j], j * 6 + 15, i + 1);
+            region_draw(REGION, symbol_parameter[j][0], color_parameter[j], j * 6 + 16, i + 1);
+            region_draw(REGION, symbol_parameter[j][1], color_parameter[j], j * 6 + 17, i + 1);
         }
     }
 }
@@ -279,33 +278,68 @@ void phrase_unhighlight_cursor(void)
 {
     static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
-    color_t color_normal;
-    color_t color_fade;
-
-    if (cursor.y % 4 == 0) {
-        color_normal = COLOR_DARK;
-        color_fade = COLOR_DARK_FADE;
-    }
-    else {
-        color_normal = COLOR_NORMAL;
-        color_fade = COLOR_NORMAL_FADE;
-    }
+    const color_t COLOR_VALUE = (cursor.y % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
+    const color_t COLOR_NULL  = (cursor.y % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
     switch(cursor.x) {
-        case PHRASE_COLUMN_NOTE:
+        case PHRASE_COLUMN_NOTE: {
             const uint8_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
+            const bool IS_NOTE_NULL = (SELECTED_NOTE == 0x00);
 
-            if (SELECTED_NOTE == 0x00) {
-                region_change_color(REGION, color_fade, 2, cursor.y + 1);
-                region_change_color(REGION, color_fade, 3, cursor.y + 1);
-                region_change_color(REGION, color_fade, 4, cursor.y + 1);
-            }
-            else {
-                region_change_color(REGION, color_normal, 2, cursor.y + 1);
-                region_change_color(REGION, color_normal, 3, cursor.y + 1);
-                region_change_color(REGION, color_normal, 4, cursor.y + 1);
-            }
+            const uint8_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
+
+            region_change_color(REGION, COLOR_NOTE, 2, cursor.y + 1);
+            region_change_color(REGION, COLOR_NOTE, 3, cursor.y + 1);
+            region_change_color(REGION, COLOR_NOTE, 4, cursor.y + 1);
+
             break;
+        }
+
+        case PHRASE_COLUMN_INSTRUMENT: {
+            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const bool IS_INSTRUMENT_NULL = (SELECTED_INSTRUMENT == 0x00);
+
+            const uint8_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
+
+            region_change_color(REGION, COLOR_INSTRUMENT, 6, cursor.y + 1);
+            region_change_color(REGION, COLOR_INSTRUMENT, 7, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_VOLUME: {
+            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const bool IS_VOLUME_NULL = (SELECTED_VOLUME == 0x00);
+
+            const uint8_t COLOR_VOLUME = (IS_VOLUME_NULL ? COLOR_NULL : COLOR_VALUE);
+
+            region_change_color(REGION, COLOR_VOLUME, 9,  cursor.y + 1);
+            region_change_color(REGION, COLOR_VOLUME, 10, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_COMMAND: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const bool IS_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
+
+            const uint8_t COLOR_COMMAND = (IS_COMMAND_NULL ? COLOR_NULL : COLOR_VALUE);
+
+            region_change_color(REGION, COLOR_COMMAND, selected_command * 6 + 13, cursor.y + 1);
+            region_change_color(REGION, COLOR_COMMAND, selected_command * 6 + 14, cursor.y + 1);
+            region_change_color(REGION, COLOR_COMMAND, selected_command * 6 + 15, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_PARAMETER: {
+            const uint8_t COLOR_PARAMETER = COLOR_NULL;
+
+            region_change_color(REGION, COLOR_PARAMETER, selected_command * 6 + 16, cursor.y + 1);
+            region_change_color(REGION, COLOR_PARAMETER, selected_command * 6 + 17, cursor.y + 1);
+
+            break;
+        }
 
         default:
             break;
@@ -314,47 +348,590 @@ void phrase_unhighlight_cursor(void)
 
 void phrase_highlight_label(void)
 {
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
+    switch (cursor.x) {
+        case PHRASE_COLUMN_NOTE:
+            region_change_color(REGION, COLOR_DARK, 2, 0);
+            break;
+
+        case PHRASE_COLUMN_INSTRUMENT:
+            region_change_color(REGION, COLOR_DARK, 6, 0);
+            break;
+
+        case PHRASE_COLUMN_VOLUME:
+            region_change_color(REGION, COLOR_DARK, 9, 0);
+            break;
+
+        case PHRASE_COLUMN_COMMAND:
+        case PHRASE_COLUMN_PARAMETER:
+            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 13, 0);
+            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 14, 0);
+            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 15, 0);
+            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 16, 0);
+            break;
+
+        default:
+            break;
+    }
 }
 
 void phrase_unhighlight_label(void)
 {
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
+    switch (cursor.x) {
+        case PHRASE_COLUMN_NOTE:
+            region_change_color(REGION, COLOR_DARK_FADE, 2, 0);
+            break;
+
+        case PHRASE_COLUMN_INSTRUMENT:
+            region_change_color(REGION, COLOR_DARK_FADE, 6, 0);
+            break;
+
+        case PHRASE_COLUMN_VOLUME:
+            region_change_color(REGION, COLOR_DARK_FADE, 9, 0);
+            break;
+
+        case PHRASE_COLUMN_COMMAND:
+        case PHRASE_COLUMN_PARAMETER:
+            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 13, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 14, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 15, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 16, 0);
+            break;
+
+        default:
+            break;
+    }
 }
 
 void phrase_highlight_row_number(void)
 {
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    const color_t COLOR = (cursor.y % 4 == 0 ? COLOR_DARK : COLOR_NORMAL);
 
+    region_change_color(REGION, COLOR, 0, cursor.y + 1);
 }
 
 void phrase_unhighlight_row_number(void)
 {
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
+    const color_t COLOR = (cursor.y % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
+    region_change_color(REGION, COLOR, 0, cursor.y + 1);
 }
 
 void phrase_update_value(void)
 {
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
+    switch (cursor.x) {
+        case PHRASE_COLUMN_NOTE: {
+            const uint8_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
+            const bool IS_SELECTED_NOTE_NULL = (SELECTED_NOTE == 0x00);
+
+            const uint8_t SYMBOL_NOTE[3] = {
+                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][0]),
+                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][1]),
+                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][2])
+            };
+
+            region_change_symbol(REGION, SYMBOL_NOTE[0], 2, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_NOTE[1], 3, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_NOTE[2], 4, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_INSTRUMENT: {
+            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const bool IS_SELECTED_INSTRUMENT_NULL = (SELECTED_INSTRUMENT == 0x00);
+
+            const uint8_t SYMBOL_INSTRUMENT[2] = {
+                (IS_SELECTED_INSTRUMENT_NULL ? '-' : HEX_DIGIT[SELECTED_INSTRUMENT / 0x10]),
+                (IS_SELECTED_INSTRUMENT_NULL ? '-' : HEX_DIGIT[SELECTED_INSTRUMENT % 0x10])
+            };
+
+            region_change_symbol(REGION, SYMBOL_INSTRUMENT[0], 6, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_INSTRUMENT[1], 7, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_VOLUME: {
+            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const bool IS_SELECTED_VOLUME_NULL = (SELECTED_VOLUME == 0x00);
+
+            const uint8_t SYMBOL_VOLUME[2] = {
+                (IS_SELECTED_VOLUME_NULL ? '-' : HEX_DIGIT[SELECTED_VOLUME / 0x10]),
+                (IS_SELECTED_VOLUME_NULL ? '-' : HEX_DIGIT[SELECTED_VOLUME % 0x10])
+            };
+
+            region_change_symbol(REGION, SYMBOL_VOLUME[0], 9,  cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_VOLUME[1], 10, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_COMMAND: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const bool IS_SELECTED_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
+
+            const uint8_t SYMBOL_COMMAND[3] = {
+                (IS_SELECTED_COMMAND_NULL ? '-' : COMMAND_METADATA[SELECTED_COMMAND].name[0]),
+                (IS_SELECTED_COMMAND_NULL ? '-' : COMMAND_METADATA[SELECTED_COMMAND].name[1]),
+                (IS_SELECTED_COMMAND_NULL ? '-' : COMMAND_METADATA[SELECTED_COMMAND].name[2])
+            };
+            const uint8_t SYMBOL_PARAMETER[2] = {
+                (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER / 0x10]),
+                (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER % 0x10])
+            };
+
+            region_change_symbol(REGION, SYMBOL_COMMAND[0],   selected_command * 6 + 13, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_COMMAND[1],   selected_command * 6 + 14, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_COMMAND[2],   selected_command * 6 + 15, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[0], selected_command * 6 + 16, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[1], selected_command * 6 + 17, cursor.y + 1);
+
+            break;
+        }
+
+        case PHRASE_COLUMN_PARAMETER: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const bool IS_SELECTED_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
+
+            const uint8_t SYMBOL_PARAMETER[2] = {
+                (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER / 0x10]),
+                (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER % 0x10])
+            };
+
+            region_change_symbol(REGION, SYMBOL_PARAMETER[0], selected_command * 6 + 16, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[1], selected_command * 6 + 17, cursor.y + 1);
+
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 void phrase_move_cursor(joystick_position_t joystick_position)
 {
+    cursor_t new_cursor = cursor;
+    int32_t new_selected_command = selected_command;
 
+    switch (joystick_position) {
+        case JOYSTICK_POSITION_DOWN:
+            new_cursor.y = change_value_within_bounds(cursor.y, +1, 0x00, 0x0F);
+            break;
+
+        case JOYSTICK_POSITION_UP:
+            new_cursor.y = change_value_within_bounds(cursor.y, -1, 0x00, 0x0F);
+            break;
+
+        case JOYSTICK_POSITION_RIGHT:
+            if (cursor.x == PHRASE_COLUMN_PARAMETER &&
+                selected_command + 1 < COMMANDS_PER_ROW)
+            {
+                new_selected_command += 1;
+                new_cursor.x = PHRASE_COLUMN_COMMAND;
+            }
+            else {
+                new_cursor.x = change_value_within_bounds(cursor.x, +1, 0, PHRASE_COLUMN_COUNT - 1);
+            }
+            break;
+
+        case JOYSTICK_POSITION_LEFT:
+            if (cursor.x == PHRASE_COLUMN_COMMAND &&
+                selected_command - 1 >= 0)
+            {
+                new_selected_command -= 1;
+                new_cursor.x = PHRASE_COLUMN_PARAMETER;
+            }
+            else {
+                new_cursor.x = change_value_within_bounds(cursor.x, -1, 0, PHRASE_COLUMN_COUNT - 1);
+            }
+            break;
+
+        default:
+            return;
+    }
+
+    if (new_cursor.x != cursor.x || new_cursor.y != cursor.y) {
+        phrase_unhighlight_cursor();
+
+        if (new_cursor.y != cursor.y) {
+            phrase_unhighlight_row_number();
+            cursor.y = new_cursor.y;
+            phrase_highlight_row_number();
+        }
+
+        if (new_cursor.x != cursor.x) {
+            phrase_unhighlight_label();
+            cursor.x = new_cursor.x;
+            selected_command = new_selected_command;
+            phrase_highlight_label();
+        }
+
+        phrase_highlight_cursor();
+    }
 }
 
 void phrase_insert_value(void)
 {
+    switch (cursor.x) {
+        case PHRASE_COLUMN_NOTE: {
+            const uint8_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
 
+            if (SELECTED_NOTE == 0x00) {
+                data_set_phrase_note(copied_note, selected_phrase, cursor.y);
+                phrase_update_value();
+            }
+            else {
+                copied_note = SELECTED_NOTE;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_INSTRUMENT: {
+            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+
+            if (SELECTED_INSTRUMENT == 0x00) {
+                data_set_phrase_instrument(copied_instrument, selected_phrase, cursor.y);
+                phrase_update_value();
+            }
+            else {
+                copied_instrument = SELECTED_INSTRUMENT;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_VOLUME: {
+            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+
+            if (SELECTED_VOLUME == 0x00) {
+                data_set_phrase_volume(copied_volume, selected_phrase, cursor.y);
+                phrase_update_value();
+            }
+            else {
+                copied_volume = SELECTED_VOLUME;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_COMMAND: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+
+            if (SELECTED_COMMAND == 0x00) {
+                data_set_phrase_command(copied_command, selected_command, selected_phrase, cursor.y);
+                data_set_phrase_parameter(copied_parameter, selected_command, selected_phrase, cursor.y);
+                phrase_update_value();
+            }
+            else {
+                copied_command = SELECTED_COMMAND;
+                copied_parameter = SELECTED_PARAMETER;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_PARAMETER: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+
+            if (SELECTED_COMMAND != 0x00) {
+                copied_command = SELECTED_COMMAND;
+                copied_parameter = SELECTED_PARAMETER;
+            }
+
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 void phrase_delete_value(void)
 {
+    switch (cursor.x) {
+        case PHRASE_COLUMN_NOTE: {
+            const uint8_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
 
+            if (SELECTED_NOTE == 0x00)
+                return;
+
+            copied_note = SELECTED_NOTE;
+
+            data_set_phrase_note(0x00, selected_phrase, cursor.y);
+
+            phrase_update_value();
+
+            break;
+        }
+
+        case PHRASE_COLUMN_INSTRUMENT: {
+            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+
+            if (SELECTED_INSTRUMENT == 0x00)
+                return;
+
+            copied_instrument = SELECTED_INSTRUMENT;
+
+            data_set_phrase_instrument(0x00, selected_phrase, cursor.y);
+
+            phrase_update_value();
+
+            break;
+        }
+
+        case PHRASE_COLUMN_VOLUME: {
+            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+
+            if (SELECTED_VOLUME == 0x00)
+                return;
+
+            copied_volume = SELECTED_VOLUME;
+
+            data_set_phrase_volume(0x00, selected_phrase, cursor.y);
+
+            phrase_update_value();
+
+            break;
+        }
+
+        case PHRASE_COLUMN_COMMAND: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+
+            if (SELECTED_COMMAND == 0x00)
+                return;
+
+            copied_command = SELECTED_COMMAND;
+            copied_parameter = SELECTED_PARAMETER;
+
+            data_set_phrase_command(0x00, selected_command, selected_phrase, cursor.y);
+            data_set_phrase_parameter(0x00, selected_command, selected_phrase, cursor.y);
+
+            phrase_update_value();
+
+            break;
+        }
+
+        case PHRASE_COLUMN_PARAMETER: {
+            const uint8_t SELECTED_COMMAND = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+
+            if (SELECTED_COMMAND == 0x00)
+                return;
+
+            copied_parameter = 0x00;
+
+            data_set_phrase_parameter(0x00, selected_command, selected_phrase, cursor.y);
+
+            phrase_update_value();
+
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 void phrase_change_value(joystick_position_t joystick_position)
 {
+    switch (cursor.x) {
+        case PHRASE_COLUMN_NOTE: {
+            const int32_t SELECTED_NOTE = (int32_t) data_get_phrase_note(selected_phrase, cursor.y);
+            int32_t new_note = SELECTED_NOTE;
 
+            if (SELECTED_NOTE == 0x00)
+                return;
+
+            switch (joystick_position) {
+                case JOYSTICK_POSITION_UP:
+                    new_note = change_value_within_bounds(SELECTED_NOTE, +1, 0x01, NOTE_COUNT - 1);
+                    break;
+
+                case JOYSTICK_POSITION_DOWN:
+                    new_note = change_value_within_bounds(SELECTED_NOTE, -1, 0x01, NOTE_COUNT - 1);
+                    break;
+
+                case JOYSTICK_POSITION_RIGHT:
+                    new_note = change_value_within_bounds(SELECTED_NOTE, +12, 0x01, NOTE_COUNT - 1);
+                    break;
+
+                case JOYSTICK_POSITION_LEFT:
+                    new_note = change_value_within_bounds(SELECTED_NOTE, -12, 0x01, NOTE_COUNT - 1);
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (new_note != SELECTED_NOTE) {
+                data_set_phrase_note((uint8_t) new_note, selected_phrase, cursor.y);
+                phrase_update_value();
+                copied_note = (uint8_t) new_note;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_INSTRUMENT: {
+            const int32_t SELECTED_INSTRUMENT = (int32_t) data_get_phrase_instrument(selected_phrase, cursor.y);
+            int32_t new_instrument = SELECTED_INSTRUMENT;
+
+            if (SELECTED_INSTRUMENT == 0x00)
+                return;
+
+            switch (joystick_position) {
+                case JOYSTICK_POSITION_UP:
+                    new_instrument = change_value_within_bounds(SELECTED_INSTRUMENT, +1, 0x01, INSTRUMENT_COUNT);
+                    break;
+
+                case JOYSTICK_POSITION_DOWN:
+                    new_instrument = change_value_within_bounds(SELECTED_INSTRUMENT, -1, 0x01, INSTRUMENT_COUNT);
+                    break;
+
+                case JOYSTICK_POSITION_RIGHT:
+                    new_instrument = change_value_within_bounds(SELECTED_INSTRUMENT, +16, 0x01, INSTRUMENT_COUNT);
+                    break;
+
+                case JOYSTICK_POSITION_LEFT:
+                    new_instrument = change_value_within_bounds(SELECTED_INSTRUMENT, -16, 0x01, INSTRUMENT_COUNT);
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (new_instrument != SELECTED_INSTRUMENT) {
+                data_set_phrase_instrument((uint8_t) new_instrument, selected_phrase, cursor.y);
+                phrase_update_value();
+                copied_instrument = (uint8_t) new_instrument;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_VOLUME: {
+            const int32_t SELECTED_VOLUME = (int32_t) data_get_phrase_volume(selected_phrase, cursor.y);
+            int32_t new_volume = SELECTED_VOLUME;
+
+            if (SELECTED_VOLUME == 0x00)
+                return;
+
+            switch (joystick_position) {
+                case JOYSTICK_POSITION_UP:
+                    new_volume = change_value_within_bounds(SELECTED_VOLUME, +1, 0x01, 0xFF);
+                    break;
+
+                case JOYSTICK_POSITION_DOWN:
+                    new_volume = change_value_within_bounds(SELECTED_VOLUME, -1, 0x01, 0xFF);
+                    break;
+
+                case JOYSTICK_POSITION_RIGHT:
+                    new_volume = change_value_within_bounds(SELECTED_VOLUME, +16, 0x01, 0xFF);
+                    break;
+
+                case JOYSTICK_POSITION_LEFT:
+                    new_volume = change_value_within_bounds(SELECTED_VOLUME, -16, 0x01, 0xFF);
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (new_volume != SELECTED_VOLUME) {
+                data_set_phrase_volume((uint8_t) new_volume, selected_phrase, cursor.y);
+                phrase_update_value();
+                copied_volume = (uint8_t) new_volume;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_COMMAND: {
+            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            int32_t new_command = SELECTED_COMMAND;
+
+            if (SELECTED_COMMAND == 0x00)
+                return;
+
+            switch (joystick_position) {
+                case JOYSTICK_POSITION_UP:
+                case JOYSTICK_POSITION_RIGHT:
+                    new_command = change_value_within_bounds(SELECTED_COMMAND, +1, 0x01, COMMAND_COUNT - 1);
+                    break;
+
+                case JOYSTICK_POSITION_DOWN:
+                case JOYSTICK_POSITION_LEFT:
+                    new_command = change_value_within_bounds(SELECTED_COMMAND, -1, 0x01, COMMAND_COUNT - 1);
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (new_command != SELECTED_COMMAND) {
+                data_set_phrase_command((uint8_t) new_command, selected_command, selected_phrase, cursor.y);
+                phrase_update_value();
+                copied_command = (uint8_t) new_command;
+            }
+
+            break;
+        }
+
+        case PHRASE_COLUMN_PARAMETER: {
+            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const int32_t SELECTED_PARAMETER = (int32_t) data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            int32_t new_parameter = SELECTED_PARAMETER;
+
+            if (SELECTED_COMMAND == 0x00)
+                return;
+
+            switch (joystick_position) {
+                case JOYSTICK_POSITION_UP:
+                    new_parameter = change_value_within_bounds(SELECTED_PARAMETER, +1, 0x01, 0xFF);
+                    break;
+
+                case JOYSTICK_POSITION_DOWN:
+                    new_parameter = change_value_within_bounds(SELECTED_PARAMETER, -1, 0x01, 0xFF);
+                    break;
+
+                case JOYSTICK_POSITION_RIGHT:
+                    new_parameter = change_value_within_bounds(SELECTED_PARAMETER, +16, 0x01, 0xFF);
+                    break;
+
+                case JOYSTICK_POSITION_LEFT:
+                    new_parameter = change_value_within_bounds(SELECTED_PARAMETER, -16, 0x01, 0xFF);
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (new_parameter != SELECTED_PARAMETER) {
+                data_set_phrase_parameter((uint8_t) new_parameter, selected_command, selected_phrase, cursor.y);
+                phrase_update_value();
+                copied_parameter = (uint8_t) new_parameter;
+            }
+
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 uint8_t phrase_get_selected_instrument(void)

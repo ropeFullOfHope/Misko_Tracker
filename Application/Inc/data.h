@@ -15,10 +15,10 @@
 #define INSTRUMENT_COUNT 127
 #define COMMANDS_PER_ROW 3
 
-#define NOTE_COUNT (9 * 12)
+#define NOTE_COUNT (9 * 12 + 1)
 
 extern const uint8_t HEX_DIGIT[16];
-extern const uint8_t NOTE_NAME[9 * 12][3];
+extern const uint8_t NOTE_NAME[NOTE_COUNT][3];
 
 uint8_t data_get_song_chain(int32_t channel, int32_t row);
 void data_set_song_chain(uint8_t chain, int32_t channel, int32_t row);

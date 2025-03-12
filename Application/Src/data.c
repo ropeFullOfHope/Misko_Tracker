@@ -36,6 +36,7 @@ const uint8_t HEX_DIGIT[16] = {
 };
 
 const uint8_t NOTE_NAME[NOTE_COUNT][3] = {
+    "---",
     "C-0", "C#0", "D-0", "D#0", "E-0", "F-0", "F#0", "G-0", "G#0", "A-0", "A#0", "B-0",
     "C-1", "C#1", "D-1", "D#1", "E-1", "F-1", "F#1", "G-1", "G#1", "A-1", "A#1", "B-1",
     "C-2", "C#2", "D-2", "D#2", "E-2", "F-2", "F#2", "G-2", "G#2", "A-2", "A#2", "B-2",
@@ -167,7 +168,7 @@ uint8_t data_get_phrase_command(uint8_t command_number, uint8_t phrase, int32_t 
 {
     phrase -= 1;
 
-    if (command_number < COMMAND_COUNT)
+    if (command_number < COMMANDS_PER_ROW)
         if (phrase < PHRASE_COUNT)
             if (0 <= row && row < 16)
                 return project_data.phrase[phrase].command[row][command_number];
@@ -179,7 +180,7 @@ void data_set_phrase_command(uint8_t command, uint8_t command_number, uint8_t ph
 {
     phrase -= 1;
 
-    if (command_number < COMMAND_COUNT)
+    if (command_number < COMMANDS_PER_ROW)
         if (phrase < PHRASE_COUNT)
             if (0 <= row && row < 16)
                 project_data.phrase[phrase].command[row][command_number] = command;
@@ -189,7 +190,7 @@ uint8_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_
 {
     phrase -= 1;
 
-    if (command_number < COMMAND_COUNT)
+    if (command_number < COMMANDS_PER_ROW)
         if (phrase < PHRASE_COUNT)
             if (0 <= row && row < 16)
                 return project_data.phrase[phrase].parameter[row][command_number];
@@ -201,7 +202,7 @@ void data_set_phrase_parameter(uint8_t parameter, uint8_t command_number, uint8_
 {
     phrase -= 1;
 
-    if (command_number < COMMAND_COUNT)
+    if (command_number < COMMANDS_PER_ROW)
         if (phrase < PHRASE_COUNT)
             if (0 <= row && row < 16)
                 project_data.phrase[phrase].parameter[row][command_number] = parameter;
