@@ -33,8 +33,8 @@ void data_set_phrase_instrument(uint8_t instrument, uint8_t phrase, int32_t row)
 uint8_t data_get_phrase_volume(uint8_t phrase, int32_t row);
 void data_set_phrase_volume(uint8_t volume, uint8_t phrase, int32_t row);
 uint8_t data_get_phrase_command(uint8_t command_number, uint8_t phrase, int32_t row);
-void data_set_phrase_command(uint8_t command, uint8_t command_number, uint8_t phrase, int32_t row);
-uint8_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_t row);
+void data_set_phrase_command(command_id_t command, uint8_t command_number, uint8_t phrase, int32_t row);
+command_id_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_t row);
 void data_set_phrase_parameter(uint8_t parameter, uint8_t command_number, uint8_t phrase, int32_t row);
 
 int32_t data_get_setting_joystick_delay_initial (void);

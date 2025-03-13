@@ -1,4 +1,5 @@
-../Application/Src/region.c:18:6:region_draw	8	static
-../Application/Src/region.c:30:6:region_change_symbol	8	static
-../Application/Src/region.c:43:6:region_change_color	8	static
-../Application/Src/region.c:56:6:region_fill	24	static
+../Application/Src/region.c:20:6:region_draw	32	static
+../Application/Src/region.c:34:6:region_change_symbol	24	static
+../Application/Src/region.c:49:6:region_change_color	24	static
+../Application/Src/region.c:64:6:region_fill	32	static
+../Application/Src/region.c:74:9:region_draw_text	104	static

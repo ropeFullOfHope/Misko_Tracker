@@ -10,6 +10,8 @@ static void phrase_draw_editor_phrase_labels(void);
 static void phrase_draw_editor_phrase_row_numbers(void);
 static void phrase_draw_editor_phrase_spacing(void);
 static void phrase_draw_editor_phrase_data(void);
+static void phrase_draw_editor_command_description_name(void);
+static void phrase_draw_editor_command_description_description(void);
 static void phrase_clear_title(void);
 static void phrase_clear_editor_phrase(void);
 static void phrase_clear_editor_command_description(void);
@@ -20,6 +22,8 @@ static void phrase_unhighlight_label(void);
 static void phrase_highlight_row_number(void);
 static void phrase_unhighlight_row_number(void);
 static void phrase_update_value(void);
+static void phrase_update_command_description(void);
+static command_id_t phrase_get_selected_command(void);
 
 typedef struct {
     enum {
@@ -34,8 +38,9 @@ typedef struct {
 } cursor_t;
 
 static cursor_t cursor = {0};
-static int32_t selected_command = 0;
 static uint8_t selected_phrase = 0x01;
+static int32_t cursor_command = 0;
+static command_id_t displayed_command_description = COMMAND_NULL;
 static uint8_t copied_note = 0x31;
 static uint8_t copied_instrument = 0x01;
 static uint8_t copied_volume = 0x80;
@@ -44,6 +49,8 @@ static uint8_t copied_parameter = 0x00;
 
 void phrase_init(uint8_t phrase)
 {
+    selected_phrase = phrase;
+
     phrase_draw_title();
     phrase_draw_editor_phrase();
     phrase_draw_editor_command_description();
@@ -83,7 +90,15 @@ void phrase_draw_editor_phrase(void)
 
 void phrase_draw_editor_command_description(void)
 {
+    const uint8_t SELECTED_COMMAND = phrase_get_selected_command();
 
+    displayed_command_description = SELECTED_COMMAND;
+
+    if (SELECTED_COMMAND == COMMAND_NULL)
+        return;
+
+    phrase_draw_editor_command_description_name();
+    phrase_draw_editor_command_description_description();
 }
 
 void phrase_draw_editor_phrase_labels(void)
@@ -216,6 +231,55 @@ void phrase_draw_editor_phrase_data(void)
     }
 }
 
+void phrase_draw_editor_command_description_name(void)
+{
+    static const region_t *REGION = &REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION;
+    const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+    const command_metadata_t *SELECTED_COMMAND_METADATA = &COMMAND_METADATA[SELECTED_COMMAND];
+
+    for (int32_t i = 0; i < 3; i++)
+        region_draw(REGION, SELECTED_COMMAND_METADATA->name[i], COLOR_DARK, i, 0);
+
+    region_draw(REGION, ' ', COLOR_DARK, 3, 0);
+    region_draw(REGION, '-', COLOR_DARK, 4, 0);
+    region_draw(REGION, ' ', COLOR_DARK, 5, 0);
+
+    const uint8_t *TEXT_FULL_NAME = SELECTED_COMMAND_METADATA->full_name;
+    for (int32_t i = 0; TEXT_FULL_NAME[i] != '\0'; i++)
+        region_draw(REGION, TEXT_FULL_NAME[i], COLOR_DARK, i + 6, 0);
+}
+
+void phrase_draw_editor_command_description_description(void)
+{
+    const region_t *REGION = &REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION;
+    const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+    const command_metadata_t *SELECTED_COMMAND_METADATA = &COMMAND_METADATA[SELECTED_COMMAND];
+
+    int32_t written_rows = 0;
+
+    written_rows += region_draw_text(REGION, SELECTED_COMMAND_METADATA->description.general, COLOR_NORMAL, 0, 1);
+
+    switch (SELECTED_COMMAND_METADATA->parameter_type) {
+        case PARAMETER_XX:
+            region_draw(REGION, (uint8_t) 'X', COLOR_DARK, 0, written_rows + 1);
+            region_draw(REGION, (uint8_t) 'X', COLOR_DARK, 1, written_rows + 1);
+
+            written_rows += region_draw_text(REGION, SELECTED_COMMAND_METADATA->description.parameter.xx, COLOR_NORMAL, 3, written_rows + 1);
+            break;
+
+        case PARAMETER_XY:
+            region_draw(REGION, (uint8_t) 'X', COLOR_DARK, 0, written_rows + 1);
+            written_rows += region_draw_text(REGION, SELECTED_COMMAND_METADATA->description.parameter.x, COLOR_NORMAL, 2, written_rows + 1);
+
+            region_draw(REGION, (uint8_t) 'Y', COLOR_DARK, 0, written_rows + 1);
+            written_rows += region_draw_text(REGION, SELECTED_COMMAND_METADATA->description.parameter.y, COLOR_NORMAL, 2, written_rows + 1);
+            break;
+
+        default:
+            break;
+    }
+}
+
 void phrase_clear_title(void)
 {
     static const region_t *REGION = &REGION_PHRASE_TITLE;
@@ -259,14 +323,14 @@ void phrase_highlight_cursor(void)
             break;
 
         case PHRASE_COLUMN_COMMAND:
-            region_change_color(REGION, COLOR_HIGHLIGHT, selected_command * 6 + 13, cursor.y + 1);
-            region_change_color(REGION, COLOR_HIGHLIGHT, selected_command * 6 + 14, cursor.y + 1);
-            region_change_color(REGION, COLOR_HIGHLIGHT, selected_command * 6 + 15, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, cursor_command * 6 + 13, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, cursor_command * 6 + 14, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, cursor_command * 6 + 15, cursor.y + 1);
             break;
 
         case PHRASE_COLUMN_PARAMETER:
-            region_change_color(REGION, COLOR_HIGHLIGHT, selected_command * 6 + 16, cursor.y + 1);
-            region_change_color(REGION, COLOR_HIGHLIGHT, selected_command * 6 + 17, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, cursor_command * 6 + 16, cursor.y + 1);
+            region_change_color(REGION, COLOR_HIGHLIGHT, cursor_command * 6 + 17, cursor.y + 1);
             break;
 
         default:
@@ -320,14 +384,14 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
             const bool IS_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
 
             const uint8_t COLOR_COMMAND = (IS_COMMAND_NULL ? COLOR_NULL : COLOR_VALUE);
 
-            region_change_color(REGION, COLOR_COMMAND, selected_command * 6 + 13, cursor.y + 1);
-            region_change_color(REGION, COLOR_COMMAND, selected_command * 6 + 14, cursor.y + 1);
-            region_change_color(REGION, COLOR_COMMAND, selected_command * 6 + 15, cursor.y + 1);
+            region_change_color(REGION, COLOR_COMMAND, cursor_command * 6 + 13, cursor.y + 1);
+            region_change_color(REGION, COLOR_COMMAND, cursor_command * 6 + 14, cursor.y + 1);
+            region_change_color(REGION, COLOR_COMMAND, cursor_command * 6 + 15, cursor.y + 1);
 
             break;
         }
@@ -335,8 +399,8 @@ void phrase_unhighlight_cursor(void)
         case PHRASE_COLUMN_PARAMETER: {
             const uint8_t COLOR_PARAMETER = COLOR_NULL;
 
-            region_change_color(REGION, COLOR_PARAMETER, selected_command * 6 + 16, cursor.y + 1);
-            region_change_color(REGION, COLOR_PARAMETER, selected_command * 6 + 17, cursor.y + 1);
+            region_change_color(REGION, COLOR_PARAMETER, cursor_command * 6 + 16, cursor.y + 1);
+            region_change_color(REGION, COLOR_PARAMETER, cursor_command * 6 + 17, cursor.y + 1);
 
             break;
         }
@@ -365,10 +429,10 @@ void phrase_highlight_label(void)
 
         case PHRASE_COLUMN_COMMAND:
         case PHRASE_COLUMN_PARAMETER:
-            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 13, 0);
-            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 14, 0);
-            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 15, 0);
-            region_change_color(REGION, COLOR_DARK, selected_command * 6 + 16, 0);
+            region_change_color(REGION, COLOR_DARK, cursor_command * 6 + 13, 0);
+            region_change_color(REGION, COLOR_DARK, cursor_command * 6 + 14, 0);
+            region_change_color(REGION, COLOR_DARK, cursor_command * 6 + 15, 0);
+            region_change_color(REGION, COLOR_DARK, cursor_command * 6 + 16, 0);
             break;
 
         default:
@@ -395,10 +459,10 @@ void phrase_unhighlight_label(void)
 
         case PHRASE_COLUMN_COMMAND:
         case PHRASE_COLUMN_PARAMETER:
-            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 13, 0);
-            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 14, 0);
-            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 15, 0);
-            region_change_color(REGION, COLOR_DARK_FADE, selected_command * 6 + 16, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, cursor_command * 6 + 13, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, cursor_command * 6 + 14, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, cursor_command * 6 + 15, 0);
+            region_change_color(REGION, COLOR_DARK_FADE, cursor_command * 6 + 16, 0);
             break;
 
         default:
@@ -475,8 +539,8 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
             const bool IS_SELECTED_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
 
             const uint8_t SYMBOL_COMMAND[3] = {
@@ -489,18 +553,18 @@ void phrase_update_value(void)
                 (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER % 0x10])
             };
 
-            region_change_symbol(REGION, SYMBOL_COMMAND[0],   selected_command * 6 + 13, cursor.y + 1);
-            region_change_symbol(REGION, SYMBOL_COMMAND[1],   selected_command * 6 + 14, cursor.y + 1);
-            region_change_symbol(REGION, SYMBOL_COMMAND[2],   selected_command * 6 + 15, cursor.y + 1);
-            region_change_symbol(REGION, SYMBOL_PARAMETER[0], selected_command * 6 + 16, cursor.y + 1);
-            region_change_symbol(REGION, SYMBOL_PARAMETER[1], selected_command * 6 + 17, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_COMMAND[0],   cursor_command * 6 + 13, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_COMMAND[1],   cursor_command * 6 + 14, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_COMMAND[2],   cursor_command * 6 + 15, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[0], cursor_command * 6 + 16, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[1], cursor_command * 6 + 17, cursor.y + 1);
 
             break;
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
             const bool IS_SELECTED_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
 
             const uint8_t SYMBOL_PARAMETER[2] = {
@@ -508,8 +572,8 @@ void phrase_update_value(void)
                 (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER % 0x10])
             };
 
-            region_change_symbol(REGION, SYMBOL_PARAMETER[0], selected_command * 6 + 16, cursor.y + 1);
-            region_change_symbol(REGION, SYMBOL_PARAMETER[1], selected_command * 6 + 17, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[0], cursor_command * 6 + 16, cursor.y + 1);
+            region_change_symbol(REGION, SYMBOL_PARAMETER[1], cursor_command * 6 + 17, cursor.y + 1);
 
             break;
         }
@@ -519,10 +583,32 @@ void phrase_update_value(void)
     }
 }
 
+void phrase_update_command_description(void)
+{
+    const command_id_t SELECTED_COMMAND = phrase_get_selected_command();
+
+    if (SELECTED_COMMAND == displayed_command_description)
+        return;
+
+    if (displayed_command_description == COMMAND_NULL) {
+        displayed_command_description = SELECTED_COMMAND;
+        phrase_draw_editor_command_description();
+    }
+    else if (SELECTED_COMMAND == COMMAND_NULL) {
+        displayed_command_description = SELECTED_COMMAND;
+        phrase_clear_editor_command_description();
+    }
+    else {
+        displayed_command_description = SELECTED_COMMAND;
+        phrase_clear_editor_command_description();
+        phrase_draw_editor_command_description();
+    }
+}
+
 void phrase_move_cursor(joystick_position_t joystick_position)
 {
     cursor_t new_cursor = cursor;
-    int32_t new_selected_command = selected_command;
+    int32_t new_selected_command = cursor_command;
 
     switch (joystick_position) {
         case JOYSTICK_POSITION_DOWN:
@@ -535,7 +621,7 @@ void phrase_move_cursor(joystick_position_t joystick_position)
 
         case JOYSTICK_POSITION_RIGHT:
             if (cursor.x == PHRASE_COLUMN_PARAMETER &&
-                selected_command + 1 < COMMANDS_PER_ROW)
+                cursor_command + 1 < COMMANDS_PER_ROW)
             {
                 new_selected_command += 1;
                 new_cursor.x = PHRASE_COLUMN_COMMAND;
@@ -547,7 +633,7 @@ void phrase_move_cursor(joystick_position_t joystick_position)
 
         case JOYSTICK_POSITION_LEFT:
             if (cursor.x == PHRASE_COLUMN_COMMAND &&
-                selected_command - 1 >= 0)
+                cursor_command - 1 >= 0)
             {
                 new_selected_command -= 1;
                 new_cursor.x = PHRASE_COLUMN_PARAMETER;
@@ -573,11 +659,13 @@ void phrase_move_cursor(joystick_position_t joystick_position)
         if (new_cursor.x != cursor.x) {
             phrase_unhighlight_label();
             cursor.x = new_cursor.x;
-            selected_command = new_selected_command;
+            cursor_command = new_selected_command;
             phrase_highlight_label();
         }
 
         phrase_highlight_cursor();
+
+        phrase_update_command_description();
     }
 }
 
@@ -627,13 +715,14 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
 
             if (SELECTED_COMMAND == 0x00) {
-                data_set_phrase_command(copied_command, selected_command, selected_phrase, cursor.y);
-                data_set_phrase_parameter(copied_parameter, selected_command, selected_phrase, cursor.y);
+                data_set_phrase_command(copied_command, cursor_command, selected_phrase, cursor.y);
+                data_set_phrase_parameter(copied_parameter, cursor_command, selected_phrase, cursor.y);
                 phrase_update_value();
+                phrase_update_command_description();
             }
             else {
                 copied_command = SELECTED_COMMAND;
@@ -644,8 +733,8 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
 
             if (SELECTED_COMMAND != 0x00) {
                 copied_command = SELECTED_COMMAND;
@@ -709,8 +798,8 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(selected_command, selected_phrase, cursor.y);
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
 
             if (SELECTED_COMMAND == 0x00)
                 return;
@@ -718,23 +807,24 @@ void phrase_delete_value(void)
             copied_command = SELECTED_COMMAND;
             copied_parameter = SELECTED_PARAMETER;
 
-            data_set_phrase_command(0x00, selected_command, selected_phrase, cursor.y);
-            data_set_phrase_parameter(0x00, selected_command, selected_phrase, cursor.y);
+            data_set_phrase_command(0x00, cursor_command, selected_phrase, cursor.y);
+            data_set_phrase_parameter(0x00, cursor_command, selected_phrase, cursor.y);
 
             phrase_update_value();
+            phrase_update_command_description();
 
             break;
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const uint8_t SELECTED_COMMAND = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
 
             if (SELECTED_COMMAND == 0x00)
                 return;
 
             copied_parameter = 0x00;
 
-            data_set_phrase_parameter(0x00, selected_command, selected_phrase, cursor.y);
+            data_set_phrase_parameter(0x00, cursor_command, selected_phrase, cursor.y);
 
             phrase_update_value();
 
@@ -861,7 +951,7 @@ void phrase_change_value(joystick_position_t joystick_position)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(selected_command, selected_phrase, cursor.y);
+            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
             int32_t new_command = SELECTED_COMMAND;
 
             if (SELECTED_COMMAND == 0x00)
@@ -883,8 +973,9 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_command != SELECTED_COMMAND) {
-                data_set_phrase_command((uint8_t) new_command, selected_command, selected_phrase, cursor.y);
+                data_set_phrase_command((uint8_t) new_command, cursor_command, selected_phrase, cursor.y);
                 phrase_update_value();
+                phrase_update_command_description();
                 copied_command = (uint8_t) new_command;
             }
 
@@ -892,8 +983,8 @@ void phrase_change_value(joystick_position_t joystick_position)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(selected_command, selected_phrase, cursor.y);
-            const int32_t SELECTED_PARAMETER = (int32_t) data_get_phrase_parameter(selected_command, selected_phrase, cursor.y);
+            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const int32_t SELECTED_PARAMETER = (int32_t) data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
             int32_t new_parameter = SELECTED_PARAMETER;
 
             if (SELECTED_COMMAND == 0x00)
@@ -921,7 +1012,7 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_parameter != SELECTED_PARAMETER) {
-                data_set_phrase_parameter((uint8_t) new_parameter, selected_command, selected_phrase, cursor.y);
+                data_set_phrase_parameter((uint8_t) new_parameter, cursor_command, selected_phrase, cursor.y);
                 phrase_update_value();
                 copied_parameter = (uint8_t) new_parameter;
             }
@@ -932,6 +1023,17 @@ void phrase_change_value(joystick_position_t joystick_position)
         default:
             break;
     }
+}
+
+command_id_t phrase_get_selected_command(void)
+{
+    if (cursor.x == PHRASE_COLUMN_COMMAND ||
+        cursor.x == PHRASE_COLUMN_PARAMETER)
+    {
+        return data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+    }
+
+    return COMMAND_NULL;
 }
 
 uint8_t phrase_get_selected_instrument(void)

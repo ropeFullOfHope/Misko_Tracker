@@ -9,7 +9,7 @@ typedef struct {
     uint8_t note[PHRASE_ROW_COUNT];
     uint8_t instrument[PHRASE_ROW_COUNT];
     uint8_t volume[PHRASE_ROW_COUNT];
-    uint8_t command[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
+    command_id_t command[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
     uint8_t parameter[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
 } phrase_t;
 
@@ -173,10 +173,10 @@ uint8_t data_get_phrase_command(uint8_t command_number, uint8_t phrase, int32_t 
             if (0 <= row && row < 16)
                 return project_data.phrase[phrase].command[row][command_number];
 
-    return 0x00;
+    return COMMAND_NULL;
 }
 
-void data_set_phrase_command(uint8_t command, uint8_t command_number, uint8_t phrase, int32_t row)
+void data_set_phrase_command(command_id_t command, uint8_t command_number, uint8_t phrase, int32_t row)
 {
     phrase -= 1;
 
@@ -186,7 +186,7 @@ void data_set_phrase_command(uint8_t command, uint8_t command_number, uint8_t ph
                 project_data.phrase[phrase].command[row][command_number] = command;
 }
 
-uint8_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_t row)
+command_id_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_t row)
 {
     phrase -= 1;
 
@@ -195,7 +195,7 @@ uint8_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_
             if (0 <= row && row < 16)
                 return project_data.phrase[phrase].parameter[row][command_number];
 
-    return 0x00;
+    return COMMAND_NULL;
 }
 
 void data_set_phrase_parameter(uint8_t parameter, uint8_t command_number, uint8_t phrase, int32_t row)

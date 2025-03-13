@@ -32,8 +32,8 @@ void app_init(void)
     joystick_init();
     sound_init();
 
-    for (uint32_t x = 0; x < COLUMN_COUNT; x++) {
-        for (uint32_t y = 0; y < ROW_COUNT; y++) {
+    for (int32_t x = 0; x < COLUMN_COUNT; x++) {
+        for (int32_t y = 0; y < ROW_COUNT; y++) {
             LCD_draw(' ', COLOR_NORMAL, x, y);
         }
     }

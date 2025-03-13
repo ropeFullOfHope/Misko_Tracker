@@ -64,7 +64,7 @@ typedef struct {
 
 static button_status_t button_status[BUTTON_COUNT] = {0};
 static uint32_t button_port;
-static uint32_t current_time = -1;
+static uint32_t current_time = 0xFFFFFFFF;
 
 static const uint32_t button_pin[BUTTON_COUNT] = {0, 1, 6, 8};
 

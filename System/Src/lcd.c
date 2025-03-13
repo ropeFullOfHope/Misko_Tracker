@@ -12,8 +12,8 @@ typedef struct {
 } screen_t;
 
 typedef struct {
-    uint8_t x;
-    uint8_t y;
+    int8_t x;
+    int8_t y;
 } coordinates_t;
 
 static void LCD_enqueue_tile(coordinates_t coordinates);
@@ -46,8 +46,11 @@ void LCD_init(void)
     backlight_set_brightness(50);
 }
 
-void LCD_draw(uint8_t symbol, color_t color, uint32_t x, uint32_t y)
+void LCD_draw(uint8_t symbol, color_t color, int32_t x, int32_t y)
 {
+    if (x < 0 || y < 0)
+        return;
+
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
@@ -64,8 +67,11 @@ void LCD_draw(uint8_t symbol, color_t color, uint32_t x, uint32_t y)
     }
 }
 
-void LCD_change_symbol(uint8_t symbol, uint32_t x, uint32_t y)
+void LCD_change_symbol(uint8_t symbol, int32_t x, int32_t y)
 {
+    if (x < 0 || y < 0)
+        return;
+
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
@@ -81,8 +87,11 @@ void LCD_change_symbol(uint8_t symbol, uint32_t x, uint32_t y)
     }
 }
 
-void LCD_change_color(color_t color, uint32_t x, uint32_t y)
+void LCD_change_color(color_t color, int32_t x, int32_t y)
 {
+    if (x < 0 || y < 0)
+        return;
+
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 
@@ -114,8 +123,11 @@ void LCD_update_one_tile(void)
     LCD_update_tile(coordiantes.x, coordiantes.y);
 }
 
-void LCD_update_tile(uint32_t x, uint32_t y)
+void LCD_update_tile(int32_t x, int32_t y)
 {
+    if (x < 0 || y < 0)
+        return;
+
     if (x >= COLUMN_COUNT || y >= ROW_COUNT)
         return;
 

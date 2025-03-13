@@ -88,15 +88,13 @@ void chain_draw_editor_phrase_preview(void)
 
     previewed_phrase = PHRASE;
 
-    if (PHRASE == 0x00) {
-        chain_clear_editor_phrase_preview();
-    }
-    else {
-        chain_draw_editor_phrase_preview_labels();
-        chain_draw_editor_phrase_preview_row_numbers();
-        chain_draw_editor_phrase_preview_spacing();
-        chain_draw_editor_phrase_preview_data();
-    }
+    if (PHRASE == 0x00)
+        return;
+
+    chain_draw_editor_phrase_preview_labels();
+    chain_draw_editor_phrase_preview_row_numbers();
+    chain_draw_editor_phrase_preview_spacing();
+    chain_draw_editor_phrase_preview_data();
 }
 
 void chain_draw_editor_chain_labels(void)
@@ -207,9 +205,9 @@ void chain_draw_editor_phrase_preview_data(void)
 {
     static const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-    for (int32_t i = 0; i < 16; i++) {
-        const uint8_t PHRASE = data_get_chain_phrase(selected_chain, i);
+    const uint8_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
+    for (int32_t i = 0; i < 16; i++) {
         const uint8_t NOTE = data_get_phrase_note(PHRASE, i);
         const uint8_t INSTRUMENT = data_get_phrase_instrument(PHRASE, i);
         const uint8_t VOLUME = data_get_phrase_volume(PHRASE, i);
@@ -301,7 +299,7 @@ void chain_unhighlight_cursor(void)
     const color_t COLOR_NULL  = (cursor.y % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
     switch (cursor.x) {
-        case CHAIN_COLUMN_PHRASE:
+        case CHAIN_COLUMN_PHRASE: {
             const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
             const bool IS_SELECTED_PHRASE_NULL = (SELECTED_PHRASE == 0x00);
 
@@ -311,8 +309,9 @@ void chain_unhighlight_cursor(void)
             region_change_color(REGION, COLOR_PHRASE, 3, cursor.y + 1);
 
             break;
+        }
 
-        case CHAIN_COLUMN_TRANSPOSE:
+        case CHAIN_COLUMN_TRANSPOSE: {
             const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
             const bool IS_SELECTED_TRANSPOSE_NULL = (SELECTED_TRANSPOSE == 0x00);
 
@@ -322,6 +321,7 @@ void chain_unhighlight_cursor(void)
             region_change_color(REGION, COLOR_TRANSPOSE, 6, cursor.y + 1);
 
             break;
+        }
 
         default:
             break;
@@ -385,7 +385,7 @@ void chain_update_value(void)
     static const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     switch (cursor.x) {
-        case CHAIN_COLUMN_PHRASE:
+        case CHAIN_COLUMN_PHRASE: {
             const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
             const bool IS_SELECTED_PHRASE_NULL = (SELECTED_PHRASE == 0x00);
 
@@ -398,8 +398,9 @@ void chain_update_value(void)
             region_change_symbol(REGION, SYMBOL_PHRASE[1], 3, cursor.y + 1);
 
             break;
+        }
 
-        case CHAIN_COLUMN_TRANSPOSE:
+        case CHAIN_COLUMN_TRANSPOSE: {
             const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
             const bool IS_SELECTED_TRANSPOSE_NULL = (SELECTED_TRANSPOSE == 0x00);
 
@@ -412,6 +413,7 @@ void chain_update_value(void)
             region_change_symbol(REGION, SYMBOL_TRANSPOSE[1], 6, cursor.y + 1);
 
             break;
+        }
 
         default:
             break;
@@ -425,10 +427,18 @@ void chain_update_phrase_preview(void)
     if (SELECTED_PHRASE == previewed_phrase)
         return;
 
-    if (SELECTED_PHRASE == 0x00 || previewed_phrase == 0x00)
+    if (previewed_phrase == 0x00) {
+        previewed_phrase = SELECTED_PHRASE;
         chain_draw_editor_phrase_preview();
-    else
+    }
+    else if (SELECTED_PHRASE == 0x00) {
+        previewed_phrase = SELECTED_PHRASE;
+        chain_clear_editor_phrase_preview();
+    }
+    else {
+        previewed_phrase = SELECTED_PHRASE;
         chain_draw_editor_phrase_preview_data();
+    }
 }
 
 void chain_move_cursor(joystick_position_t joystick_position)
@@ -480,7 +490,7 @@ void chain_move_cursor(joystick_position_t joystick_position)
 void chain_insert_value()
 {
     switch (cursor.x) {
-        case CHAIN_COLUMN_PHRASE:
+        case CHAIN_COLUMN_PHRASE: {
             const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
             if (SELECTED_PHRASE == 0x00) {
@@ -493,8 +503,9 @@ void chain_insert_value()
             }
 
             break;
+        }
 
-        case CHAIN_COLUMN_TRANSPOSE:
+        case CHAIN_COLUMN_TRANSPOSE: {
             const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
             if (SELECTED_TRANSPOSE == 0x00) {
@@ -506,6 +517,7 @@ void chain_insert_value()
             }
 
             break;
+        }
 
         default:
             break;
@@ -515,7 +527,7 @@ void chain_insert_value()
 void chain_delete_value()
 {
     switch (cursor.x) {
-        case CHAIN_COLUMN_PHRASE:
+        case CHAIN_COLUMN_PHRASE: {
             const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
             if (SELECTED_PHRASE == 0x00)
@@ -529,8 +541,9 @@ void chain_delete_value()
             chain_update_phrase_preview();
 
             break;
+        }
 
-        case CHAIN_COLUMN_TRANSPOSE:
+        case CHAIN_COLUMN_TRANSPOSE: {
             uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
             if (SELECTED_TRANSPOSE == 0x00)
@@ -543,6 +556,7 @@ void chain_delete_value()
             chain_update_value();
 
             break;
+        }
 
         default:
             break;
@@ -552,7 +566,7 @@ void chain_delete_value()
 void chain_change_value(joystick_position_t joystick_position)
 {
     switch (cursor.x) {
-        case CHAIN_COLUMN_PHRASE:
+        case CHAIN_COLUMN_PHRASE: {
             const int32_t SELECTED_PHRASE = (int32_t) data_get_chain_phrase(selected_chain, cursor.y);
             int32_t new_phrase = SELECTED_PHRASE;
 
@@ -587,8 +601,9 @@ void chain_change_value(joystick_position_t joystick_position)
                 copied_phrase = (uint8_t) new_phrase;
             }
             break;
+        }
 
-        case CHAIN_COLUMN_TRANSPOSE:
+        case CHAIN_COLUMN_TRANSPOSE: {
             const int32_t SELECTED_TRANSPOSE = (int32_t) data_get_chain_transpose(selected_chain, cursor.y);
             int32_t new_transpose = SELECTED_TRANSPOSE;
 
@@ -622,6 +637,7 @@ void chain_change_value(joystick_position_t joystick_position)
                 copied_transpose = (uint8_t) new_transpose;
             }
             break;
+        }
 
         default:
             break;

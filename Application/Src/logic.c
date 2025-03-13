@@ -131,7 +131,7 @@ logic_state_t logic_state_song(void)
         if (is_joystick_triggered) {
             switch (JOYSTICK_POSITION) {
                 // Hold X + Right : Edit selected phrase.
-                case JOYSTICK_POSITION_RIGHT:
+                case JOYSTICK_POSITION_RIGHT: {
                     uint8_t SELECTED_CHAIN = song_get_selected_chain();
 
                     if (SELECTED_CHAIN == 0x00)
@@ -142,6 +142,7 @@ logic_state_t logic_state_song(void)
 
                     return LOGIC_STATE_CHAIN;
                     break;
+                }
 
                 // Hold X + Up : Go to project screen.
                 case JOYSTICK_POSITION_UP:
@@ -215,7 +216,7 @@ logic_state_t logic_state_chain(void)
         if (is_joystick_triggered) {
             switch (JOYSTICK_POSITION) {
                 // Hold X + Right : Edit selected phrase.
-                case JOYSTICK_POSITION_RIGHT:
+                case JOYSTICK_POSITION_RIGHT: {
                     uint8_t SELECTED_PHRASE = chain_get_selected_phrase();
 
                     if (SELECTED_PHRASE == 0x00)
@@ -226,6 +227,7 @@ logic_state_t logic_state_chain(void)
 
                     return LOGIC_STATE_PHRASE;
                     break;
+                }
 
                 // Hold X + Left : Go back to song screen.
                 case JOYSTICK_POSITION_LEFT:
@@ -303,7 +305,7 @@ logic_state_t logic_state_phrase(void)
         if (is_joystick_triggered) {
             switch (JOYSTICK_POSITION) {
                 // Hold X + Right : Edit selected instrument.
-                case JOYSTICK_POSITION_RIGHT:
+                case JOYSTICK_POSITION_RIGHT: {
                     uint8_t SELECTED_INSTRUMENT = phrase_get_selected_instrument();
 
                     if (SELECTED_INSTRUMENT == 0x00)
@@ -314,9 +316,10 @@ logic_state_t logic_state_phrase(void)
 
                     return LOGIC_STATE_INSTRUMENT;
                     break;
+                }
 
                 // Hold X + Left : Go back to chain screen.
-                case JOYSTICK_POSITION_LEFT:
+                case JOYSTICK_POSITION_LEFT: {
                     uint8_t SELECTED_CHAIN = song_get_selected_chain();
 
                     if (SELECTED_CHAIN == 0x00)
@@ -327,6 +330,7 @@ logic_state_t logic_state_phrase(void)
 
                     return LOGIC_STATE_CHAIN;
                     break;
+                }
 
                 // Hold X + Up : Go to project screen.
                 case JOYSTICK_POSITION_UP:
