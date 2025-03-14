@@ -1,8 +1,8 @@
 #include "logic_song.h"
 #include <stdbool.h>
-#include "data.h"
 #include "region.h"
-#include "helper_functions.h"
+#include "lcd.h"
+#include "basic_utils.h"
 
 static void song_draw_title(void);
 static void song_draw_editor_song(void);
@@ -27,7 +27,7 @@ typedef struct {
 
 static cursor_t cursor = {0};
 static int32_t scroll = 0;
-static uint8_t copied_chain = 0x01;
+static chain_id_t copied_chain = 0x01;
 
 void song_init(void)
 {
@@ -48,7 +48,7 @@ void song_deinit(void)
 void song_draw_title(void)
 {
     static const region_t *REGION = &REGION_SONG_TITLE;
-    static const uint8_t TITLE[] = {'S','o','n','g'};
+    static const symbol_t TITLE[] = {'S','o','n','g'};
     static const int32_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
 
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
@@ -68,8 +68,8 @@ void song_draw_editor_song_channel_labels(void)
     static const region_t *REGION = &REGION_SONG_EDITOR_SONG;
 
     for (int32_t i = 0; i < CHANNEL_COUNT; i++) {
-        region_draw(REGION, (uint8_t) i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
-        region_draw(REGION, (uint8_t) ' ',     COLOR_DARK_FADE, i * 3 + 4, 0);
+        region_draw(REGION, i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
+        region_draw(REGION, ' ',     COLOR_DARK_FADE, i * 3 + 4, 0);
     }
 }
 
@@ -79,16 +79,16 @@ void song_draw_editor_song_row_numbers(void)
     const int32_t ROWS_ON_SCREEN = REGION->size.y - 1;
 
     for (int32_t i = 0; i < ROWS_ON_SCREEN; i++) {
-        const uint8_t ROW = scroll + i;
+        const int32_t ROW = scroll + i;
         const color_t COLOR = (ROW % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         // Left side
-        region_draw(REGION, HEX_DIGIT[ROW / 0x10], COLOR, 0, i + 1);
-        region_draw(REGION, HEX_DIGIT[ROW % 0x10], COLOR, 1, i + 1);
+        region_draw(REGION, HEX_DIGIT[(ROW >> 1) % 0x10], COLOR, 0, i + 1);
+        region_draw(REGION, HEX_DIGIT[(ROW >> 0) % 0x10], COLOR, 1, i + 1);
 
         // Right side
-        region_draw(REGION, HEX_DIGIT[ROW / 0x10], COLOR, CHANNEL_COUNT * 3 + 3, i + 1);
-        region_draw(REGION, HEX_DIGIT[ROW % 0x10], COLOR, CHANNEL_COUNT * 3 + 4, i + 1);
+        region_draw(REGION, HEX_DIGIT[(ROW >> 1) % 0x10], COLOR, CHANNEL_COUNT * 3 + 3, i + 1);
+        region_draw(REGION, HEX_DIGIT[(ROW >> 0) % 0x10], COLOR, CHANNEL_COUNT * 3 + 4, i + 1);
     }
 }
 
@@ -98,7 +98,7 @@ void song_draw_editor_song_spacing(void)
     const int32_t ROWS_ON_SCREEN = REGION->size.y - 1;
 
     for (int32_t y = 0; y < ROWS_ON_SCREEN; y++) {
-        const uint8_t ROW = scroll + y;
+        const int32_t ROW = scroll + y;
         const color_t COLOR = (ROW % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         for (int32_t x = 0; x < CHANNEL_COUNT + 1; x++)
@@ -112,10 +112,10 @@ void song_draw_editor_song_data(void)
     const int32_t ROWS_ON_SCREEN = REGION->size.y - 1;
 
     for (int32_t y = 0; y < ROWS_ON_SCREEN; y++) {
-        const uint8_t ROW = scroll + y;
+        const int32_t ROW = scroll + y;
 
         for (int32_t x = 0; x < CHANNEL_COUNT; x++) {
-            const uint8_t CHAIN = data_get_song_chain(x, ROW);
+            const chain_id_t CHAIN = data_get_song_chain(x, ROW);
             const bool IS_CHAIN_NULL = (CHAIN == 0x00);
 
             const color_t COLOR_VALUE = (ROW % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
@@ -123,7 +123,7 @@ void song_draw_editor_song_data(void)
 
             const color_t COLOR = (IS_CHAIN_NULL ? COLOR_NULL : COLOR_VALUE);
 
-            const uint8_t SYMBOL[2] = {
+            const symbol_t SYMBOL[2] = {
                 (IS_CHAIN_NULL ? '-' : HEX_DIGIT[CHAIN / 0x10]),
                 (IS_CHAIN_NULL ? '-' : HEX_DIGIT[CHAIN % 0x10])
             };
@@ -162,7 +162,7 @@ void song_unhighlight_cursor(void)
 {
     static const region_t *REGION = &REGION_SONG_EDITOR_SONG;
     const int32_t RELATIVE_ROW = cursor.y - scroll;
-    const uint8_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
     const bool IS_CHAIN_NULL = (SELECTED_CHAIN == 0x00);
 
     const color_t COLOR_VALUE = (cursor.y % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
@@ -222,10 +222,10 @@ void song_update_chain(void)
 {
     static const region_t *REGION = &REGION_SONG_EDITOR_SONG;
     const int32_t RELATIVE_ROW = cursor.y - scroll;
-    const uint8_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
     const bool IS_CHAIN_NULL = (SELECTED_CHAIN == 0x00);
 
-    const uint8_t SYMBOL[2] = {
+    const symbol_t SYMBOL[2] = {
         (IS_CHAIN_NULL ? '-' : HEX_DIGIT[SELECTED_CHAIN / 0x10]),
         (IS_CHAIN_NULL ? '-' : HEX_DIGIT[SELECTED_CHAIN % 0x10])
     };
@@ -350,7 +350,7 @@ void song_move_page(joystick_position_t joystick_position)
 
 void song_insert_chain()
 {
-    const uint8_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
 
     if (SELECTED_CHAIN == 0x00) {
         data_set_song_chain(copied_chain, cursor.x, cursor.y);
@@ -368,7 +368,7 @@ void song_insert_new_chain(void)
 
 void song_delete_chain(void)
 {
-    const uint8_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
 
     if (SELECTED_CHAIN == 0x00)
         return;
@@ -410,13 +410,13 @@ void song_change_chain(joystick_position_t joystick_position)
     }
 
     if (new_chain != SELECTED_CHAIN) {
-        data_set_song_chain(new_chain, cursor.x, cursor.y);
+        data_set_song_chain((chain_id_t)new_chain, cursor.x, cursor.y);
         song_update_chain();
-        copied_chain = new_chain;
+        copied_chain = (chain_id_t)new_chain;
     }
 }
 
-uint32_t song_get_selected_chain(void)
+chain_id_t song_get_selected_chain(void)
 {
     return data_get_song_chain(cursor.x,cursor.y);
 }

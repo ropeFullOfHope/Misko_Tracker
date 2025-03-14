@@ -8,7 +8,7 @@ typedef enum {
     COMMAND_ARP,
     COMMAND_PCH,
     COMMAND_COUNT
-} command_id_t;
+} command_t;
 
 typedef enum {
     PARAMETER_XX,
@@ -16,16 +16,16 @@ typedef enum {
 } parameter_type_t;
 
 typedef struct {
-    uint8_t name[3];
-    uint8_t *full_name;
+    symbol_t name[3];
+    symbol_t *full_name;
     parameter_type_t parameter_type;
     struct {
-        uint8_t *general;
+        symbol_t *general;
         union {
-            uint8_t *xx;
+            symbol_t *xx;
             struct {
-                uint8_t *x;
-                uint8_t *y;
+                symbol_t *x;
+                symbol_t *y;
             };
         } parameter;
     } description;

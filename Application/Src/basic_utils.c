@@ -1,4 +1,11 @@
-#include "helper_functions.h"
+#include "basic_utils.h"
+
+const symbol_t HEX_DIGIT[16] = {
+    '0', '1', '2', '3',
+    '4', '5', '6', '7',
+    '8', '9', 'A', 'B',
+    'C', 'D', 'E', 'F'
+};
 
 int32_t change_value_within_bounds(int32_t value, int32_t change_amount, int32_t lower_bound, int32_t upper_bound)
 {

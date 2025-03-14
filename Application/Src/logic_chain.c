@@ -1,8 +1,8 @@
 #include "logic_chain.h"
 #include <stdbool.h>
-#include "data.h"
 #include "region.h"
-#include "helper_functions.h"
+#include "lcd.h"
+#include "basic_utils.h"
 
 static void chain_draw_title(void);
 static void chain_draw_editor_chain(void);
@@ -36,12 +36,12 @@ typedef struct {
 } cursor_t;
 
 static cursor_t cursor = {0};
-static uint8_t selected_chain = 0x01;
-static uint8_t previewed_phrase = 0x00;
-static uint8_t copied_phrase = 0x01;
-static uint8_t copied_transpose = 0x80;
+static chain_id_t selected_chain = 0x01;
+static phrase_id_t previewed_phrase = 0x00;
+static phrase_id_t copied_phrase = 0x01;
+static transpose_t copied_transpose = 0x80;
 
-void chain_init(uint8_t chain)
+void chain_init(chain_id_t chain)
 {
     selected_chain = chain;
 
@@ -64,8 +64,8 @@ void chain_deinit(void)
 void chain_draw_title(void)
 {
     static const region_t *REGION = &REGION_CHAIN_TITLE;
-    const uint8_t TITLE[] = {'C', 'h', 'a', 'i', 'n'};
-    const uint8_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
+    const symbol_t TITLE[] = {'C', 'h', 'a', 'i', 'n'};
+    const int32_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
 
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
         region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
@@ -84,7 +84,7 @@ void chain_draw_editor_chain(void)
 
 void chain_draw_editor_phrase_preview(void)
 {
-    const uint8_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+    const phrase_id_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
     previewed_phrase = PHRASE;
 
@@ -134,8 +134,8 @@ void chain_draw_editor_chain_data(void)
     static const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     for (int32_t i = 0; i < 16; i++) {
-        const uint8_t PHRASE    = data_get_chain_phrase(selected_chain, i);
-        const uint8_t TRANSPOSE = data_get_chain_transpose(selected_chain, i);
+        const phrase_id_t PHRASE    = data_get_chain_phrase(selected_chain, i);
+        const transpose_t TRANSPOSE = data_get_chain_transpose(selected_chain, i);
 
         const bool IS_PHRASE_NULL = (PHRASE == 0x00);
         const bool IS_TRANSPOSE_NULL = (TRANSPOSE == 0x00);
@@ -144,13 +144,13 @@ void chain_draw_editor_chain_data(void)
         const color_t COLOR_VALUE = (i % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
         const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
-        const uint8_t SYMBOL_PHRASE[2] = {
+        const symbol_t SYMBOL_PHRASE[2] = {
             (IS_PHRASE_NULL ? '-' : HEX_DIGIT[PHRASE / 0x10]),
             (IS_PHRASE_NULL ? '-' : HEX_DIGIT[PHRASE % 0x10])
         };
         const color_t COLOR_PHRASE = (IS_PHRASE_NULL ? COLOR_NULL : COLOR_VALUE);
 
-        const uint8_t SYMBOL_TRANSPOSE[2] = {
+        const symbol_t SYMBOL_TRANSPOSE[2] = {
             (IS_TRANSPOSE_NULL ? '-' : HEX_DIGIT[TRANSPOSE / 0x10]),
             (IS_TRANSPOSE_NULL ? '-' : HEX_DIGIT[TRANSPOSE % 0x10])
         };
@@ -205,12 +205,12 @@ void chain_draw_editor_phrase_preview_data(void)
 {
     static const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-    const uint8_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+    const phrase_id_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
     for (int32_t i = 0; i < 16; i++) {
-        const uint8_t NOTE = data_get_phrase_note(PHRASE, i);
-        const uint8_t INSTRUMENT = data_get_phrase_instrument(PHRASE, i);
-        const uint8_t VOLUME = data_get_phrase_volume(PHRASE, i);
+        const note_t NOTE = data_get_phrase_note(PHRASE, i);
+        const instrument_id_t INSTRUMENT = data_get_phrase_instrument(PHRASE, i);
+        const volume_t VOLUME = data_get_phrase_volume(PHRASE, i);
 
         const bool IS_NOTE_NULL = (NOTE == 0x00);
         const bool IS_INSTRUMENT_NULL = (INSTRUMENT == 0x00);
@@ -219,20 +219,20 @@ void chain_draw_editor_phrase_preview_data(void)
         const color_t COLOR_VALUE = (i % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
         const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
-        const uint8_t SYMBOL_NOTE[3] = {
+        const symbol_t SYMBOL_NOTE[3] = {
             (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][0]),
             (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][1]),
             (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][2]),
         };
         const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
 
-        const uint8_t SYMBOL_INSTRUMENT[2] = {
+        const symbol_t SYMBOL_INSTRUMENT[2] = {
             (IS_INSTRUMENT_NULL ? '-' : HEX_DIGIT[INSTRUMENT / 0x10]),
             (IS_INSTRUMENT_NULL ? '-' : HEX_DIGIT[INSTRUMENT % 0x10])
         };
         const color_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
 
-        const uint8_t SYMBOL_VOLUME[2] = {
+        const symbol_t SYMBOL_VOLUME[2] = {
             (IS_VOLUME_NULL ? '-' : HEX_DIGIT[VOLUME / 0x10]),
             (IS_VOLUME_NULL ? '-' : HEX_DIGIT[VOLUME % 0x10])
         };
@@ -300,7 +300,7 @@ void chain_unhighlight_cursor(void)
 
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
             const bool IS_SELECTED_PHRASE_NULL = (SELECTED_PHRASE == 0x00);
 
             const color_t COLOR_PHRASE = (IS_SELECTED_PHRASE_NULL ? COLOR_NULL : COLOR_VALUE);
@@ -312,10 +312,11 @@ void chain_unhighlight_cursor(void)
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            const transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
             const bool IS_SELECTED_TRANSPOSE_NULL = (SELECTED_TRANSPOSE == 0x00);
+            const bool IS_SELECTED_TRANSPOSE_ZERO = (SELECTED_TRANSPOSE == 0x80);
 
-            const color_t COLOR_TRANSPOSE = (IS_SELECTED_TRANSPOSE_NULL ? COLOR_NULL : COLOR_VALUE);
+            const color_t COLOR_TRANSPOSE = (IS_SELECTED_TRANSPOSE_NULL || IS_SELECTED_TRANSPOSE_ZERO ? COLOR_NULL : COLOR_VALUE);
 
             region_change_color(REGION, COLOR_TRANSPOSE, 5, cursor.y + 1);
             region_change_color(REGION, COLOR_TRANSPOSE, 6, cursor.y + 1);
@@ -386,10 +387,10 @@ void chain_update_value(void)
 
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
             const bool IS_SELECTED_PHRASE_NULL = (SELECTED_PHRASE == 0x00);
 
-            const uint8_t SYMBOL_PHRASE[2] = {
+            const symbol_t SYMBOL_PHRASE[2] = {
                 (IS_SELECTED_PHRASE_NULL ? '-' : HEX_DIGIT[SELECTED_PHRASE / 0x10]),
                 (IS_SELECTED_PHRASE_NULL ? '-' : HEX_DIGIT[SELECTED_PHRASE % 0x10])
             };
@@ -401,10 +402,10 @@ void chain_update_value(void)
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            const transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
             const bool IS_SELECTED_TRANSPOSE_NULL = (SELECTED_TRANSPOSE == 0x00);
 
-            const uint8_t SYMBOL_TRANSPOSE[2] = {
+            const symbol_t SYMBOL_TRANSPOSE[2] = {
                 (IS_SELECTED_TRANSPOSE_NULL ? '-' : HEX_DIGIT[SELECTED_TRANSPOSE / 0x10]),
                 (IS_SELECTED_TRANSPOSE_NULL ? '-' : HEX_DIGIT[SELECTED_TRANSPOSE % 0x10])
             };
@@ -422,7 +423,7 @@ void chain_update_value(void)
 
 void chain_update_phrase_preview(void)
 {
-    const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+    const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
     if (SELECTED_PHRASE == previewed_phrase)
         return;
@@ -491,7 +492,7 @@ void chain_insert_value()
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
             if (SELECTED_PHRASE == 0x00) {
                 data_set_chain_phrase(copied_phrase, selected_chain, cursor.y);
@@ -506,7 +507,7 @@ void chain_insert_value()
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            const transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
             if (SELECTED_TRANSPOSE == 0x00) {
                 data_set_chain_transpose(copied_transpose, selected_chain, cursor.y);
@@ -528,7 +529,7 @@ void chain_delete_value()
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const uint8_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
 
             if (SELECTED_PHRASE == 0x00)
                 return;
@@ -544,7 +545,7 @@ void chain_delete_value()
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            uint8_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
 
             if (SELECTED_TRANSPOSE == 0x00)
                 return;
@@ -595,10 +596,10 @@ void chain_change_value(joystick_position_t joystick_position)
             }
 
             if (new_phrase != SELECTED_PHRASE) {
-                data_set_chain_phrase((uint8_t) new_phrase, selected_chain, cursor.y);
+                data_set_chain_phrase((phrase_id_t) new_phrase, selected_chain, cursor.y);
                 chain_update_value();
                 chain_update_phrase_preview();
-                copied_phrase = (uint8_t) new_phrase;
+                copied_phrase = (phrase_id_t) new_phrase;
             }
             break;
         }
@@ -632,9 +633,9 @@ void chain_change_value(joystick_position_t joystick_position)
             }
 
             if (new_transpose != SELECTED_TRANSPOSE) {
-                data_set_chain_transpose((uint8_t) new_transpose, selected_chain, cursor.y);
+                data_set_chain_transpose((transpose_t) new_transpose, selected_chain, cursor.y);
                 chain_update_value();
-                copied_transpose = (uint8_t) new_transpose;
+                copied_transpose = (transpose_t) new_transpose;
             }
             break;
         }
@@ -644,7 +645,7 @@ void chain_change_value(joystick_position_t joystick_position)
     }
 }
 
-uint8_t chain_get_selected_phrase(void)
+phrase_id_t chain_get_selected_phrase(void)
 {
     return data_get_chain_phrase(selected_chain, cursor.y);
 }

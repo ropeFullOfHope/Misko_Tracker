@@ -4,7 +4,7 @@
 ../Application/Src/logic_song.c:58:6:song_draw_editor_song	8	static
 ../Application/Src/logic_song.c:66:6:song_draw_editor_song_channel_labels	24	static
 ../Application/Src/logic_song.c:76:6:song_draw_editor_song_row_numbers	32	static
-../Application/Src/logic_song.c:95:6:song_draw_editor_song_spacing	32	static
+../Application/Src/logic_song.c:95:6:song_draw_editor_song_spacing	40	static
 ../Application/Src/logic_song.c:109:6:song_draw_editor_song_data	48	static
 ../Application/Src/logic_song.c:137:6:song_clear_title	8	static
 ../Application/Src/logic_song.c:144:6:song_clear_editor_song	8	static
@@ -21,4 +21,4 @@
 ../Application/Src/logic_song.c:364:6:song_insert_new_chain	4	static
 ../Application/Src/logic_song.c:369:6:song_delete_chain	16	static
 ../Application/Src/logic_song.c:382:6:song_change_chain	24	static
-../Application/Src/logic_song.c:419:10:song_get_selected_chain	8	static
+../Application/Src/logic_song.c:419:12:song_get_selected_chain	8	static

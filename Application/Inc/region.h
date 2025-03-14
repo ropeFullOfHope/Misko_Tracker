@@ -11,11 +11,11 @@ typedef struct {
     } start, size;
 } region_t;
 
-void region_draw(const region_t *p_region, uint8_t symbol, color_t color, int32_t y, int32_t x);
-void region_change_symbol(const region_t *p_region, uint8_t symbol, int32_t x, int32_t y);
+void region_draw(const region_t *p_region, symbol_t symbol, color_t color, int32_t y, int32_t x);
+void region_change_symbol(const region_t *p_region, symbol_t symbol, int32_t x, int32_t y);
 void region_change_color(const region_t *p_region, color_t color, int32_t x, int32_t y);
-void region_fill(const region_t *p_region, uint8_t symbol, color_t color);
-int32_t region_draw_text(const region_t *p_region, uint8_t *text, color_t color, int32_t start_x, int32_t start_y);
+void region_fill(const region_t *p_region, symbol_t symbol, color_t color);
+int32_t region_draw_text(const region_t *p_region, symbol_t *text, color_t color, int32_t start_x, int32_t start_y);
 
 extern const region_t REGION_SIDEBAR;
 extern const region_t REGION_MAP;

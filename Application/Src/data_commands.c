@@ -3,35 +3,35 @@
 const command_metadata_t COMMAND_METADATA[COMMAND_COUNT] = {
     [COMMAND_NULL] = {
         .name = {'-', '-', '-'},
-        .full_name = (uint8_t*) "NULL",
+        .full_name = (symbol_t*) "NULL",
         .parameter_type = PARAMETER_XX,
         .description = {
-            .general = (uint8_t*) "---",
+            .general = (symbol_t*) "Something has gone horribly wrong.",
             .parameter = {
-                .xx = (uint8_t*) "---"
+                .xx = (symbol_t*) "You really shouldn't be seeing this."
             }
         }
     },
     [COMMAND_ARP] = {
         .name = {'A', 'R', 'P'},
-        .full_name = (uint8_t*) "Arpeggio",
+        .full_name = (symbol_t*) "Arpeggio",
         .parameter_type = PARAMETER_XY,
         .description = {
-            .general = (uint8_t*) "Fast note shifting in half steps from root note.",
+            .general = (symbol_t*) "Fast note shifting in half steps from root note.",
             .parameter = {
-                .x = (uint8_t*) "First shift.",
-                .y = (uint8_t*) "Second shift."
+                .x = (symbol_t*) "First shift.",
+                .y = (symbol_t*) "Second shift."
             }
         }
     },
     [COMMAND_PCH] = {
         .name = {'P', 'C', 'H'},
-        .full_name = (uint8_t*) "Fine Pitch",
+        .full_name = (symbol_t*) "Fine Pitch",
         .parameter_type = PARAMETER_XX,
         .description = {
-            .general = (uint8_t*) "Fine pitch tuning in 1/128th of a half step.",
+            .general = (symbol_t*) "Fine pitch tuning in 1/128th of a half step.",
             .parameter = {
-                .xx = (uint8_t*) "= 80 or 00: No pitch shift.\n> 80: Increase pitch\n< 80: Decrease pitch"
+                .xx = (symbol_t*) "=80 or =00: No pitch shift.\n>80: Increase pitch\n<80: Decrease pitch"
             }
         }
     }

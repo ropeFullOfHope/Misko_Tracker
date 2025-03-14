@@ -21,4 +21,4 @@
 ../Application/Src/logic_song.c:364:6:song_insert_new_chain	1
 ../Application/Src/logic_song.c:369:6:song_delete_chain	2
 ../Application/Src/logic_song.c:382:6:song_change_chain	7
-../Application/Src/logic_song.c:419:10:song_get_selected_chain	1
+../Application/Src/logic_song.c:419:12:song_get_selected_chain	1

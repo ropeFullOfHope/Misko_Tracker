@@ -7,26 +7,29 @@
 #define ROW_COUNT    30
 #define COLUMN_COUNT 40
 
+typedef uint8_t symbol_t;
+
 typedef enum {
     COLOR_NORMAL,
     COLOR_NORMAL_FADE,
     COLOR_DARK,
     COLOR_DARK_FADE,
-    COLOR_HIGHLIGHT
+    COLOR_HIGHLIGHT,
+    COLOR_COUNT
 } color_t;
 
 typedef struct {
-    uint8_t symbol;
+    symbol_t symbol;
     color_t color;
 } tile_t;
 
 void LCD_init(void);
-void LCD_draw(uint8_t symbol, color_t color, int32_t x, int32_t y);
-void LCD_change_symbol(uint8_t tile, int32_t x, int32_t y);
+void LCD_draw(symbol_t symbol, color_t color, int32_t x, int32_t y);
+void LCD_change_symbol(symbol_t symbol, int32_t x, int32_t y);
 void LCD_change_color(color_t color, int32_t x, int32_t y);
 void LCD_update_screen(void);
 void LCD_update_one_tile(void);
 void LCD_update_tile(int32_t x, int32_t y);
-uint32_t LCD_is_DMA_ready(void);
+bool LCD_is_DMA_ready(void);
 
 #endif /* INC_LCD_H_ */

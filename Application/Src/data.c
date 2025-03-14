@@ -1,20 +1,24 @@
 #include "data.h"
 
 typedef struct {
-    uint8_t phrase[CHAIN_ROW_COUNT];
-    uint8_t transpose[CHAIN_ROW_COUNT];
+    chain_id_t chain[CHANNEL_COUNT][SONG_ROW_COUNT];
+} song_t;
+
+typedef struct {
+    phrase_id_t phrase[CHAIN_ROW_COUNT];
+    transpose_t transpose[CHAIN_ROW_COUNT];
 } chain_t;
 
 typedef struct {
-    uint8_t note[PHRASE_ROW_COUNT];
-    uint8_t instrument[PHRASE_ROW_COUNT];
-    uint8_t volume[PHRASE_ROW_COUNT];
+    note_t note[PHRASE_ROW_COUNT];
+    instrument_id_t instrument[PHRASE_ROW_COUNT];
+    volume_t volume[PHRASE_ROW_COUNT];
     command_id_t command[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
-    uint8_t parameter[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
+    parameter_t parameter[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
 } phrase_t;
 
 typedef struct {
-    uint8_t song[CHANNEL_COUNT][SONG_ROW_COUNT];
+    song_t song;
     chain_t chain[CHAIN_COUNT];
     phrase_t phrase[PHRASE_COUNT];
 } project_data_t;
@@ -30,12 +34,7 @@ static project_settings_t project_settings = {
     .joystick_delay_repeat = 2
 };
 
-const uint8_t HEX_DIGIT[16] = {
-    '0', '1', '2', '3', '4', '5', '6', '7',
-    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-};
-
-const uint8_t NOTE_NAME[NOTE_COUNT][3] = {
+const symbol_t NOTE_NAME[NOTE_COUNT][3] = {
     "---",
     "C-0", "C#0", "D-0", "D#0", "E-0", "F-0", "F#0", "G-0", "G#0", "A-0", "A#0", "B-0",
     "C-1", "C#1", "D-1", "D#1", "E-1", "F-1", "F#1", "G-1", "G#1", "A-1", "A#1", "B-1",
@@ -48,164 +47,248 @@ const uint8_t NOTE_NAME[NOTE_COUNT][3] = {
     "C-8", "C#8", "D-8", "D#8", "E-8", "F-8", "F#8", "G-8", "G#8", "A-8", "A#8", "B-8"
 };
 
-uint8_t data_get_song_chain(int32_t channel, int32_t row)
+chain_id_t data_get_song_chain(int32_t channel, int32_t row)
 {
-    if (0 <= channel && channel < CHANNEL_COUNT)
-        if (0 <= row && row < SONG_ROW_COUNT)
-            return project_data.song[channel][row];
+    if (channel < 0 ||
+        channel >= CHANNEL_COUNT ||
+        row < 0 ||
+        row >= SONG_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return 0x00;
+    return project_data.song.chain[channel][row];
 }
 
-void data_set_song_chain(uint8_t chain, int32_t channel, int32_t row)
+void data_set_song_chain(chain_id_t chain, int32_t channel, int32_t row)
 {
-    if (0 <= channel && channel < CHANNEL_COUNT)
-        if (0 <= row && row < SONG_ROW_COUNT)
-            project_data.song[channel][row] = chain;
+    if (channel < 0 ||
+        channel >= CHANNEL_COUNT ||
+        row < 0 ||
+        row >= SONG_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.song.chain[channel][row] = chain;
 }
 
-uint8_t data_get_chain_phrase(uint8_t chain, int32_t row)
+phrase_id_t data_get_chain_phrase(chain_id_t chain, int32_t row)
 {
     chain -= 1;
 
-    if (chain < CHAIN_COUNT)
-        if (0 <= row && row < CHAIN_ROW_COUNT)
-            return project_data.chain[chain].phrase[row];
+    if (//chain < 0 ||
+        chain >= CHAIN_COUNT ||
+        row < 0 ||
+        row >= CHAIN_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return 0x00;
+    return project_data.chain[chain].phrase[row];
 }
 
-void data_set_chain_phrase(uint8_t phrase, uint8_t chain, int32_t row)
+void data_set_chain_phrase(phrase_id_t phrase, chain_id_t chain, int32_t row)
 {
     chain -= 1;
 
-    if (chain < CHAIN_COUNT)
-        if (0 <= row && row < CHAIN_ROW_COUNT)
-            project_data.chain[chain].phrase[row] = phrase;
+    if (//chain < 0 ||
+        chain >= CHAIN_COUNT ||
+        row < 0 ||
+        row >= CHAIN_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.chain[chain].phrase[row] = phrase;
 }
 
-uint8_t data_get_chain_transpose(uint8_t chain, int32_t row)
+transpose_t data_get_chain_transpose(chain_id_t chain, int32_t row)
 {
     chain -= 1;
 
-    if (chain < CHAIN_COUNT)
-        if (0 <= row && row < CHAIN_ROW_COUNT)
-            return project_data.chain[chain].transpose[row];
+    if (//chain < 0 ||
+        chain >= CHAIN_COUNT ||
+        row < 0 ||
+        row >= CHAIN_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return 0;
+    return project_data.chain[chain].transpose[row];
 }
 
-void data_set_chain_transpose(uint8_t transpose, uint8_t chain, int32_t row)
+void data_set_chain_transpose(transpose_t transpose, chain_id_t chain, int32_t row)
 {
     chain -= 1;
 
-    if (chain < CHAIN_COUNT)
-        if (0 <= row && row < CHAIN_ROW_COUNT)
-            project_data.chain[chain].transpose[row] = transpose;
+    if (//chain < 0 ||
+        chain >= CHAIN_COUNT ||
+        row < 0 ||
+        row >= CHAIN_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.chain[chain].transpose[row] = transpose;
 }
 
-uint8_t data_get_phrase_note(uint8_t phrase, int32_t row)
+note_t data_get_phrase_note(phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < 16)
-            return project_data.phrase[phrase].note[row];
+    if (//phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return 0x00;
+    return project_data.phrase[phrase].note[row];
 }
 
-void data_set_phrase_note(uint8_t note, uint8_t phrase, int32_t row)
+void data_set_phrase_note(note_t note, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < 16)
-            project_data.phrase[phrase].note[row] = note;
+    if (//phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.phrase[phrase].note[row] = note;
 }
 
-uint8_t data_get_phrase_instrument(uint8_t phrase, int32_t row)
+instrument_id_t data_get_phrase_instrument(phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < 16)
-            return project_data.phrase[phrase].instrument[row];
+    if (//phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return 0x00;
+    return project_data.phrase[phrase].instrument[row];
 }
 
-void data_set_phrase_instrument(uint8_t instrument, uint8_t phrase, int32_t row)
+void data_set_phrase_instrument(instrument_id_t instrument, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < 16)
-            project_data.phrase[phrase].instrument[row] = instrument;
+    if (//phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.phrase[phrase].instrument[row] = instrument;
 }
 
-uint8_t data_get_phrase_volume(uint8_t phrase, int32_t row)
+volume_t data_get_phrase_volume(phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < 16)
-            return project_data.phrase[phrase].volume[row];
+    if (//phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return 0x00;
+    return project_data.phrase[phrase].volume[row];
 }
 
-void data_set_phrase_volume(uint8_t volume, uint8_t phrase, int32_t row)
+void data_set_phrase_volume(volume_t volume, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (phrase < PHRASE_COUNT)
-        if (0 <= row && row < 16)
-            project_data.phrase[phrase].volume[row] = volume;
+    if (//phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.phrase[phrase].volume[row] = volume;
 }
 
-uint8_t data_get_phrase_command(uint8_t command_number, uint8_t phrase, int32_t row)
+command_id_t data_get_phrase_command(int32_t command_number, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (command_number < COMMANDS_PER_ROW)
-        if (phrase < PHRASE_COUNT)
-            if (0 <= row && row < 16)
-                return project_data.phrase[phrase].command[row][command_number];
+    if (command_number < 0 ||
+        command_number >= COMMANDS_PER_ROW ||
+        //phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return COMMAND_NULL;
+    return project_data.phrase[phrase].command[row][command_number];
 }
 
-void data_set_phrase_command(command_id_t command, uint8_t command_number, uint8_t phrase, int32_t row)
+void data_set_phrase_command(command_id_t command, int32_t command_number, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (command_number < COMMANDS_PER_ROW)
-        if (phrase < PHRASE_COUNT)
-            if (0 <= row && row < 16)
-                project_data.phrase[phrase].command[row][command_number] = command;
+    if (command_number < 0 ||
+        command_number >= COMMANDS_PER_ROW ||
+        //phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.phrase[phrase].command[row][command_number] = command;
 }
 
-command_id_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_t row)
+parameter_t data_get_phrase_parameter(int32_t command_number, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (command_number < COMMANDS_PER_ROW)
-        if (phrase < PHRASE_COUNT)
-            if (0 <= row && row < 16)
-                return project_data.phrase[phrase].parameter[row][command_number];
+    if (command_number < 0 ||
+        command_number >= COMMANDS_PER_ROW ||
+        //phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return 0x00;
+    }
 
-    return COMMAND_NULL;
+    return project_data.phrase[phrase].parameter[row][command_number];
 }
 
-void data_set_phrase_parameter(uint8_t parameter, uint8_t command_number, uint8_t phrase, int32_t row)
+void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, phrase_id_t phrase, int32_t row)
 {
     phrase -= 1;
 
-    if (command_number < COMMANDS_PER_ROW)
-        if (phrase < PHRASE_COUNT)
-            if (0 <= row && row < 16)
-                project_data.phrase[phrase].parameter[row][command_number] = parameter;
+    if (command_number < 0 ||
+        command_number >= COMMANDS_PER_ROW ||
+        //phrase < 0 ||
+        phrase >= PHRASE_COUNT ||
+        row < 0 ||
+        row >= PHRASE_ROW_COUNT)
+    {
+        return;
+    }
+
+    project_data.phrase[phrase].parameter[row][command_number] = parameter;
 }
 
 int32_t data_get_setting_joystick_delay_initial (void)

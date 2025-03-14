@@ -132,7 +132,7 @@ logic_state_t logic_state_song(void)
             switch (JOYSTICK_POSITION) {
                 // Hold X + Right : Edit selected phrase.
                 case JOYSTICK_POSITION_RIGHT: {
-                    uint8_t SELECTED_CHAIN = song_get_selected_chain();
+                    chain_id_t SELECTED_CHAIN = song_get_selected_chain();
 
                     if (SELECTED_CHAIN == 0x00)
                         return LOGIC_STATE_SONG;
@@ -217,7 +217,7 @@ logic_state_t logic_state_chain(void)
             switch (JOYSTICK_POSITION) {
                 // Hold X + Right : Edit selected phrase.
                 case JOYSTICK_POSITION_RIGHT: {
-                    uint8_t SELECTED_PHRASE = chain_get_selected_phrase();
+                    phrase_id_t SELECTED_PHRASE = chain_get_selected_phrase();
 
                     if (SELECTED_PHRASE == 0x00)
                         return LOGIC_STATE_CHAIN;
@@ -306,7 +306,7 @@ logic_state_t logic_state_phrase(void)
             switch (JOYSTICK_POSITION) {
                 // Hold X + Right : Edit selected instrument.
                 case JOYSTICK_POSITION_RIGHT: {
-                    uint8_t SELECTED_INSTRUMENT = phrase_get_selected_instrument();
+                    instrument_id_t SELECTED_INSTRUMENT = phrase_get_selected_instrument();
 
                     if (SELECTED_INSTRUMENT == 0x00)
                         break;
@@ -320,7 +320,7 @@ logic_state_t logic_state_phrase(void)
 
                 // Hold X + Left : Go back to chain screen.
                 case JOYSTICK_POSITION_LEFT: {
-                    uint8_t SELECTED_CHAIN = song_get_selected_chain();
+                    chain_id_t SELECTED_CHAIN = song_get_selected_chain();
 
                     if (SELECTED_CHAIN == 0x00)
                         break;

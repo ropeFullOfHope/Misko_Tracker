@@ -17,7 +17,7 @@ const region_t REGION_PHRASE_TITLE                      = {.start = {1,  1}, .si
 const region_t REGION_PHRASE_EDITOR_PHRASE              = {.start = {1,  3}, .size = {30, 17}};
 const region_t REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION = {.start = {1, 21}, .size = {38,  8}};
 
-void region_draw(const region_t *p_region, uint8_t symbol, color_t color, int32_t x, int32_t y)
+void region_draw(const region_t *p_region, symbol_t symbol, color_t color, int32_t x, int32_t y)
 {
     if (p_region == NULL)
         return;
@@ -31,7 +31,7 @@ void region_draw(const region_t *p_region, uint8_t symbol, color_t color, int32_
     LCD_draw(symbol, color, p_region->start.x + x, p_region->start.y + y);
 }
 
-void region_change_symbol(const region_t *p_region, uint8_t symbol, int32_t x, int32_t y)
+void region_change_symbol(const region_t *p_region, symbol_t symbol, int32_t x, int32_t y)
 {
     if (p_region == NULL)
         return;
@@ -61,7 +61,7 @@ void region_change_color(const region_t *p_region, color_t color, int32_t x, int
 }
 
 
-void region_fill(const region_t *p_region, uint8_t symbol, color_t color)
+void region_fill(const region_t *p_region, symbol_t symbol, color_t color)
 {
     if (p_region == NULL)
         return;
@@ -71,7 +71,7 @@ void region_fill(const region_t *p_region, uint8_t symbol, color_t color)
             LCD_draw(symbol, color, p_region->start.x + x, p_region->start.y + y);
 }
 
-int32_t region_draw_text(const region_t *p_region, uint8_t *text, color_t color, int32_t start_x, int32_t start_y)
+int32_t region_draw_text(const region_t *p_region, symbol_t *text, color_t color, int32_t start_x, int32_t start_y)
 {
     if (p_region == NULL)
         return 0;
@@ -91,7 +91,7 @@ int32_t region_draw_text(const region_t *p_region, uint8_t *text, color_t color,
     if (*text == '\0')
         return 0;
 
-    uint8_t text_line[MAX_LINE_LENGTH + 1] = {0};
+    symbol_t text_line[MAX_LINE_LENGTH + 1] = {0};
 
     int32_t row;
 

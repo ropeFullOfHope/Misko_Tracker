@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "data_commands.h"
+#include "lcd.h"
 
 #define ENGINE_TICK_RATE 60
 
@@ -17,25 +18,33 @@
 
 #define NOTE_COUNT (9 * 12 + 1)
 
-extern const uint8_t HEX_DIGIT[16];
-extern const uint8_t NOTE_NAME[NOTE_COUNT][3];
+typedef uint8_t chain_id_t;
+typedef uint8_t phrase_id_t;
+typedef uint8_t transpose_t;
+typedef uint8_t note_t;
+typedef uint8_t instrument_id_t;
+typedef uint8_t volume_t;
+typedef uint8_t command_id_t;
+typedef uint8_t parameter_t;
 
-uint8_t data_get_song_chain(int32_t channel, int32_t row);
-void data_set_song_chain(uint8_t chain, int32_t channel, int32_t row);
-uint8_t data_get_chain_phrase(uint8_t chain, int32_t row);
-void data_set_chain_phrase(uint8_t phrase, uint8_t chain, int32_t row);
-uint8_t data_get_chain_transpose(uint8_t chain, int32_t row);
-void data_set_chain_transpose(uint8_t transpose, uint8_t chain, int32_t row);
-uint8_t data_get_phrase_note(uint8_t phrase, int32_t row);
-void data_set_phrase_note(uint8_t note, uint8_t phrase, int32_t row);
-uint8_t data_get_phrase_instrument(uint8_t phrase, int32_t row);
-void data_set_phrase_instrument(uint8_t instrument, uint8_t phrase, int32_t row);
-uint8_t data_get_phrase_volume(uint8_t phrase, int32_t row);
-void data_set_phrase_volume(uint8_t volume, uint8_t phrase, int32_t row);
-uint8_t data_get_phrase_command(uint8_t command_number, uint8_t phrase, int32_t row);
-void data_set_phrase_command(command_id_t command, uint8_t command_number, uint8_t phrase, int32_t row);
-command_id_t data_get_phrase_parameter(uint8_t command_number, uint8_t phrase, int32_t row);
-void data_set_phrase_parameter(uint8_t parameter, uint8_t command_number, uint8_t phrase, int32_t row);
+extern const symbol_t NOTE_NAME[NOTE_COUNT][3];
+
+chain_id_t data_get_song_chain(int32_t channel, int32_t row);
+void data_set_song_chain(chain_id_t chain, int32_t channel, int32_t row);
+phrase_id_t data_get_chain_phrase(chain_id_t chain, int32_t row);
+void data_set_chain_phrase(phrase_id_t phrase, chain_id_t chain, int32_t row);
+transpose_t data_get_chain_transpose(chain_id_t chain, int32_t row);
+void data_set_chain_transpose(transpose_t transpose, chain_id_t chain, int32_t row);
+note_t data_get_phrase_note(phrase_id_t phrase, int32_t row);
+void data_set_phrase_note(note_t note, phrase_id_t phrase, int32_t row);
+instrument_id_t data_get_phrase_instrument(phrase_id_t phrase, int32_t row);
+void data_set_phrase_instrument(instrument_id_t instrument, phrase_id_t phrase, int32_t row);
+volume_t data_get_phrase_volume(phrase_id_t phrase, int32_t row);
+void data_set_phrase_volume(volume_t volume, phrase_id_t phrase, int32_t row);
+command_id_t data_get_phrase_command(int32_t command_number, phrase_id_t phrase, int32_t row);
+void data_set_phrase_command(command_id_t command, int32_t command_number, phrase_id_t phrase, int32_t row);
+parameter_t data_get_phrase_parameter(int32_t command_number, phrase_id_t phrase, int32_t row);
+void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, phrase_id_t phrase, int32_t row);
 
 int32_t data_get_setting_joystick_delay_initial (void);
 void data_set_setting_joystick_delay_initial (int32_t delay);

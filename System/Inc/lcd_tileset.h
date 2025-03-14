@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
-extern const uint16_t tileset[5][256][8 * 8];
+#define TILESET_COLOR_COUNT 5
+#define TILESET_TILE_COUNT  128
+#define TILESET_TILE_SIZE   (8 * 8)
+
+extern const uint16_t TILESET[TILESET_COLOR_COUNT][TILESET_TILE_COUNT][TILESET_TILE_SIZE];
 
 #endif /* INC_LCD_TILESET_H_ */
