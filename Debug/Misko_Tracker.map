@@ -5262,7 +5262,7 @@ LOAD C:/ST/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
 LOAD C:/ST/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a
 LOAD C:/ST/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a
 
-.debug_info     0x00000000    0x121c8
+.debug_info     0x00000000    0x121e2
  .debug_info    0x00000000      0x1bd ./Application/Src/app.o
  .debug_info    0x000001bd       0x39 ./Application/Src/audio.o
  .debug_info    0x000001f6      0x137 ./Application/Src/basic_utils.o
@@ -5270,35 +5270,35 @@ LOAD C:/ST/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_info    0x00000aca      0x1b2 ./Application/Src/data_commands.o
  .debug_info    0x00000c7c      0x55a ./Application/Src/logic.o
  .debug_info    0x000011d6      0xd12 ./Application/Src/logic_chain.o
- .debug_info    0x00001ee8     0x126f ./Application/Src/logic_phrase.o
- .debug_info    0x00003157      0x9ad ./Application/Src/logic_song.o
- .debug_info    0x00003b04      0x4ce ./Application/Src/region.o
- .debug_info    0x00003fd2       0x9a ./Application/Src/video.o
- .debug_info    0x0000406c     0x2a74 ./Core/Src/main.o
- .debug_info    0x00006ae0      0xb3a ./Core/Src/stm32g4xx_hal_msp.o
- .debug_info    0x0000761a      0x1c0 ./Core/Src/stm32g4xx_it.o
- .debug_info    0x000077da      0x58e ./Core/Src/system_stm32g4xx.o
- .debug_info    0x00007d68       0x30 ./Core/Startup/startup_stm32g474qetx.o
- .debug_info    0x00007d98      0xb95 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_info    0x0000892d      0xdf9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_info    0x00009726      0x763 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_info    0x00009e89      0x93f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_info    0x0000a7c8      0xe67 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.o
- .debug_info    0x0000b62f      0xb14 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.o
- .debug_info    0x0000c143      0x7db ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_fmc.o
- .debug_info    0x0000c91e      0x95b ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_gpio.o
- .debug_info    0x0000d279      0x7da ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_spi.o
- .debug_info    0x0000da53     0x11d8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_tim.o
- .debug_info    0x0000ec2b      0xc20 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.o
- .debug_info    0x0000f84b      0x371 ./System/Src/backlight.o
- .debug_info    0x0000fbbc      0x662 ./System/Src/button.o
- .debug_info    0x0001021e      0x704 ./System/Src/ili9341.o
- .debug_info    0x00010922      0x9b4 ./System/Src/joystick.o
- .debug_info    0x000112d6      0x4bf ./System/Src/lcd.o
- .debug_info    0x00011795       0xbe ./System/Src/lcd_tileset.o
- .debug_info    0x00011853      0x370 ./System/Src/millis.o
- .debug_info    0x00011bc3      0x396 ./System/Src/sound.o
- .debug_info    0x00011f59      0x26f ./System/Src/ticks.o
+ .debug_info    0x00001ee8     0x1289 ./Application/Src/logic_phrase.o
+ .debug_info    0x00003171      0x9ad ./Application/Src/logic_song.o
+ .debug_info    0x00003b1e      0x4ce ./Application/Src/region.o
+ .debug_info    0x00003fec       0x9a ./Application/Src/video.o
+ .debug_info    0x00004086     0x2a74 ./Core/Src/main.o
+ .debug_info    0x00006afa      0xb3a ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_info    0x00007634      0x1c0 ./Core/Src/stm32g4xx_it.o
+ .debug_info    0x000077f4      0x58e ./Core/Src/system_stm32g4xx.o
+ .debug_info    0x00007d82       0x30 ./Core/Startup/startup_stm32g474qetx.o
+ .debug_info    0x00007db2      0xb95 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_info    0x00008947      0xdf9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_info    0x00009740      0x763 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_info    0x00009ea3      0x93f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_info    0x0000a7e2      0xe67 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.o
+ .debug_info    0x0000b649      0xb14 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.o
+ .debug_info    0x0000c15d      0x7db ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_fmc.o
+ .debug_info    0x0000c938      0x95b ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_gpio.o
+ .debug_info    0x0000d293      0x7da ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_spi.o
+ .debug_info    0x0000da6d     0x11d8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_tim.o
+ .debug_info    0x0000ec45      0xc20 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.o
+ .debug_info    0x0000f865      0x371 ./System/Src/backlight.o
+ .debug_info    0x0000fbd6      0x662 ./System/Src/button.o
+ .debug_info    0x00010238      0x704 ./System/Src/ili9341.o
+ .debug_info    0x0001093c      0x9b4 ./System/Src/joystick.o
+ .debug_info    0x000112f0      0x4bf ./System/Src/lcd.o
+ .debug_info    0x000117af       0xbe ./System/Src/lcd_tileset.o
+ .debug_info    0x0001186d      0x370 ./System/Src/millis.o
+ .debug_info    0x00011bdd      0x396 ./System/Src/sound.o
+ .debug_info    0x00011f73      0x26f ./System/Src/ticks.o
 
 .debug_abbrev   0x00000000     0x3c11
  .debug_abbrev  0x00000000      0x101 ./Application/Src/app.o
@@ -5483,7 +5483,7 @@ LOAD C:/ST/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_rnglists
                 0x0000102a       0x1f ./System/Src/ticks.o
 
-.debug_line     0x00000000    0x11bfc
+.debug_line     0x00000000    0x11c0a
  .debug_line    0x00000000      0x38a ./Application/Src/app.o
  .debug_line    0x0000038a       0x4b ./Application/Src/audio.o
  .debug_line    0x000003d5      0x2eb ./Application/Src/basic_utils.o
@@ -5491,35 +5491,35 @@ LOAD C:/ST/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x00000ca1      0x2c9 ./Application/Src/data_commands.o
  .debug_line    0x00000f6a      0x634 ./Application/Src/logic.o
  .debug_line    0x0000159e      0xcd2 ./Application/Src/logic_chain.o
- .debug_line    0x00002270     0x1234 ./Application/Src/logic_phrase.o
- .debug_line    0x000034a4      0x9ef ./Application/Src/logic_song.o
- .debug_line    0x00003e93      0x534 ./Application/Src/region.o
- .debug_line    0x000043c7       0xa6 ./Application/Src/video.o
- .debug_line    0x0000446d     0x1460 ./Core/Src/main.o
- .debug_line    0x000058cd      0x92c ./Core/Src/stm32g4xx_hal_msp.o
- .debug_line    0x000061f9      0x91b ./Core/Src/stm32g4xx_it.o
- .debug_line    0x00006b14      0x798 ./Core/Src/system_stm32g4xx.o
- .debug_line    0x000072ac       0x7b ./Core/Startup/startup_stm32g474qetx.o
- .debug_line    0x00007327      0xb64 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_line    0x00007e8b      0xcc9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_line    0x00008b54      0xb3d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_line    0x00009691      0xcc3 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_line    0x0000a354      0xc04 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.o
- .debug_line    0x0000af58      0xb84 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.o
- .debug_line    0x0000badc      0x9ba ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_fmc.o
- .debug_line    0x0000c496      0xac8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_gpio.o
- .debug_line    0x0000cf5e      0x9d9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_spi.o
- .debug_line    0x0000d937      0xf00 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_tim.o
- .debug_line    0x0000e837      0xcc7 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.o
- .debug_line    0x0000f4fe      0x30d ./System/Src/backlight.o
- .debug_line    0x0000f80b      0x707 ./System/Src/button.o
- .debug_line    0x0000ff12      0x638 ./System/Src/ili9341.o
- .debug_line    0x0001054a      0x63b ./System/Src/joystick.o
- .debug_line    0x00010b85      0x520 ./System/Src/lcd.o
- .debug_line    0x000110a5      0x26f ./System/Src/lcd_tileset.o
- .debug_line    0x00011314      0x31d ./System/Src/millis.o
- .debug_line    0x00011631      0x325 ./System/Src/sound.o
- .debug_line    0x00011956      0x2a6 ./System/Src/ticks.o
+ .debug_line    0x00002270     0x123c ./Application/Src/logic_phrase.o
+ .debug_line    0x000034ac      0x9f5 ./Application/Src/logic_song.o
+ .debug_line    0x00003ea1      0x534 ./Application/Src/region.o
+ .debug_line    0x000043d5       0xa6 ./Application/Src/video.o
+ .debug_line    0x0000447b     0x1460 ./Core/Src/main.o
+ .debug_line    0x000058db      0x92c ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_line    0x00006207      0x91b ./Core/Src/stm32g4xx_it.o
+ .debug_line    0x00006b22      0x798 ./Core/Src/system_stm32g4xx.o
+ .debug_line    0x000072ba       0x7b ./Core/Startup/startup_stm32g474qetx.o
+ .debug_line    0x00007335      0xb64 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_line    0x00007e99      0xcc9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_line    0x00008b62      0xb3d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_line    0x0000969f      0xcc3 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_line    0x0000a362      0xc04 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.o
+ .debug_line    0x0000af66      0xb84 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.o
+ .debug_line    0x0000baea      0x9ba ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_fmc.o
+ .debug_line    0x0000c4a4      0xac8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_gpio.o
+ .debug_line    0x0000cf6c      0x9d9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_spi.o
+ .debug_line    0x0000d945      0xf00 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_tim.o
+ .debug_line    0x0000e845      0xcc7 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.o
+ .debug_line    0x0000f50c      0x30d ./System/Src/backlight.o
+ .debug_line    0x0000f819      0x707 ./System/Src/button.o
+ .debug_line    0x0000ff20      0x638 ./System/Src/ili9341.o
+ .debug_line    0x00010558      0x63b ./System/Src/joystick.o
+ .debug_line    0x00010b93      0x520 ./System/Src/lcd.o
+ .debug_line    0x000110b3      0x26f ./System/Src/lcd_tileset.o
+ .debug_line    0x00011322      0x31d ./System/Src/millis.o
+ .debug_line    0x0001163f      0x325 ./System/Src/sound.o
+ .debug_line    0x00011964      0x2a6 ./System/Src/ticks.o
 
 .debug_str      0x00000000   0x10d8e7
  .debug_str     0x00000000   0x10d8e7 ./Application/Src/app.o

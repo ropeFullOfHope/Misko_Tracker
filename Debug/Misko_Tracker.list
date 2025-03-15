@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0001f138  2**0
                   CONTENTS, READONLY
- 12 .debug_info   000121c8  00000000  00000000  0001f168  2**0
+ 12 .debug_info   000121e2  00000000  00000000  0001f168  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00003c11  00000000  00000000  00031330  2**0
+ 13 .debug_abbrev 00003c11  00000000  00000000  0003134a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000014f0  00000000  00000000  00034f48  2**3
+ 14 .debug_aranges 000014f0  00000000  00000000  00034f60  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00001049  00000000  00000000  00036438  2**0
+ 15 .debug_rnglists 00001049  00000000  00000000  00036450  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_line   00011bfc  00000000  00000000  00037481  2**0
+ 16 .debug_line   00011c0a  00000000  00000000  00037499  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_str    0010d8e7  00000000  00000000  0004907d  2**0
+ 17 .debug_str    0010d8e7  00000000  00000000  000490a3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .comment      00000043  00000000  00000000  00156964  2**0
+ 18 .comment      00000043  00000000  00000000  0015698a  2**0
                   CONTENTS, READONLY
- 19 .debug_frame  000051cc  00000000  00000000  001569a8  2**2
+ 19 .debug_frame  000051cc  00000000  00000000  001569d0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_macro  0002acdf  00000000  00000000  0015bb74  2**0
+ 20 .debug_macro  0002acdf  00000000  00000000  0015bb9c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000066  00000000  00000000  00186853  2**0
+ 21 .debug_line_str 00000066  00000000  00000000  0018687b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -4400,11 +4400,11 @@ phrase_id_t chain_get_selected_phrase(void)
  8001c38:	2000a8b4 	.word	0x2000a8b4
 
 08001c3c <phrase_init>:
-static uint8_t copied_volume = 0x64 + 1;
-static uint8_t copied_command = 0x01;
-static uint8_t copied_parameter = 0x00;
+static volume_t copied_volume = 0x64 + 1;
+static command_id_t copied_command = 0x01;
+static parameter_t copied_parameter = 0x00;
 
-void phrase_init(uint8_t phrase)
+void phrase_init(phrase_id_t phrase)
 {
  8001c3c:	b580      	push	{r7, lr}
  8001c3e:	b082      	sub	sp, #8
@@ -4460,16 +4460,16 @@ void phrase_draw_title(void)
  8001c86:	b086      	sub	sp, #24
  8001c88:	af02      	add	r7, sp, #8
     static const region_t *REGION = &REGION_PHRASE_TITLE;
-    const uint8_t TITLE[] = {'P', 'h', 'r', 'a', 's', 'e'};
+    const symbol_t TITLE[] = {'P', 'h', 'r', 'a', 's', 'e'};
  8001c8a:	4a21      	ldr	r2, [pc, #132]	@ (8001d10 <phrase_draw_title+0x8c>)
- 8001c8c:	1d3b      	adds	r3, r7, #4
+ 8001c8c:	463b      	mov	r3, r7
  8001c8e:	e892 0003 	ldmia.w	r2, {r0, r1}
  8001c92:	6018      	str	r0, [r3, #0]
  8001c94:	3304      	adds	r3, #4
  8001c96:	8019      	strh	r1, [r3, #0]
-    const uint8_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
+    const int32_t TITLE_LENGTH = ARRAY_SIZE(TITLE);
  8001c98:	2306      	movs	r3, #6
- 8001c9a:	72fb      	strb	r3, [r7, #11]
+ 8001c9a:	60bb      	str	r3, [r7, #8]
 
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
  8001c9c:	2300      	movs	r3, #0
@@ -4478,7 +4478,7 @@ void phrase_draw_title(void)
         region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
  8001ca2:	4b1c      	ldr	r3, [pc, #112]	@ (8001d14 <phrase_draw_title+0x90>)
  8001ca4:	6818      	ldr	r0, [r3, #0]
- 8001ca6:	1d3a      	adds	r2, r7, #4
+ 8001ca6:	463a      	mov	r2, r7
  8001ca8:	68fb      	ldr	r3, [r7, #12]
  8001caa:	4413      	add	r3, r2
  8001cac:	7819      	ldrb	r1, [r3, #0]
@@ -4491,8 +4491,8 @@ void phrase_draw_title(void)
  8001cba:	68fb      	ldr	r3, [r7, #12]
  8001cbc:	3301      	adds	r3, #1
  8001cbe:	60fb      	str	r3, [r7, #12]
- 8001cc0:	7afb      	ldrb	r3, [r7, #11]
- 8001cc2:	68fa      	ldr	r2, [r7, #12]
+ 8001cc0:	68fa      	ldr	r2, [r7, #12]
+ 8001cc2:	68bb      	ldr	r3, [r7, #8]
  8001cc4:	429a      	cmp	r2, r3
  8001cc6:	dbec      	blt.n	8001ca2 <phrase_draw_title+0x1e>
 
@@ -4506,7 +4506,7 @@ void phrase_draw_title(void)
  8001cd4:	461a      	mov	r2, r3
  8001cd6:	4b11      	ldr	r3, [pc, #68]	@ (8001d1c <phrase_draw_title+0x98>)
  8001cd8:	5c99      	ldrb	r1, [r3, r2]
- 8001cda:	7afb      	ldrb	r3, [r7, #11]
+ 8001cda:	68bb      	ldr	r3, [r7, #8]
  8001cdc:	3301      	adds	r3, #1
  8001cde:	2200      	movs	r2, #0
  8001ce0:	9200      	str	r2, [sp, #0]
@@ -4520,7 +4520,7 @@ void phrase_draw_title(void)
  8001cf0:	f003 030f 	and.w	r3, r3, #15
  8001cf4:	4a09      	ldr	r2, [pc, #36]	@ (8001d1c <phrase_draw_title+0x98>)
  8001cf6:	5cd1      	ldrb	r1, [r2, r3]
- 8001cf8:	7afb      	ldrb	r3, [r7, #11]
+ 8001cf8:	68bb      	ldr	r3, [r7, #8]
  8001cfa:	3302      	adds	r3, #2
  8001cfc:	2200      	movs	r2, #0
  8001cfe:	9200      	str	r2, [sp, #0]
@@ -4562,7 +4562,7 @@ void phrase_draw_editor_command_description(void)
  8001d38:	b580      	push	{r7, lr}
  8001d3a:	b082      	sub	sp, #8
  8001d3c:	af00      	add	r7, sp, #0
-    const uint8_t SELECTED_COMMAND = phrase_get_selected_command();
+    const command_id_t SELECTED_COMMAND = phrase_get_selected_command();
  8001d3e:	f001 ff05 	bl	8003b4c <phrase_get_selected_command>
  8001d42:	4603      	mov	r3, r0
  8001d44:	71fb      	strb	r3, [r7, #7]
@@ -4712,7 +4712,7 @@ void phrase_draw_editor_phrase_labels(void)
  8001e3e:	2203      	movs	r2, #3
  8001e40:	2144      	movs	r1, #68	@ 0x44
  8001e42:	f002 fbf9 	bl	8004638 <region_draw>
-        region_draw(REGION, (uint8_t) i + '1', COLOR_DARK_FADE, i * 6 + 16, 0);
+        region_draw(REGION, (symbol_t) i + '1', COLOR_DARK_FADE, i * 6 + 16, 0);
  8001e46:	4b15      	ldr	r3, [pc, #84]	@ (8001e9c <phrase_draw_editor_phrase_labels+0x134>)
  8001e48:	6818      	ldr	r0, [r3, #0]
  8001e4a:	687b      	ldr	r3, [r7, #4]
@@ -4929,7 +4929,7 @@ void phrase_draw_editor_phrase_data(void)
  8001fb2:	2300      	movs	r3, #0
  8001fb4:	657b      	str	r3, [r7, #84]	@ 0x54
  8001fb6:	e2c1      	b.n	800253c <phrase_draw_editor_phrase_data+0x590>
-        const note_t  NOTE       = data_get_phrase_note(selected_phrase, i);
+        const note_t NOTE = data_get_phrase_note(selected_phrase, i);
  8001fb8:	4bb3      	ldr	r3, [pc, #716]	@ (8002288 <phrase_draw_editor_phrase_data+0x2dc>)
  8001fba:	781b      	ldrb	r3, [r3, #0]
  8001fbc:	6d79      	ldr	r1, [r7, #84]	@ 0x54
@@ -4937,7 +4937,7 @@ void phrase_draw_editor_phrase_data(void)
  8001fc0:	f7fe fa70 	bl	80004a4 <data_get_phrase_note>
  8001fc4:	4603      	mov	r3, r0
  8001fc6:	f887 3043 	strb.w	r3, [r7, #67]	@ 0x43
-        const uint8_t INSTRUMENT = data_get_phrase_instrument(selected_phrase, i);
+        const instrument_id_t INSTRUMENT = data_get_phrase_instrument(selected_phrase, i);
  8001fca:	4baf      	ldr	r3, [pc, #700]	@ (8002288 <phrase_draw_editor_phrase_data+0x2dc>)
  8001fcc:	781b      	ldrb	r3, [r3, #0]
  8001fce:	6d79      	ldr	r1, [r7, #84]	@ 0x54
@@ -4945,7 +4945,7 @@ void phrase_draw_editor_phrase_data(void)
  8001fd2:	f7fe fab9 	bl	8000548 <data_get_phrase_instrument>
  8001fd6:	4603      	mov	r3, r0
  8001fd8:	f887 3042 	strb.w	r3, [r7, #66]	@ 0x42
-        const uint8_t VOLUME     = data_get_phrase_volume(selected_phrase, i);
+        const volume_t VOLUME = data_get_phrase_volume(selected_phrase, i);
  8001fdc:	4baa      	ldr	r3, [pc, #680]	@ (8002288 <phrase_draw_editor_phrase_data+0x2dc>)
  8001fde:	781b      	ldrb	r3, [r3, #0]
  8001fe0:	6d79      	ldr	r1, [r7, #84]	@ 0x54
@@ -4954,8 +4954,8 @@ void phrase_draw_editor_phrase_data(void)
  8001fe8:	4603      	mov	r3, r0
  8001fea:	f887 3041 	strb.w	r3, [r7, #65]	@ 0x41
 
-        uint8_t command[COMMANDS_PER_ROW];
-        uint8_t parameter[COMMANDS_PER_ROW];
+        command_id_t command[COMMANDS_PER_ROW];
+        parameter_t parameter[COMMANDS_PER_ROW];
         for (int32_t j = 0; j < COMMANDS_PER_ROW; j++) {
  8001fee:	2300      	movs	r3, #0
  8001ff0:	653b      	str	r3, [r7, #80]	@ 0x50
@@ -5066,7 +5066,7 @@ void phrase_draw_editor_phrase_data(void)
  80020c0:	2301      	movs	r3, #1
  80020c2:	f887 303c 	strb.w	r3, [r7, #60]	@ 0x3c
 
-        const uint8_t SYMBOL_NOTE[3] = {
+        const symbol_t SYMBOL_NOTE[3] = {
  80020c6:	f897 3040 	ldrb.w	r3, [r7, #64]	@ 0x40
  80020ca:	2b00      	cmp	r3, #0
  80020cc:	d001      	beq.n	80020d2 <phrase_draw_editor_phrase_data+0x126>
@@ -5074,7 +5074,7 @@ void phrase_draw_editor_phrase_data(void)
  80020d0:	e007      	b.n	80020e2 <phrase_draw_editor_phrase_data+0x136>
             (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][0]),
  80020d2:	f897 2043 	ldrb.w	r2, [r7, #67]	@ 0x43
-        const uint8_t SYMBOL_NOTE[3] = {
+        const symbol_t SYMBOL_NOTE[3] = {
  80020d6:	496d      	ldr	r1, [pc, #436]	@ (800228c <phrase_draw_editor_phrase_data+0x2e0>)
  80020d8:	4613      	mov	r3, r2
  80020da:	005b      	lsls	r3, r3, #1
@@ -5089,7 +5089,7 @@ void phrase_draw_editor_phrase_data(void)
  80020f0:	e008      	b.n	8002104 <phrase_draw_editor_phrase_data+0x158>
             (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][1]),
  80020f2:	f897 2043 	ldrb.w	r2, [r7, #67]	@ 0x43
-        const uint8_t SYMBOL_NOTE[3] = {
+        const symbol_t SYMBOL_NOTE[3] = {
  80020f6:	4965      	ldr	r1, [pc, #404]	@ (800228c <phrase_draw_editor_phrase_data+0x2e0>)
  80020f8:	4613      	mov	r3, r2
  80020fa:	005b      	lsls	r3, r3, #1
@@ -5105,7 +5105,7 @@ void phrase_draw_editor_phrase_data(void)
  8002112:	e008      	b.n	8002126 <phrase_draw_editor_phrase_data+0x17a>
             (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][2])
  8002114:	f897 2043 	ldrb.w	r2, [r7, #67]	@ 0x43
-        const uint8_t SYMBOL_NOTE[3] = {
+        const symbol_t SYMBOL_NOTE[3] = {
  8002118:	495c      	ldr	r1, [pc, #368]	@ (800228c <phrase_draw_editor_phrase_data+0x2e0>)
  800211a:	4613      	mov	r3, r2
  800211c:	005b      	lsls	r3, r3, #1
@@ -5124,7 +5124,7 @@ void phrase_draw_editor_phrase_data(void)
  8002138:	f897 303d 	ldrb.w	r3, [r7, #61]	@ 0x3d
  800213c:	f887 303b 	strb.w	r3, [r7, #59]	@ 0x3b
 
-        const uint8_t SYMBOL_INSTRUMENT[2] = {
+        const symbol_t SYMBOL_INSTRUMENT[2] = {
  8002140:	f897 303f 	ldrb.w	r3, [r7, #63]	@ 0x3f
  8002144:	2b00      	cmp	r3, #0
  8002146:	d001      	beq.n	800214c <phrase_draw_editor_phrase_data+0x1a0>
@@ -5135,7 +5135,7 @@ void phrase_draw_editor_phrase_data(void)
  8002150:	091b      	lsrs	r3, r3, #4
  8002152:	b2db      	uxtb	r3, r3
  8002154:	461a      	mov	r2, r3
-        const uint8_t SYMBOL_INSTRUMENT[2] = {
+        const symbol_t SYMBOL_INSTRUMENT[2] = {
  8002156:	4b4e      	ldr	r3, [pc, #312]	@ (8002290 <phrase_draw_editor_phrase_data+0x2e4>)
  8002158:	5c9b      	ldrb	r3, [r3, r2]
  800215a:	f887 3024 	strb.w	r3, [r7, #36]	@ 0x24
@@ -5147,7 +5147,7 @@ void phrase_draw_editor_phrase_data(void)
             (IS_INSTRUMENT_NULL ? '-' : HEX_DIGIT[INSTRUMENT % 0x10])
  800216a:	f897 3042 	ldrb.w	r3, [r7, #66]	@ 0x42
  800216e:	f003 030f 	and.w	r3, r3, #15
-        const uint8_t SYMBOL_INSTRUMENT[2] = {
+        const symbol_t SYMBOL_INSTRUMENT[2] = {
  8002172:	4a47      	ldr	r2, [pc, #284]	@ (8002290 <phrase_draw_editor_phrase_data+0x2e4>)
  8002174:	5cd3      	ldrb	r3, [r2, r3]
  8002176:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
@@ -5161,7 +5161,7 @@ void phrase_draw_editor_phrase_data(void)
  8002188:	f897 303d 	ldrb.w	r3, [r7, #61]	@ 0x3d
  800218c:	f887 303a 	strb.w	r3, [r7, #58]	@ 0x3a
 
-        const uint8_t SYMBOL_VOLUME[2] = {
+        const symbol_t SYMBOL_VOLUME[2] = {
  8002190:	f897 303e 	ldrb.w	r3, [r7, #62]	@ 0x3e
  8002194:	2b00      	cmp	r3, #0
  8002196:	d001      	beq.n	800219c <phrase_draw_editor_phrase_data+0x1f0>
@@ -5175,7 +5175,7 @@ void phrase_draw_editor_phrase_data(void)
  80021a6:	330f      	adds	r3, #15
  80021a8:	111b      	asrs	r3, r3, #4
  80021aa:	461a      	mov	r2, r3
-        const uint8_t SYMBOL_VOLUME[2] = {
+        const symbol_t SYMBOL_VOLUME[2] = {
  80021ac:	4b38      	ldr	r3, [pc, #224]	@ (8002290 <phrase_draw_editor_phrase_data+0x2e4>)
  80021ae:	5c9b      	ldrb	r3, [r3, r2]
  80021b0:	f887 3020 	strb.w	r3, [r7, #32]
@@ -5192,7 +5192,7 @@ void phrase_draw_editor_phrase_data(void)
  80021cc:	f002 020f 	and.w	r2, r2, #15
  80021d0:	bf58      	it	pl
  80021d2:	4253      	negpl	r3, r2
-        const uint8_t SYMBOL_VOLUME[2] = {
+        const symbol_t SYMBOL_VOLUME[2] = {
  80021d4:	4a2e      	ldr	r2, [pc, #184]	@ (8002290 <phrase_draw_editor_phrase_data+0x2e4>)
  80021d6:	5cd3      	ldrb	r3, [r2, r3]
  80021d8:	f887 3021 	strb.w	r3, [r7, #33]	@ 0x21
@@ -5206,8 +5206,8 @@ void phrase_draw_editor_phrase_data(void)
  80021ea:	f897 303d 	ldrb.w	r3, [r7, #61]	@ 0x3d
  80021ee:	f887 3039 	strb.w	r3, [r7, #57]	@ 0x39
 
-        uint8_t symbol_command[COMMANDS_PER_ROW][3];
-        uint8_t symbol_parameter[COMMANDS_PER_ROW][2];
+        symbol_t symbol_command[COMMANDS_PER_ROW][3];
+        symbol_t symbol_parameter[COMMANDS_PER_ROW][2];
         color_t color_command[COMMANDS_PER_ROW];
         color_t color_parameter[COMMANDS_PER_ROW];
         for (int32_t j = 0; j < COMMANDS_PER_ROW; j++) {
@@ -5754,7 +5754,7 @@ void phrase_draw_editor_command_description_name(void)
  800263c:	2120      	movs	r1, #32
  800263e:	f001 fffb 	bl	8004638 <region_draw>
 
-    const uint8_t *TEXT_FULL_NAME = SELECTED_COMMAND_METADATA->full_name;
+    const symbol_t *TEXT_FULL_NAME = SELECTED_COMMAND_METADATA->full_name;
  8002642:	68bb      	ldr	r3, [r7, #8]
  8002644:	685b      	ldr	r3, [r3, #4]
  8002646:	607b      	str	r3, [r7, #4]
@@ -6269,7 +6269,7 @@ void phrase_unhighlight_cursor(void)
  80029d8:	2300      	movne	r3, #0
  80029da:	70bb      	strb	r3, [r7, #2]
 
-            const uint8_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
+            const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
  80029dc:	78bb      	ldrb	r3, [r7, #2]
  80029de:	2b00      	cmp	r3, #0
  80029e0:	d001      	beq.n	80029e6 <phrase_unhighlight_cursor+0x7e>
@@ -6311,7 +6311,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
  8002a22:	4b63      	ldr	r3, [pc, #396]	@ (8002bb0 <phrase_unhighlight_cursor+0x248>)
  8002a24:	781b      	ldrb	r3, [r3, #0]
  8002a26:	4a61      	ldr	r2, [pc, #388]	@ (8002bac <phrase_unhighlight_cursor+0x244>)
@@ -6329,7 +6329,7 @@ void phrase_unhighlight_cursor(void)
  8002a3e:	2300      	movne	r3, #0
  8002a40:	717b      	strb	r3, [r7, #5]
 
-            const uint8_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
+            const color_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
  8002a42:	797b      	ldrb	r3, [r7, #5]
  8002a44:	2b00      	cmp	r3, #0
  8002a46:	d001      	beq.n	8002a4c <phrase_unhighlight_cursor+0xe4>
@@ -6362,7 +6362,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
  8002a76:	4b4e      	ldr	r3, [pc, #312]	@ (8002bb0 <phrase_unhighlight_cursor+0x248>)
  8002a78:	781b      	ldrb	r3, [r3, #0]
  8002a7a:	4a4c      	ldr	r2, [pc, #304]	@ (8002bac <phrase_unhighlight_cursor+0x244>)
@@ -6380,7 +6380,7 @@ void phrase_unhighlight_cursor(void)
  8002a92:	2300      	movne	r3, #0
  8002a94:	723b      	strb	r3, [r7, #8]
 
-            const uint8_t COLOR_VOLUME = (IS_VOLUME_NULL ? COLOR_NULL : COLOR_VALUE);
+            const color_t COLOR_VOLUME = (IS_VOLUME_NULL ? COLOR_NULL : COLOR_VALUE);
  8002a96:	7a3b      	ldrb	r3, [r7, #8]
  8002a98:	2b00      	cmp	r3, #0
  8002a9a:	d001      	beq.n	8002aa0 <phrase_unhighlight_cursor+0x138>
@@ -6413,7 +6413,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
  8002aca:	4b3b      	ldr	r3, [pc, #236]	@ (8002bb8 <phrase_unhighlight_cursor+0x250>)
  8002acc:	681b      	ldr	r3, [r3, #0]
  8002ace:	4a38      	ldr	r2, [pc, #224]	@ (8002bb0 <phrase_unhighlight_cursor+0x248>)
@@ -6432,7 +6432,7 @@ void phrase_unhighlight_cursor(void)
  8002ae8:	2300      	movne	r3, #0
  8002aea:	72fb      	strb	r3, [r7, #11]
 
-            const uint8_t COLOR_COMMAND = (IS_COMMAND_NULL ? COLOR_NULL : COLOR_VALUE);
+            const color_t COLOR_COMMAND = (IS_COMMAND_NULL ? COLOR_NULL : COLOR_VALUE);
  8002aec:	7afb      	ldrb	r3, [r7, #11]
  8002aee:	2b00      	cmp	r3, #0
  8002af0:	d001      	beq.n	8002af6 <phrase_unhighlight_cursor+0x18e>
@@ -6492,7 +6492,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t COLOR_PARAMETER = COLOR_NULL;
+            const color_t COLOR_PARAMETER = COLOR_NULL;
  8002b5c:	7bbb      	ldrb	r3, [r7, #14]
  8002b5e:	737b      	strb	r3, [r7, #13]
 
@@ -6902,7 +6902,7 @@ void phrase_update_value(void)
  8002e34:	2300      	movne	r3, #0
  8002e36:	773b      	strb	r3, [r7, #28]
 
-            const uint8_t SYMBOL_NOTE[3] = {
+            const symbol_t SYMBOL_NOTE[3] = {
  8002e38:	7f3b      	ldrb	r3, [r7, #28]
  8002e3a:	2b00      	cmp	r3, #0
  8002e3c:	d001      	beq.n	8002e42 <phrase_update_value+0x56>
@@ -6910,7 +6910,7 @@ void phrase_update_value(void)
  8002e40:	e006      	b.n	8002e50 <phrase_update_value+0x64>
                 (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][0]),
  8002e42:	7f7a      	ldrb	r2, [r7, #29]
-            const uint8_t SYMBOL_NOTE[3] = {
+            const symbol_t SYMBOL_NOTE[3] = {
  8002e44:	4996      	ldr	r1, [pc, #600]	@ (80030a0 <phrase_update_value+0x2b4>)
  8002e46:	4613      	mov	r3, r2
  8002e48:	005b      	lsls	r3, r3, #1
@@ -6925,7 +6925,7 @@ void phrase_update_value(void)
  8002e5a:	e007      	b.n	8002e6c <phrase_update_value+0x80>
                 (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][1]),
  8002e5c:	7f7a      	ldrb	r2, [r7, #29]
-            const uint8_t SYMBOL_NOTE[3] = {
+            const symbol_t SYMBOL_NOTE[3] = {
  8002e5e:	4990      	ldr	r1, [pc, #576]	@ (80030a0 <phrase_update_value+0x2b4>)
  8002e60:	4613      	mov	r3, r2
  8002e62:	005b      	lsls	r3, r3, #1
@@ -6941,7 +6941,7 @@ void phrase_update_value(void)
  8002e76:	e007      	b.n	8002e88 <phrase_update_value+0x9c>
                 (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][2])
  8002e78:	7f7a      	ldrb	r2, [r7, #29]
-            const uint8_t SYMBOL_NOTE[3] = {
+            const symbol_t SYMBOL_NOTE[3] = {
  8002e7a:	4989      	ldr	r1, [pc, #548]	@ (80030a0 <phrase_update_value+0x2b4>)
  8002e7c:	4613      	mov	r3, r2
  8002e7e:	005b      	lsls	r3, r3, #1
@@ -6985,7 +6985,7 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
  8002ec2:	4b76      	ldr	r3, [pc, #472]	@ (800309c <phrase_update_value+0x2b0>)
  8002ec4:	781b      	ldrb	r3, [r3, #0]
  8002ec6:	4a74      	ldr	r2, [pc, #464]	@ (8003098 <phrase_update_value+0x2ac>)
@@ -7003,7 +7003,7 @@ void phrase_update_value(void)
  8002ede:	2300      	movne	r3, #0
  8002ee0:	77bb      	strb	r3, [r7, #30]
 
-            const uint8_t SYMBOL_INSTRUMENT[2] = {
+            const symbol_t SYMBOL_INSTRUMENT[2] = {
  8002ee2:	7fbb      	ldrb	r3, [r7, #30]
  8002ee4:	2b00      	cmp	r3, #0
  8002ee6:	d001      	beq.n	8002eec <phrase_update_value+0x100>
@@ -7014,7 +7014,7 @@ void phrase_update_value(void)
  8002eee:	091b      	lsrs	r3, r3, #4
  8002ef0:	b2db      	uxtb	r3, r3
  8002ef2:	461a      	mov	r2, r3
-            const uint8_t SYMBOL_INSTRUMENT[2] = {
+            const symbol_t SYMBOL_INSTRUMENT[2] = {
  8002ef4:	4b6c      	ldr	r3, [pc, #432]	@ (80030a8 <phrase_update_value+0x2bc>)
  8002ef6:	5c9b      	ldrb	r3, [r3, r2]
  8002ef8:	753b      	strb	r3, [r7, #20]
@@ -7026,7 +7026,7 @@ void phrase_update_value(void)
                 (IS_SELECTED_INSTRUMENT_NULL ? '-' : HEX_DIGIT[SELECTED_INSTRUMENT % 0x10])
  8002f04:	7ffb      	ldrb	r3, [r7, #31]
  8002f06:	f003 030f 	and.w	r3, r3, #15
-            const uint8_t SYMBOL_INSTRUMENT[2] = {
+            const symbol_t SYMBOL_INSTRUMENT[2] = {
  8002f0a:	4a67      	ldr	r2, [pc, #412]	@ (80030a8 <phrase_update_value+0x2bc>)
  8002f0c:	5cd3      	ldrb	r3, [r2, r3]
  8002f0e:	757b      	strb	r3, [r7, #21]
@@ -7056,7 +7056,7 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
  8002f36:	4b59      	ldr	r3, [pc, #356]	@ (800309c <phrase_update_value+0x2b0>)
  8002f38:	781b      	ldrb	r3, [r3, #0]
  8002f3a:	4a57      	ldr	r2, [pc, #348]	@ (8003098 <phrase_update_value+0x2ac>)
@@ -7074,7 +7074,7 @@ void phrase_update_value(void)
  8002f56:	2300      	movne	r3, #0
  8002f58:	f887 3020 	strb.w	r3, [r7, #32]
 
-            const uint8_t SYMBOL_VOLUME[2] = {
+            const symbol_t SYMBOL_VOLUME[2] = {
  8002f5c:	f897 3020 	ldrb.w	r3, [r7, #32]
  8002f60:	2b00      	cmp	r3, #0
  8002f62:	d001      	beq.n	8002f68 <phrase_update_value+0x17c>
@@ -7088,7 +7088,7 @@ void phrase_update_value(void)
  8002f72:	330f      	adds	r3, #15
  8002f74:	111b      	asrs	r3, r3, #4
  8002f76:	461a      	mov	r2, r3
-            const uint8_t SYMBOL_VOLUME[2] = {
+            const symbol_t SYMBOL_VOLUME[2] = {
  8002f78:	4b4b      	ldr	r3, [pc, #300]	@ (80030a8 <phrase_update_value+0x2bc>)
  8002f7a:	5c9b      	ldrb	r3, [r3, r2]
  8002f7c:	743b      	strb	r3, [r7, #16]
@@ -7105,7 +7105,7 @@ void phrase_update_value(void)
  8002f96:	f002 020f 	and.w	r2, r2, #15
  8002f9a:	bf58      	it	pl
  8002f9c:	4253      	negpl	r3, r2
-            const uint8_t SYMBOL_VOLUME[2] = {
+            const symbol_t SYMBOL_VOLUME[2] = {
  8002f9e:	4a42      	ldr	r2, [pc, #264]	@ (80030a8 <phrase_update_value+0x2bc>)
  8002fa0:	5cd3      	ldrb	r3, [r2, r3]
  8002fa2:	747b      	strb	r3, [r7, #17]
@@ -7135,7 +7135,7 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
  8002fca:	4b38      	ldr	r3, [pc, #224]	@ (80030ac <phrase_update_value+0x2c0>)
  8002fcc:	681b      	ldr	r3, [r3, #0]
  8002fce:	4a33      	ldr	r2, [pc, #204]	@ (800309c <phrase_update_value+0x2b0>)
@@ -7146,7 +7146,7 @@ void phrase_update_value(void)
  8002fd8:	f7fd fb5e 	bl	8000698 <data_get_phrase_command>
  8002fdc:	4603      	mov	r3, r0
  8002fde:	f887 3024 	strb.w	r3, [r7, #36]	@ 0x24
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
  8002fe2:	4b32      	ldr	r3, [pc, #200]	@ (80030ac <phrase_update_value+0x2c0>)
  8002fe4:	681b      	ldr	r3, [r3, #0]
  8002fe6:	4a2d      	ldr	r2, [pc, #180]	@ (800309c <phrase_update_value+0x2b0>)
@@ -7165,7 +7165,7 @@ void phrase_update_value(void)
  8003004:	2300      	movne	r3, #0
  8003006:	f887 3022 	strb.w	r3, [r7, #34]	@ 0x22
 
-            const uint8_t SYMBOL_COMMAND[3] = {
+            const symbol_t SYMBOL_COMMAND[3] = {
  800300a:	f897 3022 	ldrb.w	r3, [r7, #34]	@ 0x22
  800300e:	2b00      	cmp	r3, #0
  8003010:	d001      	beq.n	8003016 <phrase_update_value+0x22a>
@@ -7173,7 +7173,7 @@ void phrase_update_value(void)
  8003014:	e008      	b.n	8003028 <phrase_update_value+0x23c>
                 (IS_SELECTED_COMMAND_NULL ? '-' : COMMAND_METADATA[SELECTED_COMMAND].name[0]),
  8003016:	f897 2024 	ldrb.w	r2, [r7, #36]	@ 0x24
-            const uint8_t SYMBOL_COMMAND[3] = {
+            const symbol_t SYMBOL_COMMAND[3] = {
  800301a:	4925      	ldr	r1, [pc, #148]	@ (80030b0 <phrase_update_value+0x2c4>)
  800301c:	4613      	mov	r3, r2
  800301e:	005b      	lsls	r3, r3, #1
@@ -7189,7 +7189,7 @@ void phrase_update_value(void)
  8003034:	e009      	b.n	800304a <phrase_update_value+0x25e>
                 (IS_SELECTED_COMMAND_NULL ? '-' : COMMAND_METADATA[SELECTED_COMMAND].name[1]),
  8003036:	f897 2024 	ldrb.w	r2, [r7, #36]	@ 0x24
-            const uint8_t SYMBOL_COMMAND[3] = {
+            const symbol_t SYMBOL_COMMAND[3] = {
  800303a:	491d      	ldr	r1, [pc, #116]	@ (80030b0 <phrase_update_value+0x2c4>)
  800303c:	4613      	mov	r3, r2
  800303e:	005b      	lsls	r3, r3, #1
@@ -7206,7 +7206,7 @@ void phrase_update_value(void)
  8003056:	e009      	b.n	800306c <phrase_update_value+0x280>
                 (IS_SELECTED_COMMAND_NULL ? '-' : COMMAND_METADATA[SELECTED_COMMAND].name[2])
  8003058:	f897 2024 	ldrb.w	r2, [r7, #36]	@ 0x24
-            const uint8_t SYMBOL_COMMAND[3] = {
+            const symbol_t SYMBOL_COMMAND[3] = {
  800305c:	4914      	ldr	r1, [pc, #80]	@ (80030b0 <phrase_update_value+0x2c4>)
  800305e:	4613      	mov	r3, r2
  8003060:	005b      	lsls	r3, r3, #1
@@ -7217,7 +7217,7 @@ void phrase_update_value(void)
  800306a:	781b      	ldrb	r3, [r3, #0]
  800306c:	73bb      	strb	r3, [r7, #14]
             };
-            const uint8_t SYMBOL_PARAMETER[2] = {
+            const symbol_t SYMBOL_PARAMETER[2] = {
  800306e:	f897 3022 	ldrb.w	r3, [r7, #34]	@ 0x22
  8003072:	2b00      	cmp	r3, #0
  8003074:	d001      	beq.n	800307a <phrase_update_value+0x28e>
@@ -7228,7 +7228,7 @@ void phrase_update_value(void)
  800307e:	091b      	lsrs	r3, r3, #4
  8003080:	b2db      	uxtb	r3, r3
  8003082:	461a      	mov	r2, r3
-            const uint8_t SYMBOL_PARAMETER[2] = {
+            const symbol_t SYMBOL_PARAMETER[2] = {
  8003084:	4b08      	ldr	r3, [pc, #32]	@ (80030a8 <phrase_update_value+0x2bc>)
  8003086:	5c9b      	ldrb	r3, [r3, r2]
  8003088:	723b      	strb	r3, [r7, #8]
@@ -7248,7 +7248,7 @@ void phrase_update_value(void)
                 (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER % 0x10])
  80030b4:	f897 3023 	ldrb.w	r3, [r7, #35]	@ 0x23
  80030b8:	f003 030f 	and.w	r3, r3, #15
-            const uint8_t SYMBOL_PARAMETER[2] = {
+            const symbol_t SYMBOL_PARAMETER[2] = {
  80030bc:	4a5a      	ldr	r2, [pc, #360]	@ (8003228 <phrase_update_value+0x43c>)
  80030be:	5cd3      	ldrb	r3, [r2, r3]
  80030c0:	727b      	strb	r3, [r7, #9]
@@ -7335,7 +7335,7 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
  8003164:	4b32      	ldr	r3, [pc, #200]	@ (8003230 <phrase_update_value+0x444>)
  8003166:	681b      	ldr	r3, [r3, #0]
  8003168:	4a33      	ldr	r2, [pc, #204]	@ (8003238 <phrase_update_value+0x44c>)
@@ -7346,7 +7346,7 @@ void phrase_update_value(void)
  8003172:	f7fd fa91 	bl	8000698 <data_get_phrase_command>
  8003176:	4603      	mov	r3, r0
  8003178:	f887 3027 	strb.w	r3, [r7, #39]	@ 0x27
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
  800317c:	4b2c      	ldr	r3, [pc, #176]	@ (8003230 <phrase_update_value+0x444>)
  800317e:	681b      	ldr	r3, [r3, #0]
  8003180:	4a2d      	ldr	r2, [pc, #180]	@ (8003238 <phrase_update_value+0x44c>)
@@ -7365,7 +7365,7 @@ void phrase_update_value(void)
  800319e:	2300      	movne	r3, #0
  80031a0:	f887 3025 	strb.w	r3, [r7, #37]	@ 0x25
 
-            const uint8_t SYMBOL_PARAMETER[2] = {
+            const symbol_t SYMBOL_PARAMETER[2] = {
  80031a4:	f897 3025 	ldrb.w	r3, [r7, #37]	@ 0x25
  80031a8:	2b00      	cmp	r3, #0
  80031aa:	d001      	beq.n	80031b0 <phrase_update_value+0x3c4>
@@ -7376,7 +7376,7 @@ void phrase_update_value(void)
  80031b4:	091b      	lsrs	r3, r3, #4
  80031b6:	b2db      	uxtb	r3, r3
  80031b8:	461a      	mov	r2, r3
-            const uint8_t SYMBOL_PARAMETER[2] = {
+            const symbol_t SYMBOL_PARAMETER[2] = {
  80031ba:	4b1b      	ldr	r3, [pc, #108]	@ (8003228 <phrase_update_value+0x43c>)
  80031bc:	5c9b      	ldrb	r3, [r3, r2]
  80031be:	713b      	strb	r3, [r7, #4]
@@ -7388,7 +7388,7 @@ void phrase_update_value(void)
                 (IS_SELECTED_COMMAND_NULL ? '-' : HEX_DIGIT[SELECTED_PARAMETER % 0x10])
  80031cc:	f897 3026 	ldrb.w	r3, [r7, #38]	@ 0x26
  80031d0:	f003 030f 	and.w	r3, r3, #15
-            const uint8_t SYMBOL_PARAMETER[2] = {
+            const symbol_t SYMBOL_PARAMETER[2] = {
  80031d4:	4a14      	ldr	r2, [pc, #80]	@ (8003228 <phrase_update_value+0x43c>)
  80031d6:	5cd3      	ldrb	r3, [r2, r3]
  80031d8:	717b      	strb	r3, [r7, #5]
@@ -7780,7 +7780,7 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
  800343a:	4b4e      	ldr	r3, [pc, #312]	@ (8003574 <phrase_insert_value+0x1a0>)
  800343c:	781b      	ldrb	r3, [r3, #0]
  800343e:	4a4c      	ldr	r2, [pc, #304]	@ (8003570 <phrase_insert_value+0x19c>)
@@ -7822,7 +7822,7 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
  8003474:	4b3f      	ldr	r3, [pc, #252]	@ (8003574 <phrase_insert_value+0x1a0>)
  8003476:	781b      	ldrb	r3, [r3, #0]
  8003478:	4a3d      	ldr	r2, [pc, #244]	@ (8003570 <phrase_insert_value+0x19c>)
@@ -7864,7 +7864,7 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
  80034ae:	4b35      	ldr	r3, [pc, #212]	@ (8003584 <phrase_insert_value+0x1b0>)
  80034b0:	681b      	ldr	r3, [r3, #0]
  80034b2:	4a30      	ldr	r2, [pc, #192]	@ (8003574 <phrase_insert_value+0x1a0>)
@@ -7875,7 +7875,7 @@ void phrase_insert_value(void)
  80034bc:	f7fd f8ec 	bl	8000698 <data_get_phrase_command>
  80034c0:	4603      	mov	r3, r0
  80034c2:	717b      	strb	r3, [r7, #5]
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
  80034c4:	4b2f      	ldr	r3, [pc, #188]	@ (8003584 <phrase_insert_value+0x1b0>)
  80034c6:	681b      	ldr	r3, [r3, #0]
  80034c8:	4a2a      	ldr	r2, [pc, #168]	@ (8003574 <phrase_insert_value+0x1a0>)
@@ -7935,7 +7935,7 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
  8003520:	4b18      	ldr	r3, [pc, #96]	@ (8003584 <phrase_insert_value+0x1b0>)
  8003522:	681b      	ldr	r3, [r3, #0]
  8003524:	4a13      	ldr	r2, [pc, #76]	@ (8003574 <phrase_insert_value+0x1a0>)
@@ -7946,7 +7946,7 @@ void phrase_insert_value(void)
  800352e:	f7fd f8b3 	bl	8000698 <data_get_phrase_command>
  8003532:	4603      	mov	r3, r0
  8003534:	71fb      	strb	r3, [r7, #7]
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
  8003536:	4b13      	ldr	r3, [pc, #76]	@ (8003584 <phrase_insert_value+0x1b0>)
  8003538:	681b      	ldr	r3, [r3, #0]
  800353a:	4a0e      	ldr	r2, [pc, #56]	@ (8003574 <phrase_insert_value+0x1a0>)
@@ -8058,7 +8058,7 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const uint8_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
  80035f4:	4b4c      	ldr	r3, [pc, #304]	@ (8003728 <phrase_delete_value+0x198>)
  80035f6:	781b      	ldrb	r3, [r3, #0]
  80035f8:	4a4a      	ldr	r2, [pc, #296]	@ (8003724 <phrase_delete_value+0x194>)
@@ -8097,7 +8097,7 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const uint8_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
  800362a:	4b3f      	ldr	r3, [pc, #252]	@ (8003728 <phrase_delete_value+0x198>)
  800362c:	781b      	ldrb	r3, [r3, #0]
  800362e:	4a3d      	ldr	r2, [pc, #244]	@ (8003724 <phrase_delete_value+0x194>)
@@ -8136,7 +8136,7 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
  8003660:	4b35      	ldr	r3, [pc, #212]	@ (8003738 <phrase_delete_value+0x1a8>)
  8003662:	681b      	ldr	r3, [r3, #0]
  8003664:	4a30      	ldr	r2, [pc, #192]	@ (8003728 <phrase_delete_value+0x198>)
@@ -8147,7 +8147,7 @@ void phrase_delete_value(void)
  800366e:	f7fd f813 	bl	8000698 <data_get_phrase_command>
  8003672:	4603      	mov	r3, r0
  8003674:	71bb      	strb	r3, [r7, #6]
-            const uint8_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
  8003676:	4b30      	ldr	r3, [pc, #192]	@ (8003738 <phrase_delete_value+0x1a8>)
  8003678:	681b      	ldr	r3, [r3, #0]
  800367a:	4a2b      	ldr	r2, [pc, #172]	@ (8003728 <phrase_delete_value+0x198>)
@@ -8203,7 +8203,7 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const uint8_t SELECTED_COMMAND = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
  80036cc:	4b1a      	ldr	r3, [pc, #104]	@ (8003738 <phrase_delete_value+0x1a8>)
  80036ce:	681b      	ldr	r3, [r3, #0]
  80036d0:	4a15      	ldr	r2, [pc, #84]	@ (8003728 <phrase_delete_value+0x198>)
@@ -8491,7 +8491,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  80038aa:	693b      	ldr	r3, [r7, #16]
  80038ac:	429a      	cmp	r2, r3
  80038ae:	f000 812e 	beq.w	8003b0e <phrase_change_value+0x3ca>
-                data_set_phrase_instrument((uint8_t) new_instrument, selected_phrase, cursor.y);
+                data_set_phrase_instrument((instrument_id_t) new_instrument, selected_phrase, cursor.y);
  80038b2:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
  80038b4:	b2db      	uxtb	r3, r3
  80038b6:	4a59      	ldr	r2, [pc, #356]	@ (8003a1c <phrase_change_value+0x2d8>)
@@ -8502,7 +8502,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  80038c0:	f7fc fe6c 	bl	800059c <data_set_phrase_instrument>
                 phrase_update_value();
  80038c4:	f7ff fa92 	bl	8002dec <phrase_update_value>
-                copied_instrument = (uint8_t) new_instrument;
+                copied_instrument = (instrument_id_t) new_instrument;
  80038c8:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
  80038ca:	b2da      	uxtb	r2, r3
  80038cc:	4b55      	ldr	r3, [pc, #340]	@ (8003a24 <phrase_change_value+0x2e0>)
@@ -8599,7 +8599,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  800395a:	697b      	ldr	r3, [r7, #20]
  800395c:	429a      	cmp	r2, r3
  800395e:	f000 80dc 	beq.w	8003b1a <phrase_change_value+0x3d6>
-                data_set_phrase_volume((uint8_t) new_volume, selected_phrase, cursor.y);
+                data_set_phrase_volume((volume_t) new_volume, selected_phrase, cursor.y);
  8003962:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
  8003964:	b2db      	uxtb	r3, r3
  8003966:	4a2d      	ldr	r2, [pc, #180]	@ (8003a1c <phrase_change_value+0x2d8>)
@@ -8610,7 +8610,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  8003970:	f7fc fe68 	bl	8000644 <data_set_phrase_volume>
                 phrase_update_value();
  8003974:	f7ff fa3a 	bl	8002dec <phrase_update_value>
-                copied_volume = (uint8_t) new_volume;
+                copied_volume = (volume_t) new_volume;
  8003978:	6afb      	ldr	r3, [r7, #44]	@ 0x2c
  800397a:	b2da      	uxtb	r2, r3
  800397c:	4b2a      	ldr	r3, [pc, #168]	@ (8003a28 <phrase_change_value+0x2e4>)
@@ -8687,7 +8687,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  80039e8:	69bb      	ldr	r3, [r7, #24]
  80039ea:	429a      	cmp	r2, r3
  80039ec:	f000 809b 	beq.w	8003b26 <phrase_change_value+0x3e2>
-                data_set_phrase_command((uint8_t) new_command, cursor_command, selected_phrase, cursor.y);
+                data_set_phrase_command((command_id_t) new_command, cursor_command, selected_phrase, cursor.y);
  80039f0:	6abb      	ldr	r3, [r7, #40]	@ 0x28
  80039f2:	b2d8      	uxtb	r0, r3
  80039f4:	4b0d      	ldr	r3, [pc, #52]	@ (8003a2c <phrase_change_value+0x2e8>)
@@ -8701,7 +8701,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  8003a04:	f7ff f9f2 	bl	8002dec <phrase_update_value>
                 phrase_update_command_description();
  8003a08:	f7ff fc18 	bl	800323c <phrase_update_command_description>
-                copied_command = (uint8_t) new_command;
+                copied_command = (command_id_t) new_command;
  8003a0c:	6abb      	ldr	r3, [r7, #40]	@ 0x28
  8003a0e:	b2da      	uxtb	r2, r3
  8003a10:	4b07      	ldr	r3, [pc, #28]	@ (8003a30 <phrase_change_value+0x2ec>)
@@ -8817,7 +8817,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  8003ace:	69fb      	ldr	r3, [r7, #28]
  8003ad0:	429a      	cmp	r2, r3
  8003ad2:	d02e      	beq.n	8003b32 <phrase_change_value+0x3ee>
-                data_set_phrase_parameter((uint8_t) new_parameter, cursor_command, selected_phrase, cursor.y);
+                data_set_phrase_parameter((parameter_t) new_parameter, cursor_command, selected_phrase, cursor.y);
  8003ad4:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
  8003ad6:	b2d8      	uxtb	r0, r3
  8003ad8:	4b18      	ldr	r3, [pc, #96]	@ (8003b3c <phrase_change_value+0x3f8>)
@@ -8829,7 +8829,7 @@ void phrase_change_value(joystick_position_t joystick_position)
  8003ae4:	f7fc fe7a 	bl	80007dc <data_set_phrase_parameter>
                 phrase_update_value();
  8003ae8:	f7ff f980 	bl	8002dec <phrase_update_value>
-                copied_parameter = (uint8_t) new_parameter;
+                copied_parameter = (parameter_t) new_parameter;
  8003aec:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
  8003aee:	b2da      	uxtb	r2, r3
  8003af0:	4b15      	ldr	r3, [pc, #84]	@ (8003b48 <phrase_change_value+0x404>)
@@ -8941,7 +8941,7 @@ command_id_t phrase_get_selected_command(void)
 
 08003b88 <phrase_get_selected_instrument>:
 
-uint8_t phrase_get_selected_instrument(void)
+instrument_id_t phrase_get_selected_instrument(void)
 {
  8003b88:	b580      	push	{r7, lr}
  8003b8a:	af00      	add	r7, sp, #0
@@ -9077,7 +9077,7 @@ void song_draw_editor_song_channel_labels(void)
  8003c42:	2300      	movs	r3, #0
  8003c44:	607b      	str	r3, [r7, #4]
  8003c46:	e01f      	b.n	8003c88 <song_draw_editor_song_channel_labels+0x4c>
-        region_draw(REGION, i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
+        region_draw(REGION, (symbol_t) i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
  8003c48:	4b13      	ldr	r3, [pc, #76]	@ (8003c98 <song_draw_editor_song_channel_labels+0x5c>)
  8003c4a:	6818      	ldr	r0, [r3, #0]
  8003c4c:	687b      	ldr	r3, [r7, #4]

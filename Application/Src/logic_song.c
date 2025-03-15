@@ -68,7 +68,7 @@ void song_draw_editor_song_channel_labels(void)
     static const region_t *REGION = &REGION_SONG_EDITOR_SONG;
 
     for (int32_t i = 0; i < CHANNEL_COUNT; i++) {
-        region_draw(REGION, i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
+        region_draw(REGION, (symbol_t) i + '1', COLOR_DARK_FADE, i * 3 + 3, 0);
         region_draw(REGION, ' ',     COLOR_DARK_FADE, i * 3 + 4, 0);
     }
 }
