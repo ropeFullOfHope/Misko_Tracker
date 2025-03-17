@@ -2,7 +2,7 @@
 #include "ili9341_registers.h"
 #include "stm32g4xx_ll_gpio.h"
 #include "stm32g4xx_ll_dma.h"
-#include "millis.h"
+#include "micros.h"
 
 #define FMC_BANK1_REG  ((uint16_t *)  0x60000000)
 #define FMC_BANK1_MEM  ((uint16_t *) (0x60000000 | 0x0010000))
@@ -77,9 +77,9 @@ uint32_t ILI9341_is_DMA_ready(void)
 void ILI9341_hard_reset(void)
 {
     LL_GPIO_ResetOutputPin(GPIOD, 0x01 << 3);
-    delay_millis(10);
+    delay_micros(10000);
     LL_GPIO_SetOutputPin(GPIOD, 0x01 << 3);
-    delay_millis(120);
+    delay_micros(120000);
 }
 
 void ILI9341_interface_control(uint16_t param_1, uint16_t param_2, uint16_t param_3)
@@ -112,7 +112,7 @@ void ILI9341_page_address_set(uint16_t param_1, uint16_t param_2)
 void ILI9341_sleep_out(void)
 {
     ILI9341_set_address(ILI9341_SLEEP_OUT);
-    delay_millis(5);
+    delay_micros(5000);
 }
 
 void ILI9341_normal_display_mode_on(void)

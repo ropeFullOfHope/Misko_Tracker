@@ -58,6 +58,7 @@ static void MX_TIM4_Init(void);
 static void MX_TIM15_Init(void);
 static void MX_FMC_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_CORDIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -104,6 +105,7 @@ int main(void)
   MX_TIM15_Init();
   MX_FMC_Init();
   MX_SPI1_Init();
+  MX_CORDIC_Init();
   /* USER CODE BEGIN 2 */
   // Disable SysTick.
   SysTick->CTRL = 0;
@@ -161,7 +163,7 @@ void SystemClock_Config(void)
 
   /* Set AHB prescaler*/
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_8);
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
   LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
   LL_SetSystemCoreClock(170000000);
 
@@ -287,6 +289,33 @@ static void MX_ADC4_Init(void)
 }
 
 /**
+  * @brief CORDIC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CORDIC_Init(void)
+{
+
+  /* USER CODE BEGIN CORDIC_Init 0 */
+
+  /* USER CODE END CORDIC_Init 0 */
+
+  /* Peripheral clock enable */
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_CORDIC);
+
+  /* USER CODE BEGIN CORDIC_Init 1 */
+
+  /* USER CODE END CORDIC_Init 1 */
+
+  /* nothing else to be configured */
+
+  /* USER CODE BEGIN CORDIC_Init 2 */
+
+  /* USER CODE END CORDIC_Init 2 */
+
+}
+
+/**
   * @brief SPI1 Initialization Function
   * @param None
   * @retval None
@@ -378,7 +407,7 @@ static void MX_TIM2_Init(void)
   /* USER CODE BEGIN TIM2_Init 1 */
 
   /* USER CODE END TIM2_Init 1 */
-  TIM_InitStruct.Prescaler = 42499;
+  TIM_InitStruct.Prescaler = 169;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 4294967295;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
@@ -413,9 +442,9 @@ static void MX_TIM3_Init(void)
   /* USER CODE BEGIN TIM3_Init 1 */
 
   /* USER CODE END TIM3_Init 1 */
-  TIM_InitStruct.Prescaler = 42499;
+  TIM_InitStruct.Prescaler = 169;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 9;
+  TIM_InitStruct.Autoreload = 9999;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
   LL_TIM_Init(TIM3, &TIM_InitStruct);
   LL_TIM_DisableARRPreload(TIM3);
@@ -451,7 +480,7 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 1 */
 
   /* USER CODE END TIM4_Init 1 */
-  TIM_InitStruct.Prescaler = 4;
+  TIM_InitStruct.Prescaler = 34;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 99;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
@@ -675,8 +704,8 @@ static void MX_FMC_Init(void)
 static void MX_GPIO_Init(void)
 {
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOF);
@@ -827,8 +856,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(LCD_NRST_GPIO_Port, &GPIO_InitStruct);
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

@@ -5,7 +5,7 @@
 #include "audio.h"
 #include "data.h"
 #include "ticks.h"
-#include "millis.h"
+#include "micros.h"
 #include "backlight.h"
 #include "lcd.h"
 #include "joystick.h"
@@ -26,7 +26,7 @@ void app(void)
 void app_init(void)
 {
     ticks_init();
-    millis_init();
+    micros_init();
     backlight_init();
     LCD_init();
     joystick_init();

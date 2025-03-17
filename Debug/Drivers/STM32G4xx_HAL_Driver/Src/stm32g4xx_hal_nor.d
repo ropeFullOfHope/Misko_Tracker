@@ -1,6 +1,9 @@
-System/Src/millis.o: ../System/Src/millis.c \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h \
+Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_nor.o: \
+ ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_nor.c \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+ ../Core/Inc/stm32g4xx_hal_conf.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -9,10 +12,6 @@ System/Src/millis.o: ../System/Src/millis.c \
  ../Drivers/CMSIS/Include/cmsis_gcc.h \
  ../Drivers/CMSIS/Include/mpu_armv7.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
- ../Core/Inc/stm32g4xx_hal_conf.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h \
@@ -28,8 +27,10 @@ System/Src/millis.o: ../System/Src/millis.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h:
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
+../Core/Inc/stm32g4xx_hal_conf.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h:
 ../Drivers/CMSIS/Include/core_cm4.h:
@@ -38,10 +39,6 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h:
 ../Drivers/CMSIS/Include/cmsis_gcc.h:
 ../Drivers/CMSIS/Include/mpu_armv7.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h:
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
-../Core/Inc/stm32g4xx_hal_conf.h:
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h:

@@ -28,7 +28,7 @@ System/Src/button.o: ../System/Src/button.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/button.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h:
@@ -58,4 +58,4 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/button.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h:

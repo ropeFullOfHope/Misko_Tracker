@@ -220,9 +220,9 @@ void chain_draw_editor_phrase_preview_data(void)
         const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         const symbol_t SYMBOL_NOTE[3] = {
-            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][0]),
-            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][1]),
-            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][2]),
+            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][0]),
+            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][1]),
+            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][2]),
         };
         const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
 

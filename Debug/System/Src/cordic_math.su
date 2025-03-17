@@ -1,0 +1,2 @@
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cordic.h:300:22:LL_CORDIC_Config	24	static
+../System/Src/cordic_math.c:6:6:cordic_init	24	static

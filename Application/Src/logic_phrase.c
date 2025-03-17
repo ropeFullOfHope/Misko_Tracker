@@ -178,9 +178,9 @@ void phrase_draw_editor_phrase_data(void)
         const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         const symbol_t SYMBOL_NOTE[3] = {
-            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][0]),
-            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][1]),
-            (IS_NOTE_NULL ? '-' : NOTE_NAME[NOTE][2])
+            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][0]),
+            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][1]),
+            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][2])
         };
         const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
 
@@ -511,9 +511,9 @@ void phrase_update_value(void)
             const bool IS_SELECTED_NOTE_NULL = (SELECTED_NOTE == 0x00);
 
             const symbol_t SYMBOL_NOTE[3] = {
-                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][0]),
-                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][1]),
-                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_NAME[SELECTED_NOTE][2])
+                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_METADATA.name[SELECTED_NOTE][0]),
+                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_METADATA.name[SELECTED_NOTE][1]),
+                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_METADATA.name[SELECTED_NOTE][2])
             };
 
             region_change_symbol(REGION, SYMBOL_NOTE[0], 2, cursor.y + 1);

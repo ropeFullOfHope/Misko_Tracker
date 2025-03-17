@@ -16,5 +16,5 @@
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:964:19:HAL_SRAM_WriteOperation_Disable	3
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:1017:23:HAL_SRAM_GetState	1
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:1039:13:SRAM_DMACplt	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:1061:13:SRAM_DMACpltProt	1
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:1083:13:SRAM_DMAError	1
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:1062:13:SRAM_DMACpltProt	1
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_sram.c:1085:13:SRAM_DMAError	1

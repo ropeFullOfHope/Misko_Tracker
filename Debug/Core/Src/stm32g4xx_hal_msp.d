@@ -27,6 +27,7 @@ Core/Src/stm32g4xx_hal_msp.o: ../Core/Src/stm32g4xx_hal_msp.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cordic.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h \
@@ -69,6 +70,7 @@ Core/Src/stm32g4xx_hal_msp.o: ../Core/Src/stm32g4xx_hal_msp.c \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cordic.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:

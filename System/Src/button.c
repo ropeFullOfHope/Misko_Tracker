@@ -1,6 +1,6 @@
 #include "button.h"
 #include "stm32g4xx_ll_gpio.h"
-#include "millis.h"
+#include "micros.h"
 
 #define USE_CALL_BASED_HANDLING // Comment this out to use time based handling.
 
@@ -9,9 +9,9 @@
     #define DOUBLE_PRESS_DELAY 15
     #define LONG_HOLD_TIME     60
 #else
-    #define DEBOUNCING_TIME    50
-    #define DOUBLE_PRESS_DELAY 250
-    #define LONG_HOLD_TIME     1000
+    #define DEBOUNCING_TIME    50000
+    #define DOUBLE_PRESS_DELAY 250000
+    #define LONG_HOLD_TIME     1000000
 #endif
 
 /* Finite State Machine definitions */
@@ -75,7 +75,7 @@ void button_scan(void)
 #ifdef USE_CALL_BASED_HANDLING
     current_time += 1;
 #else
-    current_time = millis();
+    current_time = micros();
 #endif
 
     for (button_t button = 0; button < BUTTON_COUNT; button++)

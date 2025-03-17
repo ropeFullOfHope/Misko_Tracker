@@ -2,7 +2,7 @@
 #include "lcd_tileset.h"
 #include "ili9341.h"
 #include "backlight.h"
-#include "millis.h"
+#include "micros.h"
 
 #define QUEUE_SIZE (ROW_COUNT * COLUMN_COUNT)
 
@@ -40,7 +40,7 @@ void LCD_init(void)
         ILI9341_send_data(&data, 1);
 
     // Wait for data to be sent completly.
-    delay_millis(100);
+    delay_micros(100000);
 
     // Turn on backlight.
     backlight_set_brightness(50);

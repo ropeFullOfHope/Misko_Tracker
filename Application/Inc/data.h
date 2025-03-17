@@ -2,6 +2,7 @@
 #define INC_DATA_H_
 
 #include <stdint.h>
+#include "data_notes.h"
 #include "data_commands.h"
 #include "lcd.h"
 
@@ -16,8 +17,6 @@
 #define INSTRUMENT_COUNT 127
 #define COMMANDS_PER_ROW 3
 
-#define NOTE_COUNT (9 * 12 + 1)
-
 typedef uint8_t chain_id_t;
 typedef uint8_t phrase_id_t;
 typedef uint8_t transpose_t;
@@ -26,8 +25,6 @@ typedef uint8_t instrument_id_t;
 typedef uint8_t volume_t;
 typedef uint8_t command_id_t;
 typedef uint8_t parameter_t;
-
-extern const symbol_t NOTE_NAME[NOTE_COUNT][3];
 
 chain_id_t data_get_song_chain(int32_t channel, int32_t row);
 void data_set_song_chain(chain_id_t chain, int32_t channel, int32_t row);

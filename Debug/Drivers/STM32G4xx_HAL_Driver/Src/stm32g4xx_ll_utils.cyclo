@@ -14,8 +14,8 @@
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:2084:26:LL_RCC_PLL_IsReady	2
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:2127:22:LL_RCC_PLL_ConfigDomain_SYS	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:2456:22:LL_RCC_PLL_EnableDomain_SYS	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h:1296:22:LL_FLASH_SetLatency	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h:1324:26:LL_FLASH_GetLatency	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h:1292:22:LL_FLASH_SetLatency	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h:1320:26:LL_FLASH_GetLatency	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h:330:26:LL_PWR_GetRegulVoltageScaling	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h:361:26:LL_PWR_IsEnabledRange1BoostMode	2
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.c:170:6:LL_Init1msTick	1
