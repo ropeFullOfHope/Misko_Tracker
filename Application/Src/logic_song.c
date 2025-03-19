@@ -83,11 +83,11 @@ void song_draw_editor_song_row_numbers(void)
         const color_t COLOR = (ROW % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         // Left side
-        region_draw(REGION, HEX_DIGIT[(ROW >> 1) % 0x10], COLOR, 0, i + 1);
+        region_draw(REGION, HEX_DIGIT[(ROW >> 4) % 0x10], COLOR, 0, i + 1);
         region_draw(REGION, HEX_DIGIT[(ROW >> 0) % 0x10], COLOR, 1, i + 1);
 
         // Right side
-        region_draw(REGION, HEX_DIGIT[(ROW >> 1) % 0x10], COLOR, CHANNEL_COUNT * 3 + 3, i + 1);
+        region_draw(REGION, HEX_DIGIT[(ROW >> 4) % 0x10], COLOR, CHANNEL_COUNT * 3 + 3, i + 1);
         region_draw(REGION, HEX_DIGIT[(ROW >> 0) % 0x10], COLOR, CHANNEL_COUNT * 3 + 4, i + 1);
     }
 }

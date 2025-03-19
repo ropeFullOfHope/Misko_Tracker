@@ -10,6 +10,9 @@
 #include "lcd.h"
 #include "joystick.h"
 #include "sound.h"
+#include "cordic_math.h"
+
+#include "basic_utils.h"
 
 static void app_init(void);
 static void app_main(void);
@@ -31,6 +34,7 @@ void app_init(void)
     LCD_init();
     joystick_init();
     sound_init();
+    cordic_init();
 
     for (int32_t x = 0; x < COLUMN_COUNT; x++) {
         for (int32_t y = 0; y < ROW_COUNT; y++) {

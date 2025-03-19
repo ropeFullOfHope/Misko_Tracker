@@ -2,8 +2,7 @@
 #include "stm32g4xx_ll_dma.h"
 #include "stm32g4xx_ll_adc.h"
 #include "stm32g4xx_ll_tim.h"
-
-#include "lcd.h"
+#include "cordic_math.h"
 
 #define DEADZONE (512 - 1)
 
@@ -51,36 +50,28 @@ void joystick_scan(void)
         return;
     }
 
-    // Calculate absolute value of y.
-    int32_t abs_y = y < 0 ? -y : y;
-
-    // Calculate angle (returns range of -180° and 180°).
-    int32_t angle;
-    if (x >= 0)
-        angle = (45 * 1 - 45 * (x - abs_y) / (x + abs_y));
-    else
-        angle = (45 * 3 - 45 * (abs_y + x) / (abs_y - x));
-    angle = (y < 0 ? -angle : angle);
+    uint32_t angle = cordic_atan2((uint32_t)x, (uint32_t)y);
 
     // Determine joystick's position depending on angle.
-    if (angle <= -145) {
-        joystick_position = JOYSTICK_POSITION_LEFT;
-    } else if (angle < -125) {
-        joystick_position = JOYSTICK_POSITION_DOWNLEFT;
-    } else if (angle <= -55) {
-        joystick_position = JOYSTICK_POSITION_DOWN;
-    } else if (angle < -35) {
-        joystick_position = JOYSTICK_POSITION_DOWNRIGHT;
-    } else if (angle <= 35) {
+    // 0x08000000 is 11.25° or pi / 16 rad.
+    if (angle <= (uint32_t) 0x08000000 * 3) {
         joystick_position = JOYSTICK_POSITION_RIGHT;
-    } else if (angle < 55) {
+    } else if (angle < (uint32_t) 0x08000000 * 5) {
         joystick_position = JOYSTICK_POSITION_UPRIGHT;
-    } else if (angle <= 125) {
+    } else if (angle <= (uint32_t) 0x08000000 * 11) {
         joystick_position = JOYSTICK_POSITION_UP;
-    } else if (angle < 145) {
+    } else if (angle < (uint32_t) 0x08000000 * 13) {
         joystick_position = JOYSTICK_POSITION_UPLEFT;
-    } else {
+    } else if (angle <= (uint32_t) 0x08000000 * 19) {
         joystick_position = JOYSTICK_POSITION_LEFT;
+    } else if (angle < (uint32_t) 0x08000000 * 21) {
+        joystick_position = JOYSTICK_POSITION_DOWNLEFT;
+    } else if (angle <= (uint32_t) 0x08000000 * 27) {
+        joystick_position = JOYSTICK_POSITION_DOWN;
+    } else if (angle < (uint32_t) 0x08000000 * 29) {
+        joystick_position = JOYSTICK_POSITION_DOWNRIGHT;
+    } else {
+        joystick_position = JOYSTICK_POSITION_RIGHT;
     }
 }
 
