@@ -13,6 +13,7 @@
 #include "cordic_math.h"
 
 #include "basic_utils.h"
+#include "stm32g4xx_ll_tim.h"
 
 static void app_init(void);
 static void app_main(void);
@@ -50,5 +51,6 @@ void app_main(void)
 
     video_update();
 
-    audio_update();
+    // Called by an interrupt.
+    //audio_update();
 }

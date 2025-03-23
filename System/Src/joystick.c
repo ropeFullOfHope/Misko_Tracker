@@ -54,23 +54,31 @@ void joystick_scan(void)
 
     // Determine joystick's position depending on angle.
     // 0x08000000 is 11.25° or pi / 16 rad.
-    if (angle <= (uint32_t) 0x08000000 * 3) {
+    if      (angle <= (uint32_t) 0x08000000 * 3) {
         joystick_position = JOYSTICK_POSITION_RIGHT;
-    } else if (angle < (uint32_t) 0x08000000 * 5) {
+    }
+    else if (angle <  (uint32_t) 0x08000000 * 5) {
         joystick_position = JOYSTICK_POSITION_UPRIGHT;
-    } else if (angle <= (uint32_t) 0x08000000 * 11) {
+    }
+    else if (angle <= (uint32_t) 0x08000000 * 11) {
         joystick_position = JOYSTICK_POSITION_UP;
-    } else if (angle < (uint32_t) 0x08000000 * 13) {
+    }
+    else if (angle <  (uint32_t) 0x08000000 * 13) {
         joystick_position = JOYSTICK_POSITION_UPLEFT;
-    } else if (angle <= (uint32_t) 0x08000000 * 19) {
+    }
+    else if (angle <= (uint32_t) 0x08000000 * 19) {
         joystick_position = JOYSTICK_POSITION_LEFT;
-    } else if (angle < (uint32_t) 0x08000000 * 21) {
+    }
+    else if (angle <  (uint32_t) 0x08000000 * 21) {
         joystick_position = JOYSTICK_POSITION_DOWNLEFT;
-    } else if (angle <= (uint32_t) 0x08000000 * 27) {
+    }
+    else if (angle <= (uint32_t) 0x08000000 * 27) {
         joystick_position = JOYSTICK_POSITION_DOWN;
-    } else if (angle < (uint32_t) 0x08000000 * 29) {
+    }
+    else if (angle <  (uint32_t) 0x08000000 * 29) {
         joystick_position = JOYSTICK_POSITION_DOWNRIGHT;
-    } else {
+    }
+    else {
         joystick_position = JOYSTICK_POSITION_RIGHT;
     }
 }

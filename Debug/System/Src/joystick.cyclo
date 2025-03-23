@@ -12,9 +12,9 @@
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2023:22:LL_TIM_EnableCounter	1
 ../System/Src/joystick.c:13:6:joystick_init	6
 ../System/Src/joystick.c:40:6:joystick_scan	10
-../System/Src/joystick.c:77:21:joystick_get_position	1
-../System/Src/joystick.c:82:10:is_joystick_centered	2
-../System/Src/joystick.c:90:10:is_joystick_up	1
-../System/Src/joystick.c:100:10:is_joystick_down	1
-../System/Src/joystick.c:110:10:is_joystick_right	1
-../System/Src/joystick.c:120:10:is_joystick_left	1
+../System/Src/joystick.c:86:21:joystick_get_position	1
+../System/Src/joystick.c:91:10:is_joystick_centered	2
+../System/Src/joystick.c:99:10:is_joystick_up	1
+../System/Src/joystick.c:109:10:is_joystick_down	1
+../System/Src/joystick.c:119:10:is_joystick_right	1
+../System/Src/joystick.c:129:10:is_joystick_left	1

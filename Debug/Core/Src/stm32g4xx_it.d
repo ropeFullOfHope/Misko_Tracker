@@ -41,7 +41,8 @@ Core/Src/stm32g4xx_it.o: ../Core/Src/stm32g4xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h \
- ../Core/Inc/stm32g4xx_it.h
+ ../Core/Inc/stm32g4xx_it.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/audio.h
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
@@ -86,3 +87,4 @@ Core/Src/stm32g4xx_it.o: ../Core/Src/stm32g4xx_it.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:
 ../Core/Inc/stm32g4xx_it.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/audio.h:
