@@ -1,7 +1,7 @@
 #include "data_notes.h"
-#include "ticks.h"
+#include "data.h"
 
-#define NOTE_PERIOD_MACRO(note_frequency) (uint32_t) ((CPU_FREQUENCY / note_frequency) + 0.5)
+#define NOTE_PERIOD_MACRO(note_frequency) (uint32_t) ((OUTPUT_SAMPLE_RATE / note_frequency) + 0.5)
 
 const note_metadata_t NOTE_METADATA = {
     .name = {

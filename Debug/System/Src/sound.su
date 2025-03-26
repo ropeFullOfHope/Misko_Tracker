@@ -3,4 +3,4 @@
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:3217:22:LL_TIM_OC_SetCompareCH1	16	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:4623:22:LL_TIM_EnableAllOutputs	16	static
 ../System/Src/sound.c:4:6:sound_init	8	static
-../System/Src/sound.c:13:6:sound_set	16	static
+../System/Src/sound.c:13:6:sound_set	24	static

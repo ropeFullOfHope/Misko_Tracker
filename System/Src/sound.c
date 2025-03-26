@@ -10,7 +10,9 @@ void sound_init(void)
     LL_TIM_EnableCounter(TIM15);
 }
 
-void sound_set(uint32_t sample)
+void sound_set(int32_t sample)
 {
-    LL_TIM_OC_SetCompareCH1(TIM15, sample % 0x1000);
+    const uint32_t COMPARE_VALUE = (uint32_t)(sample + 0x800) & 0xFFF;
+
+    LL_TIM_OC_SetCompareCH1(TIM15, COMPARE_VALUE);
 }

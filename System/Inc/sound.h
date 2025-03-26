@@ -4,6 +4,6 @@
 #include <stdint.h>
 
 void sound_init(void);
-void sound_set(uint32_t sample);
+void sound_set(int32_t sample);
 
 #endif /* INC_SOUND_H_ */

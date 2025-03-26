@@ -3,6 +3,7 @@
 #include "logic_song.h"
 #include "logic_chain.h"
 #include "logic_phrase.h"
+#include "logic_audio.h"
 #include "data.h"
 #include "ticks.h"
 #include "button.h"
@@ -11,7 +12,9 @@
 static void logic_joystick_auto_repeat(void);
 static void draw_sidebar(void);
 static void draw_map(void);
+static void play_song_from_start(void);
 
+static bool is_playback_enabled   = false;
 static bool is_joystick_triggered = false;
 
 /* Finite State Machine definitions */
@@ -62,6 +65,9 @@ void logic_update(void)
 
         current_logic_state = logic_state_table[current_logic_state]();
     }
+
+    if (is_playback_enabled)
+        logic_audio_update();
 }
 
 void logic_joystick_auto_repeat(void)
@@ -163,6 +169,11 @@ logic_state_t logic_state_song(void)
                 default:
                     break;
             }
+        }
+
+        if (is_button_pressed(BUTTON_LEFT)) {
+            play_song_from_start();
+            return LOGIC_STATE_SONG;
         }
 
         return LOGIC_STATE_SONG;
@@ -395,4 +406,10 @@ void draw_sidebar(void)
 void draw_map(void)
 {
 
+}
+
+void play_song_from_start(void)
+{
+    logic_audio_init();
+    is_playback_enabled = true;
 }

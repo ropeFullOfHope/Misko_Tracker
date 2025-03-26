@@ -1,10 +1,13 @@
 #include "audio.h"
-
-#include "stdint.h"
-
-volatile uint32_t x = 0;
+#include "audio_buffer.h"
+#include "sound.h"
 
 void audio_update(void)
 {
-    x++;
+    if (is_audio_buffer_empty())
+        return;
+
+    const int32_t SAMPLE = audio_buffer_read();
+
+    sound_set(SAMPLE);
 }

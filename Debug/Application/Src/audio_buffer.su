@@ -1,0 +1,5 @@
+../Application/Src/audio_buffer.c:11:9:audio_buffer_read	8	static
+../Application/Src/audio_buffer.c:25:6:audio_buffer_write	16	static
+../Application/Src/audio_buffer.c:38:6:audio_buffer_clear	8	static
+../Application/Src/audio_buffer.c:46:6:is_audio_buffer_empty	4	static
+../Application/Src/audio_buffer.c:51:6:is_audio_buffer_full	4	static

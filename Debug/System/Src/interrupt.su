@@ -1,0 +1,6 @@
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2023:22:LL_TIM_EnableCounter	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2034:22:LL_TIM_DisableCounter	16	static
+../System/Src/interrupt.c:5:6:interrupt_enable	16	static
+../System/Src/interrupt.c:17:6:interrupt_disable	16	static
+../System/Src/interrupt.c:29:6:global_interrupts_enable	4	static,ignoring_inline_asm
+../System/Src/interrupt.c:34:6:global_interrupts_disable	4	static,ignoring_inline_asm

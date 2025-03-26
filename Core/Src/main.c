@@ -549,7 +549,7 @@ static void MX_TIM6_Init(void)
   LL_TIM_DisableMasterSlaveMode(TIM6);
   /* USER CODE BEGIN TIM6_Init 2 */
   LL_TIM_EnableIT_UPDATE(TIM6);
-  LL_TIM_EnableCounter(TIM6);
+  //LL_TIM_EnableCounter(TIM6);
   /* USER CODE END TIM6_Init 2 */
 
 }

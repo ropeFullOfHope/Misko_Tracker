@@ -11,9 +11,7 @@
 #include "joystick.h"
 #include "sound.h"
 #include "cordic_math.h"
-
-#include "basic_utils.h"
-#include "stm32g4xx_ll_tim.h"
+#include "interrupt.h"
 
 static void app_init(void);
 static void app_main(void);
@@ -43,6 +41,9 @@ void app_init(void)
         }
     }
     LCD_update_screen();
+
+    global_interrupts_enable();
+    interrupt_enable(INTERRUPT_AUDIO_UPDATE);
 }
 
 void app_main(void)

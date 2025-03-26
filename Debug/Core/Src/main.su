@@ -40,7 +40,6 @@
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h:341:22:LL_PWR_EnableRange1BoostMode	4	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:439:22:LL_SPI_SetStandard	16	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:875:22:LL_SPI_EnableNSSPulseMgt	16	static
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2023:22:LL_TIM_EnableCounter	16	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2214:22:LL_TIM_DisableARRPreload	16	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2993:22:LL_TIM_OC_DisableFast	24	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:3045:22:LL_TIM_OC_EnablePreload	24	static

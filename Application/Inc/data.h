@@ -6,7 +6,8 @@
 #include "data_commands.h"
 #include "lcd.h"
 
-#define ENGINE_TICK_RATE 60
+#define OUTPUT_SAMPLE_RATE 48000
+#define ENGINE_TICK_RATE   60
 
 #define CHANNEL_COUNT    8
 #define SONG_ROW_COUNT   256
@@ -42,6 +43,8 @@ command_id_t data_get_phrase_command(int32_t command_number, phrase_id_t phrase,
 void data_set_phrase_command(command_id_t command, int32_t command_number, phrase_id_t phrase, int32_t row);
 parameter_t data_get_phrase_parameter(int32_t command_number, phrase_id_t phrase, int32_t row);
 void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, phrase_id_t phrase, int32_t row);
+uint32_t data_get_tempo(void);
+void data_set_tempo(uint32_t tempo);
 
 int32_t data_get_setting_joystick_delay_initial (void);
 void data_set_setting_joystick_delay_initial (int32_t delay);

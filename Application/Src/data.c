@@ -21,6 +21,7 @@ typedef struct {
     song_t song;
     chain_t chain[CHAIN_COUNT];
     phrase_t phrase[PHRASE_COUNT];
+    uint32_t tempo;
 } project_data_t;
 
 typedef struct {
@@ -28,7 +29,9 @@ typedef struct {
     int32_t joystick_delay_repeat;
 } project_settings_t;
 
-static project_data_t project_data = {0};
+static project_data_t project_data = {
+    .tempo = 120
+};
 static project_settings_t project_settings = {
     .joystick_delay_initial = 10,
     .joystick_delay_repeat = 2
@@ -276,6 +279,16 @@ void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, ph
     }
 
     project_data.phrase[phrase].parameter[row][command_number] = parameter;
+}
+
+uint32_t data_get_tempo(void)
+{
+    return project_data.tempo;
+}
+
+void data_set_tempo(uint32_t tempo)
+{
+    project_data.tempo = tempo;
 }
 
 int32_t data_get_setting_joystick_delay_initial (void)
