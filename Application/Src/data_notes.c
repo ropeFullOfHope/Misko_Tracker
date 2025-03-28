@@ -1,7 +1,7 @@
 #include "data_notes.h"
 #include "data.h"
 
-#define NOTE_PERIOD_MACRO(note_frequency) (uint32_t) ((OUTPUT_SAMPLE_RATE / note_frequency) + 0.5)
+#define NOTE_PERIOD_MACRO(note_frequency) (uint32_t)((note_frequency * UINT32_MAX / OUTPUT_SAMPLE_RATE) + 0.5)
 
 const note_metadata_t NOTE_METADATA = {
     .name = {

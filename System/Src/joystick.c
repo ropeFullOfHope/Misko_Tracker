@@ -39,15 +39,25 @@ void joystick_init(void)
 
 void joystick_scan(void)
 {
+    joystick_position_t last_joystick_position = joystick_position;
+
     // Calculate joystick's position relative to it's center.
     int32_t x = joystick_raw[0] - joystick_center[0];
     int32_t y = joystick_raw[1] - joystick_center[1];
 
     // If joystick is inside the deadzone, set the joystick position as
     // centered and return.
-    if (x * x + y * y <= DEADZONE * DEADZONE) {
-        joystick_position = JOYSTICK_POSITION_CENTER;
-        return;
+    if (last_joystick_position == JOYSTICK_POSITION_CENTER) {
+        if ((x * x) + (y * y) <= (DEADZONE * DEADZONE)) {
+            joystick_position = JOYSTICK_POSITION_CENTER;
+            return;
+        }
+    }
+    else {
+        if ((x * x) + (y * y) <= (DEADZONE * DEADZONE) * (3 * 3) / (4 * 4)) {
+            joystick_position = JOYSTICK_POSITION_CENTER;
+            return;
+        }
     }
 
     uint32_t angle = cordic_atan2((uint32_t)x, (uint32_t)y);

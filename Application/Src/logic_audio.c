@@ -18,7 +18,9 @@ typedef struct {
     volume_t current_volume;
 
     uint32_t current_sample;
+    uint32_t period;
 
+    bool retrigger;
     bool is_muted;
 } channel_data_t;
 
@@ -155,27 +157,21 @@ void calculate_samples_per_tick(void)
 
 int32_t get_instrument_sample(channel_data_t *p_channel_data)
 {
-    const note_t CURRENT_NOTE = p_channel_data->current_note;
-    const note_t CURRENT_INSTRUMENT = p_channel_data->current_instrument;
-    const volume_t CURRENT_VOLUME = p_channel_data->current_volume;
-    const uint32_t CURRENT_SAMPLE = p_channel_data->current_sample;
 
-    if (CURRENT_NOTE == 0)
+    if (p_channel_data->current_note == 0)
         return 0;
 
-    if (CURRENT_INSTRUMENT == 0x00)
+    if (p_channel_data->current_instrument == 0x00)
         return 0;
 
-    if (CURRENT_VOLUME == 0)
+    if (p_channel_data->current_volume == 0)
         return 0;
 
-    if (CURRENT_SAMPLE >= NOTE_METADATA.period[CURRENT_NOTE])
-        p_channel_data->current_sample %= NOTE_METADATA.period[CURRENT_NOTE];
-
-    int32_t sample = (CURRENT_SAMPLE * 2 >= NOTE_METADATA.period[CURRENT_NOTE] ? 1 : -1);
-    sample *= 0x7FF * CURRENT_VOLUME / 127;
+    int32_t sample = (p_channel_data->period >= UINT32_MAX / 2 ? 1 : -1);
+    sample *= 0x7FF * p_channel_data->current_volume / 127;
 
     p_channel_data->current_sample += 1;
+    p_channel_data->period += NOTE_METADATA.period[p_channel_data->current_note];
 
     return sample;
 }
@@ -191,12 +187,18 @@ void update_current_note_instrument_volume(channel_data_t *p_channel_data, int32
 
     if (NEW_NOTE != 0) {
         p_channel_data->current_note = NEW_NOTE;
-        p_channel_data->current_sample = 0;
+        if (p_channel_data->retrigger == true) {
+            p_channel_data->current_sample = 0;
+            p_channel_data->period = 0;
+        }
     }
 
     if (NEW_INSTRUMENT != 0x00) {
         p_channel_data->current_instrument = NEW_INSTRUMENT;
-        p_channel_data->current_sample = 0;
+        if (p_channel_data->retrigger == true) {
+            p_channel_data->current_sample = 0;
+            p_channel_data->period = 0;
+        }
     }
 
     if (NEW_VOLUME != 0x00)

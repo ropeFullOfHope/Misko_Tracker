@@ -233,8 +233,8 @@ void chain_draw_editor_phrase_preview_data(void)
         const color_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
 
         const symbol_t SYMBOL_VOLUME[2] = {
-            (IS_VOLUME_NULL ? '-' : HEX_DIGIT[VOLUME / 0x10]),
-            (IS_VOLUME_NULL ? '-' : HEX_DIGIT[VOLUME % 0x10])
+            (IS_VOLUME_NULL ? '-' : HEX_DIGIT[(VOLUME - 1) / 0x10]),
+            (IS_VOLUME_NULL ? '-' : HEX_DIGIT[(VOLUME - 1) % 0x10])
         };
         const color_t COLOR_VOLUME = (IS_VOLUME_NULL ? COLOR_NULL : COLOR_VALUE);
 
