@@ -16,16 +16,16 @@ typedef enum {
 } parameter_type_t;
 
 typedef struct {
-    symbol_t name[3];
-    symbol_t *full_name;
+    char name[3];
+    char *full_name;
     parameter_type_t parameter_type;
     struct {
-        symbol_t *general;
+            char *general;
         union {
-            symbol_t *xx;
+            char *xx;
             struct {
-                symbol_t *x;
-                symbol_t *y;
+                char *x;
+                char *y;
             };
         } parameter;
     } description;

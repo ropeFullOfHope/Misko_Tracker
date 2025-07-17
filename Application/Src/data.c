@@ -1,33 +1,5 @@
 #include "data.h"
-
-typedef struct {
-    chain_id_t chain[CHANNEL_COUNT][SONG_ROW_COUNT];
-} song_t;
-
-typedef struct {
-    phrase_id_t phrase[CHAIN_ROW_COUNT];
-    transpose_t transpose[CHAIN_ROW_COUNT];
-} chain_t;
-
-typedef struct {
-    note_t note[PHRASE_ROW_COUNT];
-    instrument_id_t instrument[PHRASE_ROW_COUNT];
-    volume_t volume[PHRASE_ROW_COUNT];
-    command_id_t command[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
-    parameter_t parameter[PHRASE_ROW_COUNT][COMMANDS_PER_ROW];
-} phrase_t;
-
-typedef struct {
-    song_t song;
-    chain_t chain[CHAIN_COUNT];
-    phrase_t phrase[PHRASE_COUNT];
-    uint32_t tempo;
-} project_data_t;
-
-typedef struct {
-    int32_t joystick_delay_initial;
-    int32_t joystick_delay_repeat;
-} project_settings_t;
+#include <stddef.h>
 
 static project_data_t project_data = {
     .tempo = 120
@@ -279,6 +251,32 @@ void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, ph
     }
 
     project_data.phrase[phrase].parameter[row][command_number] = parameter;
+}
+
+const instrument_t *data_get_instrument(instrument_id_t instrument)
+{
+    instrument -= 1;
+
+    if (//instrument < 0 ||
+        instrument >= INSTRUMENT_COUNT)
+    {
+        return NULL;
+    }
+
+    return &project_data.instrument[instrument];
+}
+
+void data_set_instrument(instrument_id_t instrument, instrument_t *data)
+{
+    instrument -= 1;
+
+    if (//instrument < 0 ||
+        instrument >= INSTRUMENT_COUNT)
+    {
+        return;
+    }
+
+    project_data.instrument[instrument] = *data;
 }
 
 uint32_t data_get_tempo(void)

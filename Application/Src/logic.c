@@ -3,6 +3,7 @@
 #include "logic_song.h"
 #include "logic_chain.h"
 #include "logic_phrase.h"
+#include "logic_instrument.h"
 #include "logic_audio.h"
 #include "data.h"
 #include "ticks.h"
@@ -160,10 +161,10 @@ logic_state_t logic_state_song(void)
 
                 // Hold X + Down : Edit groove.
                 case JOYSTICK_POSITION_DOWN:
-                    song_deinit();
+                    //song_deinit();
                     //groove_init();
 
-                    return LOGIC_STATE_GROOVE;
+                    //return LOGIC_STATE_GROOVE;
                     break;
 
                 default:
@@ -248,22 +249,6 @@ logic_state_t logic_state_chain(void)
                     return LOGIC_STATE_SONG;
                     break;
 
-                // Hold X + Up : Go to project screen.
-                case JOYSTICK_POSITION_UP:
-                    chain_deinit();
-                    //project_init();
-
-                    return LOGIC_STATE_PROJECT;
-                    break;
-
-                // Hold X + Down : Edit groove.
-                case JOYSTICK_POSITION_DOWN:
-                    chain_deinit();
-                    //groove_init();
-
-                    return LOGIC_STATE_GROOVE;
-                    break;
-
                 default:
                     break;
             }
@@ -323,7 +308,7 @@ logic_state_t logic_state_phrase(void)
                         break;
 
                     phrase_deinit();
-                    //instrument_init(SELECTED_INSTRUMENT);
+                    instrument_init(SELECTED_INSTRUMENT);
 
                     return LOGIC_STATE_INSTRUMENT;
                     break;
@@ -342,22 +327,6 @@ logic_state_t logic_state_phrase(void)
                     return LOGIC_STATE_CHAIN;
                     break;
                 }
-
-                // Hold X + Up : Go to project screen.
-                case JOYSTICK_POSITION_UP:
-                    phrase_deinit();
-                    //project_init();
-
-                    return LOGIC_STATE_PROJECT;
-                    break;
-
-                // Hold X + Down : Edit groove.
-                case JOYSTICK_POSITION_DOWN:
-                    phrase_deinit();
-                    //groove_init();
-
-                    return LOGIC_STATE_GROOVE;
-                    break;
 
                 default:
                     break;
@@ -385,6 +354,58 @@ logic_state_t logic_state_phrase(void)
 
 logic_state_t logic_state_instrument(void)
 {
+    const joystick_position_t JOYSTICK_POSITION = joystick_get_position();
+
+    // Hold A
+    if (is_button_held(BUTTON_RIGHT)) {
+        // Hold A + Move : Change the value of the selected note/instrument/volume/command/parameter.
+        if (is_joystick_triggered)
+            instrument_change_value(JOYSTICK_POSITION);
+
+        return LOGIC_STATE_INSTRUMENT;
+    }
+
+    // Hold B
+    if (is_button_held(BUTTON_DOWN)) {
+        return LOGIC_STATE_INSTRUMENT;
+    }
+
+    // Hold X
+    if (is_button_held(BUTTON_UP)) {
+        // Hold X + Move
+        if (is_joystick_triggered) {
+            switch (JOYSTICK_POSITION) {
+                // Hold X + Left : Go back to chain screen.
+                case JOYSTICK_POSITION_LEFT: {
+                    chain_id_t SELECTED_PHRASE = chain_get_selected_phrase();
+
+                    if (SELECTED_PHRASE == 0x00)
+                        break;
+
+                    instrument_deinit();
+                    phrase_init(SELECTED_PHRASE);
+
+                    return LOGIC_STATE_PHRASE;
+                    break;
+                }
+
+                default:
+                    break;
+            }
+        }
+
+        return LOGIC_STATE_INSTRUMENT;
+    }
+
+    // Hold Y
+    if (is_button_held(BUTTON_LEFT)) {
+        return LOGIC_STATE_INSTRUMENT;
+    }
+
+    // Move : Move cursor.
+    if (is_joystick_triggered)
+        instrument_move_cursor(JOYSTICK_POSITION);
+
     return LOGIC_STATE_INSTRUMENT;
 }
 

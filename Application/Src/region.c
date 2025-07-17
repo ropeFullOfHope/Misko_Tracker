@@ -17,6 +17,10 @@ const region_t REGION_PHRASE_TITLE                      = {.start = {1,  1}, .si
 const region_t REGION_PHRASE_EDITOR_PHRASE              = {.start = {1,  3}, .size = {30, 17}};
 const region_t REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION = {.start = {1, 21}, .size = {38,  8}};
 
+const region_t REGION_INSTRUMENT_TITLE                = {.start = {1, 1}, .size = {13,  1}};
+const region_t REGION_INSTRUMENT_EDITOR_COMMON_CONFIG = {.start = {1, 3}, .size = {32,  2}};
+const region_t REGION_INSTRUMENT_EDITOR_TYPE_CONFIG   = {.start = {1, 6}, .size = {32, 23}};
+
 void region_draw(const region_t *p_region, symbol_t symbol, color_t color, int32_t x, int32_t y)
 {
     if (p_region == NULL)
@@ -71,7 +75,7 @@ void region_fill(const region_t *p_region, symbol_t symbol, color_t color)
             LCD_draw(symbol, color, p_region->start.x + x, p_region->start.y + y);
 }
 
-int32_t region_draw_text(const region_t *p_region, symbol_t *text, color_t color, int32_t start_x, int32_t start_y)
+int32_t region_draw_text(const region_t *p_region, const char *text, color_t color, int32_t start_x, int32_t start_y)
 {
     if (p_region == NULL)
         return 0;
@@ -109,7 +113,7 @@ int32_t region_draw_text(const region_t *p_region, symbol_t *text, color_t color
             if (*text == ' ')
                 last_space = index;
 
-            text_line[index] = *(text++);
+            text_line[index] = (symbol_t)(*(text++));
         }
 
         for (int32_t index = 0; index < (last_space == -1 ? TEXTBOX_WIDTH : last_space); index++)

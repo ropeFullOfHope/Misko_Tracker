@@ -259,7 +259,7 @@ void phrase_draw_editor_command_description_name(void)
     region_draw(REGION, '-', COLOR_DARK, 6, 0);
     region_draw(REGION, ' ', COLOR_DARK, 7, 0);
 
-    const symbol_t *TEXT_FULL_NAME = SELECTED_COMMAND_METADATA->full_name;
+    const char *TEXT_FULL_NAME = SELECTED_COMMAND_METADATA->full_name;
     for (int32_t i = 0; TEXT_FULL_NAME[i] != '\0'; i++)
         region_draw(REGION, TEXT_FULL_NAME[i], COLOR_DARK, i + 8, 0);
 }

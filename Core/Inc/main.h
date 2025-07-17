@@ -31,6 +31,8 @@ extern "C" {
 #include "stm32g4xx_ll_adc.h"
 #include "stm32g4xx_ll_cordic.h"
 #include "stm32g4xx_ll_dma.h"
+#include "stm32g4xx_ll_i2c.h"
+#include "stm32g4xx_ll_spi.h"
 #include "stm32g4xx_ll_rcc.h"
 #include "stm32g4xx_ll_bus.h"
 #include "stm32g4xx_ll_crs.h"
@@ -39,7 +41,6 @@ extern "C" {
 #include "stm32g4xx_ll_cortex.h"
 #include "stm32g4xx_ll_utils.h"
 #include "stm32g4xx_ll_pwr.h"
-#include "stm32g4xx_ll_spi.h"
 #include "stm32g4xx_ll_tim.h"
 #include "stm32g4xx_ll_gpio.h"
 
@@ -77,8 +78,6 @@ void Error_Handler(void);
 #define LED2_GPIO_Port GPIOF
 #define LED3_Pin LL_GPIO_PIN_5
 #define LED3_GPIO_Port GPIOF
-#define PIEZO_SPEAKER__Pin LL_GPIO_PIN_9
-#define PIEZO_SPEAKER__GPIO_Port GPIOF
 #define EXTERNAL_CLOCK_Pin LL_GPIO_PIN_0
 #define EXTERNAL_CLOCK_GPIO_Port GPIOF
 #define LED4_Pin LL_GPIO_PIN_0
@@ -91,8 +90,6 @@ void Error_Handler(void);
 #define LED7_GPIO_Port GPIOC
 #define LED0_Pin LL_GPIO_PIN_2
 #define LED0_GPIO_Port GPIOF
-#define PIEZO_SPEAKER_A1_Pin LL_GPIO_PIN_1
-#define PIEZO_SPEAKER_A1_GPIO_Port GPIOA
 #define SD_CARD_CD_Pin LL_GPIO_PIN_3
 #define SD_CARD_CD_GPIO_Port GPIOA
 #define SD_CARD_CS_Pin LL_GPIO_PIN_4
@@ -139,6 +136,16 @@ void Error_Handler(void);
 #define BUTTON_UP_GPIO_Port GPIOG
 #define BUTTON_DOWN_Pin LL_GPIO_PIN_1
 #define BUTTON_DOWN_GPIO_Port GPIOG
+#define POT_SCL_Pin LL_GPIO_PIN_8
+#define POT_SCL_GPIO_Port GPIOC
+#define POT_SDA_Pin LL_GPIO_PIN_9
+#define POT_SDA_GPIO_Port GPIOC
+#define DAC_WS_Pin LL_GPIO_PIN_15
+#define DAC_WS_GPIO_Port GPIOA
+#define DAC_CK_Pin LL_GPIO_PIN_10
+#define DAC_CK_GPIO_Port GPIOC
+#define DAC_SD_Pin LL_GPIO_PIN_12
+#define DAC_SD_GPIO_Port GPIOC
 #define LCD_A15_Pin LL_GPIO_PIN_5
 #define LCD_A15_GPIO_Port GPIOG
 #define BUTTON_LEFT_Pin LL_GPIO_PIN_6
