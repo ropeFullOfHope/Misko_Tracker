@@ -1,5 +1,6 @@
 #include "logic.h"
 #include <stdbool.h>
+#include "logic_project.h"
 #include "logic_song.h"
 #include "logic_chain.h"
 #include "logic_phrase.h"
@@ -82,11 +83,11 @@ void logic_joystick_auto_repeat(void)
         is_joystick_triggered = false;
     }
     else if (CURRENT_JOYSTICK_POSITION != previous_joystick_position) {
-        joystick_delay = data_get_setting_joystick_delay_initial();
+        joystick_delay = data_get_cursor_delay();
         is_joystick_triggered = true;
     }
     else if (joystick_delay == 0){
-        joystick_delay = data_get_setting_joystick_delay_repeat();
+        joystick_delay = data_get_cursor_repeat();
         is_joystick_triggered = true;
     }
     else {
@@ -154,7 +155,7 @@ logic_state_t logic_state_song(void)
                 // Hold X + Up : Go to project screen.
                 case JOYSTICK_POSITION_UP:
                     song_deinit();
-                    //project_init();
+                    project_init();
 
                     return LOGIC_STATE_PROJECT;
                     break;
@@ -411,6 +412,53 @@ logic_state_t logic_state_instrument(void)
 
 logic_state_t logic_state_project(void)
 {
+    const joystick_position_t JOYSTICK_POSITION = joystick_get_position();
+
+    // Hold A
+    if (is_button_held(BUTTON_RIGHT)) {
+        // Hold A + Move : Change the value of the selected note/instrument/volume/command/parameter.
+        if (is_joystick_triggered)
+            //project_change_value(JOYSTICK_POSITION);
+
+        return LOGIC_STATE_PROJECT;
+    }
+
+    // Hold B
+    if (is_button_held(BUTTON_DOWN)) {
+        return LOGIC_STATE_PROJECT;
+    }
+
+    // Hold X
+    if (is_button_held(BUTTON_UP)) {
+        // Hold X + Move
+        if (is_joystick_triggered) {
+            switch (JOYSTICK_POSITION) {
+                // Hold X + Down : Go back to song screen.
+                case JOYSTICK_POSITION_DOWN: {
+                    project_deinit();
+                    song_init();
+
+                    return LOGIC_STATE_SONG;
+                    break;
+                }
+
+                default:
+                    break;
+            }
+        }
+
+        return LOGIC_STATE_PROJECT;
+    }
+
+    // Hold Y
+    if (is_button_held(BUTTON_LEFT)) {
+        return LOGIC_STATE_PROJECT;
+    }
+
+    // Move : Move cursor.
+    //if (is_joystick_triggered)
+        //project_move_cursor(JOYSTICK_POSITION);
+
     return LOGIC_STATE_PROJECT;
 }
 

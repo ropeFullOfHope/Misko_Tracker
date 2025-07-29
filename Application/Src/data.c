@@ -2,11 +2,16 @@
 #include <stddef.h>
 
 static project_data_t project_data = {
-    .tempo = 120
+    .project_settings = {
+        .tempo = 120
+    }
 };
-static project_settings_t project_settings = {
-    .joystick_delay_initial = 10,
-    .joystick_delay_repeat = 2
+static preferences_t preferences = {
+    .master_volume = 0x20,
+    .cursor = {
+        .delay = 10,
+        .repeat = 2
+    }
 };
 
 chain_id_t data_get_song_chain(int32_t channel, int32_t row)
@@ -279,32 +284,129 @@ void data_set_instrument(instrument_id_t instrument, instrument_t *data)
     project_data.instrument[instrument] = *data;
 }
 
-uint32_t data_get_tempo(void)
+void data_get_project_settings(void *data, uint32_t size, uint32_t member_offset)
 {
-    return project_data.tempo;
+    const uint8_t * const base = (const uint8_t *)&project_data.project_settings;
+    const void * const src = base + member_offset;
+
+    switch (size) {
+        case 1: {
+            *(uint8_t *)data = *(const uint8_t *)src;
+            break;
+        }
+        case 2: {
+            *(uint16_t *)data = *(const uint16_t *)src;
+            break;
+        }
+        case 4: {
+            *(uint32_t *)data = *(const uint32_t *)src;
+            break;
+        }
+        case 8: {
+            *(uint64_t *)data = *(const uint64_t *)src;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
-void data_set_tempo(uint32_t tempo)
+void data_set_project_settings(const void *data, uint32_t size, uint32_t member_offset)
 {
-    project_data.tempo = tempo;
+    uint8_t * const base = (uint8_t *)&project_data.project_settings;
+    void * const dst = base + member_offset;
+
+    switch (size) {
+        case 1: {
+            *(uint8_t *)dst = *(const uint8_t *)data;
+            break;
+        }
+        case 2: {
+            *(uint16_t *)dst = *(const uint16_t *)data;
+            break;
+        }
+        case 4: {
+            *(uint32_t *)dst = *(const uint32_t *)data;
+            break;
+        }
+        case 8: {
+            *(uint64_t *)dst = *(const uint64_t *)data;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
-int32_t data_get_setting_joystick_delay_initial (void)
+void data_get_preferences(void *data, uint32_t size, uint32_t member_offset)
 {
-    return project_settings.joystick_delay_initial;
+    const uint8_t * const base = (const uint8_t *)&preferences;
+    const void * const src = base + member_offset;
+
+    switch (size) {
+        case 1: {
+            *(uint8_t *)data = *(const uint8_t *)src;
+            break;
+        }
+        case 2: {
+            *(uint16_t *)data = *(const uint16_t *)src;
+            break;
+        }
+        case 4: {
+            *(uint32_t *)data = *(const uint32_t *)src;
+            break;
+        }
+        case 8: {
+            *(uint64_t *)data = *(const uint64_t *)src;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
-void data_set_setting_joystick_delay_initial (int32_t delay)
+void data_set_preferences(const void *data, uint32_t size, uint32_t member_offset)
 {
-    project_settings.joystick_delay_initial = delay;
+    uint8_t * const base = (uint8_t *)&preferences;
+    void * const dst = base + member_offset;
+
+    switch (size) {
+        case 1: {
+            *(uint8_t *)dst = *(const uint8_t *)data;
+            break;
+        }
+        case 2: {
+            *(uint16_t *)dst = *(const uint16_t *)data;
+            break;
+        }
+        case 4: {
+            *(uint32_t *)dst = *(const uint32_t *)data;
+            break;
+        }
+        case 8: {
+            *(uint64_t *)dst = *(const uint64_t *)data;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
 }
 
-int32_t data_get_setting_joystick_delay_repeat (void)
+tempo_t data_get_tempo(void)
 {
-    return project_settings.joystick_delay_repeat;
+    return project_data.project_settings.tempo;
 }
 
-void data_set_setting_joystick_delay_repeat (int32_t delay)
+cursor_delay_t data_get_cursor_delay(void)
 {
-    project_settings.joystick_delay_repeat = delay;
+    return preferences.cursor.delay;
+}
+
+cursor_delay_t data_get_cursor_repeat(void)
+{
+    return preferences.cursor.repeat;
 }

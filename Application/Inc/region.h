@@ -20,6 +20,10 @@ int32_t region_draw_text(const region_t *p_region, const char *text, color_t col
 extern const region_t REGION_SIDEBAR;
 extern const region_t REGION_MAP;
 
+extern const region_t REGION_PROJECT_TITLE;
+extern const region_t REGION_PROJECT_EDITOR_PROJECT_SETTINGS;
+extern const region_t REGION_PROJECT_EDITOR_PREFERENCES;
+
 extern const region_t REGION_SONG_TITLE;
 extern const region_t REGION_SONG_EDITOR_SONG;
 
