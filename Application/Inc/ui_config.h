@@ -27,6 +27,10 @@ typedef struct {
         uint32_t member_offset;
         primitive_type_t primitive_type;
         struct {
+            primitive_t small;
+            primitive_t big;
+        } step;
+        struct {
             primitive_t min;
             primitive_t max;
         } bounds;
@@ -40,6 +44,7 @@ typedef struct {
 } configGroup_t;
 
 void ui_config_draw(const configGroup_t *config_group, const region_t *region);
+void ui_config_change_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number, bool increase, bool big_step);
 void ui_config_highlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
 void ui_config_unhighlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
 

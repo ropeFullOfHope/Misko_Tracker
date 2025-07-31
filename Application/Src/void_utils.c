@@ -6,7 +6,7 @@
 
 #define STRING_BUFFER_SIZE 40
 
-void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t min, primitive_t max, primitive_type_t primitive_type)
+void void_change_value_within_bounds(void *value, primitive_t delta, bool increase, primitive_t min, primitive_t max, primitive_type_t primitive_type)
 {
     if (value == NULL)
         return;
@@ -14,7 +14,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
     switch (primitive_type) {
         case PRIMITIVE_TYPE_I8: {
             int8_t *src = (int8_t *)value;
-            int16_t result = (int16_t)*src + (int16_t)delta.i8;
+            int16_t result = increase ? (int16_t)*src + (int16_t)delta.i8 : (int16_t)*src - (int16_t)delta.i8;
 
             if (result < min.i8)
                 *src = min.i8;
@@ -27,7 +27,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_I16: {
             int16_t *src = (int16_t *)value;
-            int32_t result = (int32_t)*src + (int32_t)delta.i16;
+            int32_t result = increase ? (int32_t)*src + (int32_t)delta.i16 : (int32_t)*src - (int32_t)delta.i16;
 
             if (result < min.i16)
                 *src = min.i16;
@@ -40,7 +40,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_I32: {
             int32_t *src = (int32_t *)value;
-            int64_t result = (int64_t)*src + (int64_t)delta.i32;
+            int64_t result = increase ? (int64_t)*src + (int64_t)delta.i32 : (int64_t)*src - (int64_t)delta.i32;
 
             if (result < min.i32)
                 *src = min.i32;
@@ -53,7 +53,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_I64: {
             int64_t *src = (int64_t *)value;
-            int64_t result = *src + delta.i64;
+            int64_t result = increase ? *src + delta.i64 : *src - delta.i64;
 
             if (result < min.i64)
                 *src = min.i64;
@@ -66,7 +66,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_U8: {
             uint8_t *src = (uint8_t *)value;
-            int16_t result = (int16_t)*src + (int16_t)delta.u8;
+            int16_t result = increase ? (int16_t)*src + (int16_t)delta.u8 : (int16_t)*src - (int16_t)delta.u8;
 
             if (result < min.u8)
                 *src = min.u8;
@@ -79,7 +79,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_U16: {
             uint16_t *src = (uint16_t *)value;
-            int32_t result = (int32_t)*src + (int32_t)delta.u16;
+            int32_t result = increase ? (int32_t)*src + (int32_t)delta.u16 : (int32_t)*src - (int32_t)delta.u16;
 
             if (result < min.u16)
                 *src = min.u16;
@@ -92,7 +92,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_U32: {
             uint32_t *src = (uint32_t *)value;
-            int64_t result = (int64_t)*src + (int64_t)delta.u32;
+            int64_t result = increase ? (int64_t)*src + (int64_t)delta.u32 : (int64_t)*src - (int64_t)delta.u32;
 
             if (result < min.u32)
                 *src = min.u32;
@@ -105,7 +105,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_U64: {
             uint64_t *src = (uint64_t *)value;
-            uint64_t result = *src + delta.u64;
+            uint64_t result = increase ? *src + delta.u64 : *src - delta.u64;
 
             if (result < min.u64)
                 *src = min.u64;
@@ -118,7 +118,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_F32: {
             float *src = (float *)value;
-            float result = *src + delta.f32;
+            float result = increase ? *src + delta.f32 : *src - delta.f32;
 
             if (result < min.f32)
                 *src = min.f32;
@@ -131,7 +131,7 @@ void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t
         }
         case PRIMITIVE_TYPE_F64: {
             double *src = (double *)value;
-            double result = *src + delta.f64;
+            double result = increase ? *src + delta.f64 : *src - delta.f64;
 
             if (result < min.f64)
                 *src = min.f64;
@@ -194,32 +194,32 @@ void data_to_string(char *out_string, const void *data, display_format_t display
         }
         case STRING_TYPE_HEX_UPPERCASE: {
             switch (primitive_type) {
-                case PRIMITIVE_TYPE_I8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*X",       (int)display_format.size, (uint8_t)*(int8_t *)data);         break;}
-                case PRIMITIVE_TYPE_I16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*X",       (int)display_format.size, (uint16_t)*(int16_t *)data);       break;}
-                case PRIMITIVE_TYPE_I32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIX32, (int)display_format.size, (uint32_t)*(int32_t *)data);       break;}
-                case PRIMITIVE_TYPE_I64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIX64, (int)display_format.size, (uint64_t)*(int64_t *)data);       break;}
-                case PRIMITIVE_TYPE_U8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*X",       (int)display_format.size, *(uint8_t *)data);                 break;}
-                case PRIMITIVE_TYPE_U16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*X",       (int)display_format.size, *(uint16_t *)data);                break;}
-                case PRIMITIVE_TYPE_U32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIX32, (int)display_format.size, *(uint32_t *)data);                break;}
-                case PRIMITIVE_TYPE_U64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIX64, (int)display_format.size, *(uint64_t *)data);                break;}
-                case PRIMITIVE_TYPE_F32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIX32, (int)display_format.size, (uint32_t)roundf(*(float *)data)); break;}
-                case PRIMITIVE_TYPE_F64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIX64, (int)display_format.size, (uint64_t)round(*(double *)data)); break;}
+                case PRIMITIVE_TYPE_I8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*X",       (int)display_format.size, (uint8_t)*(int8_t *)data);         break;}
+                case PRIMITIVE_TYPE_I16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*X",       (int)display_format.size, (uint16_t)*(int16_t *)data);       break;}
+                case PRIMITIVE_TYPE_I32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIX32, (int)display_format.size, (uint32_t)*(int32_t *)data);       break;}
+                case PRIMITIVE_TYPE_I64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIX64, (int)display_format.size, (uint64_t)*(int64_t *)data);       break;}
+                case PRIMITIVE_TYPE_U8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*X",       (int)display_format.size, *(uint8_t *)data);                 break;}
+                case PRIMITIVE_TYPE_U16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*X",       (int)display_format.size, *(uint16_t *)data);                break;}
+                case PRIMITIVE_TYPE_U32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIX32, (int)display_format.size, *(uint32_t *)data);                break;}
+                case PRIMITIVE_TYPE_U64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIX64, (int)display_format.size, *(uint64_t *)data);                break;}
+                case PRIMITIVE_TYPE_F32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIX32, (int)display_format.size, (uint32_t)roundf(*(float *)data)); break;}
+                case PRIMITIVE_TYPE_F64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIX64, (int)display_format.size, (uint64_t)round(*(double *)data)); break;}
                 default: break;
             }
             break;
         }
         case STRING_TYPE_HEX_LOWERCASE: {
             switch (primitive_type) {
-                case PRIMITIVE_TYPE_I8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*x",       (int)display_format.size, (uint8_t)*(int8_t *)data);         break;}
-                case PRIMITIVE_TYPE_I16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*x",       (int)display_format.size, (uint16_t)*(int16_t *)data);       break;}
-                case PRIMITIVE_TYPE_I32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIx32, (int)display_format.size, (uint32_t)*(int32_t *)data);       break;}
-                case PRIMITIVE_TYPE_I64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIx64, (int)display_format.size, (uint64_t)*(int64_t *)data);       break;}
-                case PRIMITIVE_TYPE_U8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*x",       (int)display_format.size, *(uint8_t *)data);                 break;}
-                case PRIMITIVE_TYPE_U16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*x",       (int)display_format.size, *(uint16_t *)data);                break;}
-                case PRIMITIVE_TYPE_U32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIx32, (int)display_format.size, *(uint32_t *)data);                break;}
-                case PRIMITIVE_TYPE_U64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIx64, (int)display_format.size, *(uint64_t *)data);                break;}
-                case PRIMITIVE_TYPE_F32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIx32, (int)display_format.size, (uint32_t)roundf(*(float *)data)); break;}
-                case PRIMITIVE_TYPE_F64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%*" PRIx64, (int)display_format.size, (uint64_t)round(*(double *)data)); break;}
+                case PRIMITIVE_TYPE_I8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*x",       (int)display_format.size, (uint8_t)*(int8_t *)data);         break;}
+                case PRIMITIVE_TYPE_I16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*x",       (int)display_format.size, (uint16_t)*(int16_t *)data);       break;}
+                case PRIMITIVE_TYPE_I32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIx32, (int)display_format.size, (uint32_t)*(int32_t *)data);       break;}
+                case PRIMITIVE_TYPE_I64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIx64, (int)display_format.size, (uint64_t)*(int64_t *)data);       break;}
+                case PRIMITIVE_TYPE_U8:  {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*x",       (int)display_format.size, *(uint8_t *)data);                 break;}
+                case PRIMITIVE_TYPE_U16: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*x",       (int)display_format.size, *(uint16_t *)data);                break;}
+                case PRIMITIVE_TYPE_U32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIx32, (int)display_format.size, *(uint32_t *)data);                break;}
+                case PRIMITIVE_TYPE_U64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIx64, (int)display_format.size, *(uint64_t *)data);                break;}
+                case PRIMITIVE_TYPE_F32: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIx32, (int)display_format.size, (uint32_t)roundf(*(float *)data)); break;}
+                case PRIMITIVE_TYPE_F64: {snprintf(string_buffer, STRING_BUFFER_SIZE, "%0*" PRIx64, (int)display_format.size, (uint64_t)round(*(double *)data)); break;}
                 default: break;
             }
             break;
@@ -294,14 +294,14 @@ void data_to_string(char *out_string, const void *data, display_format_t display
             size_t index = 0;
 
             switch (primitive_type) {
-                case PRIMITIVE_TYPE_I8: {index = (size_t)*(int8_t *)data; break;}
-                case PRIMITIVE_TYPE_I16: {index = (size_t)*(int16_t *)data; break;}
-                case PRIMITIVE_TYPE_I32: {index = (size_t)*(int32_t *)data; break;}
-                case PRIMITIVE_TYPE_I64: {index = (size_t)*(int64_t *)data; break;}
-                case PRIMITIVE_TYPE_U8: {index = (size_t)*(uint8_t *)data; break;}
-                case PRIMITIVE_TYPE_U16: {index = (size_t)*(uint16_t *)data; break;}
-                case PRIMITIVE_TYPE_U32: {index = (size_t)*(uint32_t *)data; break;}
-                case PRIMITIVE_TYPE_U64: {index = (size_t)*(uint64_t *)data; break;}
+                case PRIMITIVE_TYPE_I8:  {index = (size_t)*(int8_t *)data;        break;}
+                case PRIMITIVE_TYPE_I16: {index = (size_t)*(int16_t *)data;       break;}
+                case PRIMITIVE_TYPE_I32: {index = (size_t)*(int32_t *)data;       break;}
+                case PRIMITIVE_TYPE_I64: {index = (size_t)*(int64_t *)data;       break;}
+                case PRIMITIVE_TYPE_U8:  {index = (size_t)*(uint8_t *)data;       break;}
+                case PRIMITIVE_TYPE_U16: {index = (size_t)*(uint16_t *)data;      break;}
+                case PRIMITIVE_TYPE_U32: {index = (size_t)*(uint32_t *)data;      break;}
+                case PRIMITIVE_TYPE_U64: {index = (size_t)*(uint64_t *)data;      break;}
                 case PRIMITIVE_TYPE_F32: {index = (size_t)roundf(*(float *)data); break;}
                 case PRIMITIVE_TYPE_F64: {index = (size_t)round(*(double *)data); break;}
                 default: break;

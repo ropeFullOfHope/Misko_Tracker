@@ -47,6 +47,8 @@ const configGroup_t CONFIG_PROJECT_SETTINGS = {
                 .function.set = data_set_project_settings,
                 .member_offset = offsetof(project_settings_t, tempo),
                 .primitive_type = PRIMITIVE_TYPE_U32,
+                .step.small.u32 = 1,
+                .step.big.u32   = 10,
                 .bounds.min.u32 = 20,
                 .bounds.max.u32 = 300
             }
@@ -76,6 +78,8 @@ const configGroup_t CONFIG_PREFERENCES = {
                 .function.set = data_set_preferences,
                 .member_offset = offsetof(preferences_t, master_volume),
                 .primitive_type = PRIMITIVE_TYPE_U8,
+                .step.small.u8 = 0x01,
+                .step.big.u8   = 0x10,
                 .bounds.min.u8 = 0x00,
                 .bounds.max.u8 = 0x3F
             }
@@ -95,6 +99,8 @@ const configGroup_t CONFIG_PREFERENCES = {
                 .function.set = data_set_preferences,
                 .member_offset = offsetof(preferences_t, cursor.delay),
                 .primitive_type = PRIMITIVE_TYPE_U8,
+                .step.small.u8 = 1,
+                .step.big.u8   = 10,
                 .bounds.min.u8 = 1,
                 .bounds.max.u8 = 60
             }
@@ -114,6 +120,8 @@ const configGroup_t CONFIG_PREFERENCES = {
                 .function.set = data_set_preferences,
                 .member_offset = offsetof(preferences_t, cursor.repeat),
                 .primitive_type = PRIMITIVE_TYPE_U8,
+                .step.small.u8 = 1,
+                .step.big.u8   = 10,
                 .bounds.min.u8 = 1,
                 .bounds.max.u8 = 60
             }
@@ -186,6 +194,57 @@ void project_move_cursor(joystick_position_t joystick_position)
     }
 }
 
+void project_change_value(joystick_position_t joystick_position)
+{
+    const region_t *region = NULL;
+    const configGroup_t *config_group = NULL;
+    bool increase;
+    bool big_step;
+
+    switch (cursor.window) {
+        case WINDOW_PROJECT_SETTINGS: {
+            region = &REGION_PROJECT_EDITOR_PROJECT_SETTINGS;
+            config_group = &CONFIG_PROJECT_SETTINGS;
+            break;
+        }
+        case WINDOW_PREFERENCES: {
+            region = &REGION_PROJECT_EDITOR_PREFERENCES;
+            config_group = &CONFIG_PREFERENCES;
+            break;
+        }
+        default:
+            break;
+    }
+
+    switch (joystick_position) {
+        case JOYSTICK_POSITION_UP: {
+            increase = true;
+            big_step = false;
+            break;
+        }
+        case JOYSTICK_POSITION_DOWN: {
+            increase = false;
+            big_step = false;
+            break;
+        }
+        case JOYSTICK_POSITION_RIGHT: {
+            increase = true;
+            big_step = true;
+            break;
+        }
+        case JOYSTICK_POSITION_LEFT: {
+            increase = false;
+            big_step = true;
+            break;
+        }
+        default: {
+            return;
+        }
+    }
+
+    ui_config_change_data(config_group, region, (uint32_t)cursor.y, increase, big_step);
+}
+
 void project_draw_title(void)
 {
     static const region_t *region = &REGION_PROJECT_TITLE;
@@ -240,7 +299,7 @@ void project_highlight_cursor(void)
     }
 
     if (region != NULL && config_group != NULL)
-        ui_config_highligh_data(config_group, region, (uint32_t)cursor.y);
+        ui_config_highlight_data(config_group, region, (uint32_t)cursor.y);
 }
 
 void project_unhighlight_cursor(void)
@@ -265,7 +324,7 @@ void project_unhighlight_cursor(void)
     }
 
     if (region != NULL && config_group != NULL)
-        ui_config_unhighligh_data(config_group, region, (uint32_t)cursor.y);
+        ui_config_unhighlight_data(config_group, region, (uint32_t)cursor.y);
 }
 
 void project_clear_title(void)

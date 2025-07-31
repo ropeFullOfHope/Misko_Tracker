@@ -418,7 +418,7 @@ logic_state_t logic_state_project(void)
     if (is_button_held(BUTTON_RIGHT)) {
         // Hold A + Move : Change the value of the selected note/instrument/volume/command/parameter.
         if (is_joystick_triggered)
-            //project_change_value(JOYSTICK_POSITION);
+            project_change_value(JOYSTICK_POSITION);
 
         return LOGIC_STATE_PROJECT;
     }

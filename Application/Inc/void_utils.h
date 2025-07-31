@@ -2,6 +2,7 @@
 #define INC_VOID_UTILS_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef enum {
     PRIMITIVE_TYPE_I8,
@@ -49,7 +50,7 @@ typedef struct {
     uint32_t string_count;
 } display_format_t;
 
-void void_change_value_within_bounds(void *value, primitive_t delta, primitive_t min, primitive_t max, primitive_type_t primitive_type);
+void void_change_value_within_bounds(void *value, primitive_t delta, bool increase, primitive_t min, primitive_t max, primitive_type_t primitive_type);
 void data_to_string(char *out_string, const void *data, display_format_t display_format, primitive_type_t primitive_type);
 void copy_data(void *dst, const void *src, primitive_type_t primitive_type);
 
