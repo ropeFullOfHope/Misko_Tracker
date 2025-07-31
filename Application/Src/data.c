@@ -258,6 +258,21 @@ void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, ph
     project_data.phrase[phrase].parameter[row][command_number] = parameter;
 }
 
+tempo_t data_get_tempo(void)
+{
+    return project_data.project_settings.tempo;
+}
+
+cursor_delay_t data_get_cursor_delay(void)
+{
+    return preferences.cursor.delay;
+}
+
+cursor_delay_t data_get_cursor_repeat(void)
+{
+    return preferences.cursor.repeat;
+}
+
 const instrument_t *data_get_instrument(instrument_id_t instrument)
 {
     instrument -= 1;
@@ -284,129 +299,42 @@ void data_set_instrument(instrument_id_t instrument, instrument_t *data)
     project_data.instrument[instrument] = *data;
 }
 
-void data_get_project_settings(void *data, uint32_t size, uint32_t member_offset)
+void data_get_project_settings(void *data, uint32_t member_offset, primitive_type_t primitive_type)
 {
-    const uint8_t * const base = (const uint8_t *)&project_data.project_settings;
-    const void * const src = base + member_offset;
+    const uint8_t *base = (const uint8_t *)&project_data.project_settings;
 
-    switch (size) {
-        case 1: {
-            *(uint8_t *)data = *(const uint8_t *)src;
-            break;
-        }
-        case 2: {
-            *(uint16_t *)data = *(const uint16_t *)src;
-            break;
-        }
-        case 4: {
-            *(uint32_t *)data = *(const uint32_t *)src;
-            break;
-        }
-        case 8: {
-            *(uint64_t *)data = *(const uint64_t *)src;
-            break;
-        }
-        default: {
-            break;
-        }
-    }
+    const void *src = base + member_offset;
+    void *dst = data;
+
+    copy_data(dst, src, primitive_type);
 }
 
-void data_set_project_settings(const void *data, uint32_t size, uint32_t member_offset)
+void data_set_project_settings(const void *data, uint32_t member_offset, primitive_type_t primitive_type)
 {
-    uint8_t * const base = (uint8_t *)&project_data.project_settings;
-    void * const dst = base + member_offset;
+    uint8_t *base = (uint8_t *)&project_data.project_settings;
 
-    switch (size) {
-        case 1: {
-            *(uint8_t *)dst = *(const uint8_t *)data;
-            break;
-        }
-        case 2: {
-            *(uint16_t *)dst = *(const uint16_t *)data;
-            break;
-        }
-        case 4: {
-            *(uint32_t *)dst = *(const uint32_t *)data;
-            break;
-        }
-        case 8: {
-            *(uint64_t *)dst = *(const uint64_t *)data;
-            break;
-        }
-        default: {
-            break;
-        }
-    }
+    const void *src = data;
+    void *dst = base + member_offset;
+
+    copy_data(dst, src, primitive_type);
 }
 
-void data_get_preferences(void *data, uint32_t size, uint32_t member_offset)
+void data_get_preferences(void *data, uint32_t member_offset, primitive_type_t primitive_type)
 {
-    const uint8_t * const base = (const uint8_t *)&preferences;
-    const void * const src = base + member_offset;
+    const uint8_t *base = (const uint8_t *)&preferences;
 
-    switch (size) {
-        case 1: {
-            *(uint8_t *)data = *(const uint8_t *)src;
-            break;
-        }
-        case 2: {
-            *(uint16_t *)data = *(const uint16_t *)src;
-            break;
-        }
-        case 4: {
-            *(uint32_t *)data = *(const uint32_t *)src;
-            break;
-        }
-        case 8: {
-            *(uint64_t *)data = *(const uint64_t *)src;
-            break;
-        }
-        default: {
-            break;
-        }
-    }
+    const void *src = base + member_offset;
+    void *dst = data;
+
+    copy_data(dst, src, primitive_type);
 }
 
-void data_set_preferences(const void *data, uint32_t size, uint32_t member_offset)
+void data_set_preferences(const void *data, uint32_t member_offset, primitive_type_t primitive_type)
 {
-    uint8_t * const base = (uint8_t *)&preferences;
-    void * const dst = base + member_offset;
+    uint8_t *base = (uint8_t *)&preferences;
 
-    switch (size) {
-        case 1: {
-            *(uint8_t *)dst = *(const uint8_t *)data;
-            break;
-        }
-        case 2: {
-            *(uint16_t *)dst = *(const uint16_t *)data;
-            break;
-        }
-        case 4: {
-            *(uint32_t *)dst = *(const uint32_t *)data;
-            break;
-        }
-        case 8: {
-            *(uint64_t *)dst = *(const uint64_t *)data;
-            break;
-        }
-        default: {
-            break;
-        }
-    }
-}
+    const void *src = data;
+    void *dst = base + member_offset;
 
-tempo_t data_get_tempo(void)
-{
-    return project_data.project_settings.tempo;
-}
-
-cursor_delay_t data_get_cursor_delay(void)
-{
-    return preferences.cursor.delay;
-}
-
-cursor_delay_t data_get_cursor_repeat(void)
-{
-    return preferences.cursor.repeat;
+    copy_data(dst, src, primitive_type);
 }

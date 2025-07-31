@@ -5,7 +5,7 @@
 ../Application/Src/logic.c:204:15:logic_state_chain	13
 ../Application/Src/logic.c:277:15:logic_state_phrase	14
 ../Application/Src/logic.c:356:15:logic_state_instrument	10
-../Application/Src/logic.c:413:15:logic_state_project	8
+../Application/Src/logic.c:413:15:logic_state_project	9
 ../Application/Src/logic.c:465:15:logic_state_groove	1
 ../Application/Src/logic.c:470:6:draw_sidebar	1
 ../Application/Src/logic.c:475:6:draw_map	1

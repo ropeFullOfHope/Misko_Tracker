@@ -456,8 +456,8 @@ logic_state_t logic_state_project(void)
     }
 
     // Move : Move cursor.
-    //if (is_joystick_triggered)
-        //project_move_cursor(JOYSTICK_POSITION);
+    if (is_joystick_triggered)
+        project_move_cursor(JOYSTICK_POSITION);
 
     return LOGIC_STATE_PROJECT;
 }

@@ -2,6 +2,7 @@
 #define INC_DATA_H_
 
 #include <stdint.h>
+#include "void_utils.h"
 #include "data_notes.h"
 #include "data_commands.h"
 #include "lcd.h"
@@ -110,14 +111,15 @@ command_id_t data_get_phrase_command(int32_t command_number, phrase_id_t phrase,
 void data_set_phrase_command(command_id_t command, int32_t command_number, phrase_id_t phrase, int32_t row);
 parameter_t data_get_phrase_parameter(int32_t command_number, phrase_id_t phrase, int32_t row);
 void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, phrase_id_t phrase, int32_t row);
-const instrument_t *data_get_instrument(instrument_id_t instrument);
-void data_set_instrument(instrument_id_t instrument, instrument_t *data);
-void data_get_project_settings(void *data, uint32_t size, uint32_t member_offset);
-void data_set_project_settings(const void *data, uint32_t size, uint32_t member_offset);
-void data_get_preferences(void *data, uint32_t size, uint32_t member_offset);
-void data_set_preferences(const void *data, uint32_t size, uint32_t member_offset);
 tempo_t data_get_tempo(void);
 cursor_delay_t data_get_cursor_delay(void);
 cursor_delay_t data_get_cursor_repeat(void);
+const instrument_t *data_get_instrument(instrument_id_t instrument);
+void data_set_instrument(instrument_id_t instrument, instrument_t *data);
+
+void data_get_project_settings(void *data, uint32_t member_offset, primitive_type_t primitive_type);
+void data_set_project_settings(const void *data, uint32_t member_offset, primitive_type_t primitive_type);
+void data_get_preferences(void *data, uint32_t member_offset, primitive_type_t primitive_type);
+void data_set_preferences(const void *data, uint32_t member_offset, primitive_type_t primitive_type);
 
 #endif /* INC_DATA_H_ */

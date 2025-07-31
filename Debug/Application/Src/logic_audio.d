@@ -1,6 +1,7 @@
 Application/Src/logic_audio.o: ../Application/Src/logic_audio.c \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/logic_audio.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/void_utils.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_notes.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/lcd.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_commands.h \
@@ -8,6 +9,7 @@ Application/Src/logic_audio.o: ../Application/Src/logic_audio.c \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/logic_audio.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/void_utils.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_notes.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/lcd.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_commands.h:

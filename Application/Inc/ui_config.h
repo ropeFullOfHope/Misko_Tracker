@@ -1,15 +1,8 @@
 #ifndef INC_UI_CONFIG_H_
 #define INC_UI_CONFIG_H_
 
+#include "void_utils.h"
 #include "region.h"
-
-typedef enum {
-    DISPLAY_TYPE_HEX_2DIGIT_UNSIGNED,
-    DISPLAY_TYPE_DEC_2DIGIT_UNSIGNED,
-    DISPLAY_TYPE_DEC_3DIGIT_UNSIGNED,
-    DISPLAY_TYPE_STRING,
-    DISPLAY_TYPE_COUNT
-} display_type_t;
 
 typedef struct {
     const char *name;
@@ -19,19 +12,24 @@ typedef struct {
 typedef struct {
     label_t label;
     struct {
+        string_type_t type;
         uint32_t size;
+        uint32_t precision;
         uint32_t offset;
-        display_type_t type;
-        const char * const *options;
+        const char **options;
         uint32_t option_count;
     } display;
     struct {
-        uint32_t size;
-        uint32_t member_offset;
         struct {
-            void (*get)(void*, uint32_t, uint32_t);
-            void (*set)(const void*, uint32_t, uint32_t);
+            void (*get)(void*, uint32_t, primitive_type_t);
+            void (*set)(const void*, uint32_t, primitive_type_t);
         } function;
+        uint32_t member_offset;
+        primitive_type_t primitive_type;
+        struct {
+            primitive_t min;
+            primitive_t max;
+        } bounds;
     } data;
 } configItem_t;
 
@@ -42,6 +40,7 @@ typedef struct {
 } configGroup_t;
 
 void ui_config_draw(const configGroup_t *config_group, const region_t *region);
-void ui_config_highligh_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
+void ui_config_highlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
+void ui_config_unhighlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
 
 #endif /* INC_UI_CONFIG_H_ */
