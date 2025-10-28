@@ -17,9 +17,9 @@
 ../Application/Src/data.c:261:9:data_get_tempo	4	static
 ../Application/Src/data.c:266:16:data_get_cursor_delay	4	static
 ../Application/Src/data.c:271:16:data_get_cursor_repeat	4	static
-../Application/Src/data.c:276:21:data_get_instrument	16	static
-../Application/Src/data.c:289:6:data_set_instrument	16	static
-../Application/Src/data.c:302:6:data_get_project_settings	40	static
-../Application/Src/data.c:312:6:data_set_project_settings	40	static
-../Application/Src/data.c:322:6:data_get_preferences	40	static
-../Application/Src/data.c:332:6:data_set_preferences	40	static
+../Application/Src/data.c:276:6:data_get_instrument	48	static
+../Application/Src/data.c:297:6:data_set_instrument	48	static
+../Application/Src/data.c:318:6:data_get_project_settings	40	static
+../Application/Src/data.c:330:6:data_set_project_settings	40	static
+../Application/Src/data.c:342:6:data_get_preferences	40	static
+../Application/Src/data.c:354:6:data_set_preferences	40	static

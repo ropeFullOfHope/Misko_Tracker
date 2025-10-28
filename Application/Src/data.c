@@ -273,68 +273,92 @@ cursor_delay_t data_get_cursor_repeat(void)
     return preferences.cursor.repeat;
 }
 
-const instrument_t *data_get_instrument(instrument_id_t instrument)
+void data_get_instrument(void *data, context_t context, primitive_type_t primitive_type)
 {
-    instrument -= 1;
-
-    if (//instrument < 0 ||
-        instrument >= INSTRUMENT_COUNT)
-    {
-        return NULL;
-    }
-
-    return &project_data.instrument[instrument];
-}
-
-void data_set_instrument(instrument_id_t instrument, instrument_t *data)
-{
-    instrument -= 1;
-
-    if (//instrument < 0 ||
-        instrument >= INSTRUMENT_COUNT)
-    {
+    if (context.instrument.id == NULL)
         return;
-    }
 
-    project_data.instrument[instrument] = *data;
+    instrument_id_t instrument_id = context.instrument.id();
+    uint32_t member_offset = context.instrument.member_offset;
+
+    instrument_id -= 1;
+
+    if (instrument_id >= INSTRUMENT_COUNT)
+        return;
+
+    const uint8_t *base = (const uint8_t *)&project_data.instrument[instrument_id];
+
+    void *dst = data;
+    const void *src = base + member_offset;
+
+    copy_data(dst, src, primitive_type);
 }
 
-void data_get_project_settings(void *data, uint32_t member_offset, primitive_type_t primitive_type)
+void data_set_instrument(const void *data, context_t context, primitive_type_t primitive_type)
 {
+    if (context.instrument.id == NULL)
+        return;
+
+    instrument_id_t instrument_id = context.instrument.id();
+    uint32_t member_offset = context.instrument.member_offset;
+
+    instrument_id -= 1;
+
+    if (instrument_id >= INSTRUMENT_COUNT)
+        return;
+
+    uint8_t *base = (uint8_t *)&project_data.instrument[instrument_id];
+
+    void *dst = base + member_offset;
+    const void *src = data;
+
+    copy_data(dst, src, primitive_type);
+}
+
+void data_get_project_settings(void *data, context_t context, primitive_type_t primitive_type)
+{
+    uint32_t member_offset = context.project_settings.member_offset;
+
     const uint8_t *base = (const uint8_t *)&project_data.project_settings;
 
-    const void *src = base + member_offset;
     void *dst = data;
+    const void *src = base + member_offset;
 
     copy_data(dst, src, primitive_type);
 }
 
-void data_set_project_settings(const void *data, uint32_t member_offset, primitive_type_t primitive_type)
+void data_set_project_settings(const void *data, context_t context, primitive_type_t primitive_type)
 {
+    uint32_t member_offset = context.project_settings.member_offset;
+
     uint8_t *base = (uint8_t *)&project_data.project_settings;
 
-    const void *src = data;
     void *dst = base + member_offset;
+    const void *src = data;
 
     copy_data(dst, src, primitive_type);
 }
 
-void data_get_preferences(void *data, uint32_t member_offset, primitive_type_t primitive_type)
+void data_get_preferences(void *data, context_t context, primitive_type_t primitive_type)
 {
+    uint32_t member_offset = context.preferences.member_offset;
+
     const uint8_t *base = (const uint8_t *)&preferences;
 
-    const void *src = base + member_offset;
     void *dst = data;
+    const void *src = base + member_offset;
 
     copy_data(dst, src, primitive_type);
 }
 
-void data_set_preferences(const void *data, uint32_t member_offset, primitive_type_t primitive_type)
+void data_set_preferences(const void *data, context_t context, primitive_type_t primitive_type)
 {
+    uint32_t member_offset = context.preferences.member_offset;
+
     uint8_t *base = (uint8_t *)&preferences;
 
-    const void *src = data;
     void *dst = base + member_offset;
+    const void *src = data;
 
     copy_data(dst, src, primitive_type);
 }

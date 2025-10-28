@@ -136,10 +136,6 @@ void Error_Handler(void);
 #define BUTTON_UP_GPIO_Port GPIOG
 #define BUTTON_DOWN_Pin LL_GPIO_PIN_1
 #define BUTTON_DOWN_GPIO_Port GPIOG
-#define POT_SCL_Pin LL_GPIO_PIN_8
-#define POT_SCL_GPIO_Port GPIOC
-#define POT_SDA_Pin LL_GPIO_PIN_9
-#define POT_SDA_GPIO_Port GPIOC
 #define DAC_WS_Pin LL_GPIO_PIN_15
 #define DAC_WS_GPIO_Port GPIOA
 #define DAC_CK_Pin LL_GPIO_PIN_10

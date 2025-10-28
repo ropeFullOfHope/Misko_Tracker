@@ -46,13 +46,13 @@ void ui_config_change_data(const configGroup_t *config_group, const region_t *re
 
     uint8_t data_buffer[8];
 
-    config->data.function.get(data_buffer, config->data.member_offset, config->data.primitive_type);
+    config->data.function.get(data_buffer, config->data.context, config->data.primitive_type);
 
     primitive_t delta = big_step ? config->data.step.big : config->data.step.small;
 
     void_change_value_within_bounds(data_buffer, delta, increase, config->data.bounds.min, config->data.bounds.max, config->data.primitive_type);
 
-    config->data.function.set(data_buffer, config->data.member_offset, config->data.primitive_type);
+    config->data.function.set(data_buffer, config->data.context, config->data.primitive_type);
 
     uint32_t y_offset = config_number;
 
@@ -62,7 +62,7 @@ void ui_config_change_data(const configGroup_t *config_group, const region_t *re
     ui_config_update_data(config, region, y_offset);
 }
 
-void ui_config_highlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number)
+void ui_config_color_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number, color_t color)
 {
     if (config_group == NULL || region == NULL)
         return;
@@ -78,26 +78,7 @@ void ui_config_highlight_data(const configGroup_t *config_group, const region_t 
     const configItem_t * const config = &config_group->configs[config_number];
 
     for (uint32_t x = 0; x < config->display.size; x++)
-        region_change_color(region, COLOR_HIGHLIGHT, (int32_t)(x + config->display.offset), (int32_t)y_offset);
-}
-
-void ui_config_unhighlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number)
-{
-    if (config_group == NULL || region == NULL)
-        return;
-
-    uint32_t y_offset = config_number;
-
-    if (config_number >= config_group->config_count)
-        return;
-
-    if (config_group->label.name != NULL)
-        y_offset++;
-
-    const configItem_t * const config = &config_group->configs[config_number];
-
-    for (uint32_t x = 0; x < config->display.size; x++)
-        region_change_color(region, COLOR_DARK, (int32_t)(x + config->display.offset), (int32_t)y_offset);
+        region_change_color(region, color, (int32_t)(x + config->display.offset), (int32_t)y_offset);
 }
 
 static void ui_config_draw_group_label(const configGroup_t *config_group, const region_t *region)
@@ -140,7 +121,7 @@ static void ui_config_draw_data(const configItem_t *config, const region_t *regi
 
     uint8_t data_buffer[8];
 
-    config->data.function.get(data_buffer, config->data.member_offset, config->data.primitive_type);
+    config->data.function.get(data_buffer, config->data.context, config->data.primitive_type);
 
     char string_buffer[MAX_STRING_BUFFER_LENGTH];
     const display_format_t display_format = {
@@ -167,7 +148,7 @@ static void ui_config_update_data(const configItem_t *config, const region_t *re
 
     uint8_t data_buffer[8];
 
-    config->data.function.get(data_buffer, config->data.member_offset, config->data.primitive_type);
+    config->data.function.get(data_buffer, config->data.context, config->data.primitive_type);
 
     char string_buffer[MAX_STRING_BUFFER_LENGTH];
     const display_format_t display_format = {

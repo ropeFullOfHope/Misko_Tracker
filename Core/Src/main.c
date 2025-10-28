@@ -342,21 +342,21 @@ static void MX_I2C3_Init(void)
   PC8   ------> I2C3_SCL
   PC9   ------> I2C3_SDA
   */
-  GPIO_InitStruct.Pin = POT_SCL_Pin;
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
-  LL_GPIO_Init(POT_SCL_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = POT_SDA_Pin;
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_9;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   GPIO_InitStruct.Alternate = LL_GPIO_AF_8;
-  LL_GPIO_Init(POT_SDA_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* Peripheral clock enable */
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C3);
@@ -368,7 +368,7 @@ static void MX_I2C3_Init(void)
   /** I2C Initialization
   */
   I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-  I2C_InitStruct.Timing = 0x40B285C2;
+  I2C_InitStruct.Timing = 0x40621236;
   I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
   I2C_InitStruct.DigitalFilter = 0;
   I2C_InitStruct.OwnAddress1 = 0;
@@ -381,7 +381,7 @@ static void MX_I2C3_Init(void)
   LL_I2C_DisableGeneralCall(I2C3);
   LL_I2C_EnableClockStretching(I2C3);
   /* USER CODE BEGIN I2C3_Init 2 */
-
+  LL_I2C_Enable(I2C3);
   /* USER CODE END I2C3_Init 2 */
 
 }
@@ -449,7 +449,7 @@ static void MX_I2S3_Init(void)
   I2S_InitStruct.ClockPolarity = LL_I2S_POLARITY_LOW;
   LL_I2S_Init(SPI3, &I2S_InitStruct);
   /* USER CODE BEGIN I2S3_Init 2 */
-
+  LL_I2S_Enable(SPI3);
   /* USER CODE END I2S3_Init 2 */
 
 }
@@ -521,7 +521,7 @@ static void MX_SPI1_Init(void)
   LL_SPI_SetStandard(SPI1, LL_SPI_PROTOCOL_MOTOROLA);
   LL_SPI_EnableNSSPulseMgt(SPI1);
   /* USER CODE BEGIN SPI1_Init 2 */
-
+  LL_SPI_Enable(SPI1);
   /* USER CODE END SPI1_Init 2 */
 
 }

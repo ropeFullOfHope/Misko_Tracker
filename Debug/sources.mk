@@ -26,5 +26,6 @@ Application/Src \
 Core/Src \
 Core/Startup \
 Drivers/STM32G4xx_HAL_Driver/Src \
+Middleware/Src \
 System/Src \
 

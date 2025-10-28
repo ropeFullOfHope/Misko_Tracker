@@ -95,6 +95,19 @@ typedef struct {
     } cursor;
 } preferences_t;
 
+typedef union {
+    struct {
+        instrument_id_t (*id)(void);
+        uint32_t member_offset;
+    } instrument;
+    struct {
+        uint32_t member_offset;
+    } project_settings;
+    struct {
+        uint32_t member_offset;
+    } preferences;
+} context_t;
+
 chain_id_t data_get_song_chain(int32_t channel, int32_t row);
 void data_set_song_chain(chain_id_t chain, int32_t channel, int32_t row);
 phrase_id_t data_get_chain_phrase(chain_id_t chain, int32_t row);
@@ -114,12 +127,12 @@ void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, ph
 tempo_t data_get_tempo(void);
 cursor_delay_t data_get_cursor_delay(void);
 cursor_delay_t data_get_cursor_repeat(void);
-const instrument_t *data_get_instrument(instrument_id_t instrument);
-void data_set_instrument(instrument_id_t instrument, instrument_t *data);
 
-void data_get_project_settings(void *data, uint32_t member_offset, primitive_type_t primitive_type);
-void data_set_project_settings(const void *data, uint32_t member_offset, primitive_type_t primitive_type);
-void data_get_preferences(void *data, uint32_t member_offset, primitive_type_t primitive_type);
-void data_set_preferences(const void *data, uint32_t member_offset, primitive_type_t primitive_type);
+void data_get_instrument(void *data, context_t context, primitive_type_t primitive_type);
+void data_set_instrument(const void *data, context_t context, primitive_type_t primitive_type);
+void data_get_project_settings(void *data, context_t context, primitive_type_t primitive_type);
+void data_set_project_settings(const void *data, context_t context, primitive_type_t primitive_type);
+void data_get_preferences(void *data, context_t context, primitive_type_t primitive_type);
+void data_set_preferences(const void *data, context_t context, primitive_type_t primitive_type);
 
 #endif /* INC_DATA_H_ */

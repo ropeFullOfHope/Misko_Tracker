@@ -3,6 +3,7 @@
 
 #include "void_utils.h"
 #include "region.h"
+#include "data.h"
 
 typedef struct {
     const char *name;
@@ -21,10 +22,10 @@ typedef struct {
     } display;
     struct {
         struct {
-            void (*get)(void*, uint32_t, primitive_type_t);
-            void (*set)(const void*, uint32_t, primitive_type_t);
+            void (*get)(void*, context_t, primitive_type_t);
+            void (*set)(const void*, context_t, primitive_type_t);
         } function;
-        uint32_t member_offset;
+        context_t context;
         primitive_type_t primitive_type;
         struct {
             primitive_t small;
@@ -45,7 +46,6 @@ typedef struct {
 
 void ui_config_draw(const configGroup_t *config_group, const region_t *region);
 void ui_config_change_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number, bool increase, bool big_step);
-void ui_config_highlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
-void ui_config_unhighlight_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number);
+void ui_config_color_data(const configGroup_t *config_group, const region_t *region, uint32_t config_number, color_t color);
 
 #endif /* INC_UI_CONFIG_H_ */

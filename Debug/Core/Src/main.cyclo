@@ -18,13 +18,16 @@
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:890:22:LL_DMA_SetMemorySize	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:944:22:LL_DMA_SetChannelPriorityLevel	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1406:22:LL_DMA_SetPeriphRequest	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:429:22:LL_I2C_Enable	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:644:22:LL_I2C_EnableClockStretching	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:764:22:LL_I2C_DisableGeneralCall	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:875:22:LL_I2C_SetOwnAddress2	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:897:22:LL_I2C_DisableOwnAddress2	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:1879:22:LL_I2C_EnableAutoEndMode	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:371:22:LL_SPI_Enable	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:439:22:LL_SPI_SetStandard	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:875:22:LL_SPI_EnableNSSPulseMgt	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:1652:22:LL_I2S_Enable	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:930:22:LL_RCC_HSE_EnableBypass	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:950:22:LL_RCC_HSE_Enable	1
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:970:26:LL_RCC_HSE_IsReady	2

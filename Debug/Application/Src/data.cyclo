@@ -17,9 +17,9 @@
 ../Application/Src/data.c:261:9:data_get_tempo	1
 ../Application/Src/data.c:266:16:data_get_cursor_delay	1
 ../Application/Src/data.c:271:16:data_get_cursor_repeat	1
-../Application/Src/data.c:276:21:data_get_instrument	2
-../Application/Src/data.c:289:6:data_set_instrument	2
-../Application/Src/data.c:302:6:data_get_project_settings	1
-../Application/Src/data.c:312:6:data_set_project_settings	1
-../Application/Src/data.c:322:6:data_get_preferences	1
-../Application/Src/data.c:332:6:data_set_preferences	1
+../Application/Src/data.c:276:6:data_get_instrument	3
+../Application/Src/data.c:297:6:data_set_instrument	3
+../Application/Src/data.c:318:6:data_get_project_settings	1
+../Application/Src/data.c:330:6:data_set_project_settings	1
+../Application/Src/data.c:342:6:data_get_preferences	1
+../Application/Src/data.c:354:6:data_set_preferences	1

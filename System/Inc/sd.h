@@ -1,8 +1,9 @@
 #ifndef INC_SD_H_
 #define INC_SD_H_
 
-#include "diskio.h"
+#include <stdint.h>
 
-DSTATUS sd_status(void);
+uint8_t sd_init(void);
+uint8_t sd_status(void);
 
 #endif /* INC_SD_H_ */

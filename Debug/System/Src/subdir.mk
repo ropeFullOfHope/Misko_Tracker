@@ -15,8 +15,10 @@ C_SRCS += \
 ../System/Src/lcd.c \
 ../System/Src/lcd_tileset.c \
 ../System/Src/micros.c \
+../System/Src/sd.c \
 ../System/Src/sound.c \
-../System/Src/ticks.c 
+../System/Src/ticks.c \
+../System/Src/volume.c 
 
 OBJS += \
 ./System/Src/LED.o \
@@ -29,8 +31,10 @@ OBJS += \
 ./System/Src/lcd.o \
 ./System/Src/lcd_tileset.o \
 ./System/Src/micros.o \
+./System/Src/sd.o \
 ./System/Src/sound.o \
-./System/Src/ticks.o 
+./System/Src/ticks.o \
+./System/Src/volume.o 
 
 C_DEPS += \
 ./System/Src/LED.d \
@@ -43,8 +47,10 @@ C_DEPS += \
 ./System/Src/lcd.d \
 ./System/Src/lcd_tileset.d \
 ./System/Src/micros.d \
+./System/Src/sd.d \
 ./System/Src/sound.d \
-./System/Src/ticks.d 
+./System/Src/ticks.d \
+./System/Src/volume.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -54,7 +60,7 @@ System/Src/%.o System/Src/%.su System/Src/%.cyclo: ../System/Src/%.c System/Src/
 clean: clean-System-2f-Src
 
 clean-System-2f-Src:
-	-$(RM) ./System/Src/LED.cyclo ./System/Src/LED.d ./System/Src/LED.o ./System/Src/LED.su ./System/Src/backlight.cyclo ./System/Src/backlight.d ./System/Src/backlight.o ./System/Src/backlight.su ./System/Src/button.cyclo ./System/Src/button.d ./System/Src/button.o ./System/Src/button.su ./System/Src/cordic_math.cyclo ./System/Src/cordic_math.d ./System/Src/cordic_math.o ./System/Src/cordic_math.su ./System/Src/ili9341.cyclo ./System/Src/ili9341.d ./System/Src/ili9341.o ./System/Src/ili9341.su ./System/Src/interrupt.cyclo ./System/Src/interrupt.d ./System/Src/interrupt.o ./System/Src/interrupt.su ./System/Src/joystick.cyclo ./System/Src/joystick.d ./System/Src/joystick.o ./System/Src/joystick.su ./System/Src/lcd.cyclo ./System/Src/lcd.d ./System/Src/lcd.o ./System/Src/lcd.su ./System/Src/lcd_tileset.cyclo ./System/Src/lcd_tileset.d ./System/Src/lcd_tileset.o ./System/Src/lcd_tileset.su ./System/Src/micros.cyclo ./System/Src/micros.d ./System/Src/micros.o ./System/Src/micros.su ./System/Src/sound.cyclo ./System/Src/sound.d ./System/Src/sound.o ./System/Src/sound.su ./System/Src/ticks.cyclo ./System/Src/ticks.d ./System/Src/ticks.o ./System/Src/ticks.su
+	-$(RM) ./System/Src/LED.cyclo ./System/Src/LED.d ./System/Src/LED.o ./System/Src/LED.su ./System/Src/backlight.cyclo ./System/Src/backlight.d ./System/Src/backlight.o ./System/Src/backlight.su ./System/Src/button.cyclo ./System/Src/button.d ./System/Src/button.o ./System/Src/button.su ./System/Src/cordic_math.cyclo ./System/Src/cordic_math.d ./System/Src/cordic_math.o ./System/Src/cordic_math.su ./System/Src/ili9341.cyclo ./System/Src/ili9341.d ./System/Src/ili9341.o ./System/Src/ili9341.su ./System/Src/interrupt.cyclo ./System/Src/interrupt.d ./System/Src/interrupt.o ./System/Src/interrupt.su ./System/Src/joystick.cyclo ./System/Src/joystick.d ./System/Src/joystick.o ./System/Src/joystick.su ./System/Src/lcd.cyclo ./System/Src/lcd.d ./System/Src/lcd.o ./System/Src/lcd.su ./System/Src/lcd_tileset.cyclo ./System/Src/lcd_tileset.d ./System/Src/lcd_tileset.o ./System/Src/lcd_tileset.su ./System/Src/micros.cyclo ./System/Src/micros.d ./System/Src/micros.o ./System/Src/micros.su ./System/Src/sd.cyclo ./System/Src/sd.d ./System/Src/sd.o ./System/Src/sd.su ./System/Src/sound.cyclo ./System/Src/sound.d ./System/Src/sound.o ./System/Src/sound.su ./System/Src/ticks.cyclo ./System/Src/ticks.d ./System/Src/ticks.o ./System/Src/ticks.su ./System/Src/volume.cyclo ./System/Src/volume.d ./System/Src/volume.o ./System/Src/volume.su
 
 .PHONY: clean-System-2f-Src
 
