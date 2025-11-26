@@ -23,7 +23,7 @@
 ../Application/Src/logic_chain.c:384:6:chain_update_value	24	static
 ../Application/Src/logic_chain.c:424:6:chain_update_phrase_preview	16	static
 ../Application/Src/logic_chain.c:445:6:chain_move_cursor	24	static
-../Application/Src/logic_chain.c:491:6:chain_insert_value	16	static
+../Application/Src/logic_chain.c:491:6:chain_insert_value	24	static
 ../Application/Src/logic_chain.c:528:6:chain_delete_value	16	static
 ../Application/Src/logic_chain.c:567:6:chain_change_value	32	static
-../Application/Src/logic_chain.c:648:13:chain_get_selected_phrase	8	static
+../Application/Src/logic_chain.c:648:13:chain_get_selected_phrase	4	static

@@ -43,9 +43,8 @@ const configGroup_t CONFIGS_PROJECT_SETTINGS = {
                 .offset = 6
             },
             .data = {
-                .function.get = data_get_project_settings,
-                .function.set = data_set_project_settings,
-                .context.project_settings.member_offset = offsetof(project_settings_t, tempo),
+                .pointer = &project_data.project_settings.tempo,
+                .indirect = false,
                 .primitive_type = PRIMITIVE_TYPE_U32,
                 .step.small.u32 = 1,
                 .step.big.u32   = 10,
@@ -74,9 +73,8 @@ const configGroup_t CONFIGS_PREFERENCES = {
                 .offset = 14
             },
             .data = {
-                .function.get = data_get_preferences,
-                .function.set = data_set_preferences,
-                .context.preferences.member_offset = offsetof(preferences_t, master_volume),
+                .pointer = &preferences.master_volume,
+                .indirect = false,
                 .primitive_type = PRIMITIVE_TYPE_U8,
                 .step.small.u8 = 0x01,
                 .step.big.u8   = 0x10,
@@ -95,9 +93,8 @@ const configGroup_t CONFIGS_PREFERENCES = {
                 .offset = 14
             },
             .data = {
-                .function.get = data_get_preferences,
-                .function.set = data_set_preferences,
-                .context.preferences.member_offset = offsetof(preferences_t, cursor.delay),
+                .pointer = &preferences.cursor.delay,
+                .indirect = false,
                 .primitive_type = PRIMITIVE_TYPE_U8,
                 .step.small.u8 = 1,
                 .step.big.u8   = 10,
@@ -116,9 +113,8 @@ const configGroup_t CONFIGS_PREFERENCES = {
                 .offset = 14
             },
             .data = {
-                .function.get = data_get_preferences,
-                .function.set = data_set_preferences,
-                .context.preferences.member_offset = offsetof(preferences_t, cursor.repeat),
+                .pointer = &preferences.cursor.repeat,
+                .indirect = false,
                 .primitive_type = PRIMITIVE_TYPE_U8,
                 .step.small.u8 = 1,
                 .step.big.u8   = 10,

@@ -1,7 +1,13 @@
 Application/Src/audio.o: ../Application/Src/audio.c \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/audio.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/audio_buffer.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sound.h
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/void_utils.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_notes.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/lcd.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_commands.h
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/audio.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/audio_buffer.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sound.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/void_utils.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_notes.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/lcd.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/data_commands.h:

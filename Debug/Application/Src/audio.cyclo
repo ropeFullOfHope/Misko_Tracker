@@ -1,1 +1,4 @@
-../Application/Src/audio.c:5:6:audio_update	2
+../Application/Src/audio.c:29:6:audio_start	2
+../Application/Src/audio.c:55:6:audio_stop	1
+../Application/Src/audio.c:61:6:audio_fill_buffer	1
+../Application/Src/audio.c:66:16:audio_get_next_sample	11

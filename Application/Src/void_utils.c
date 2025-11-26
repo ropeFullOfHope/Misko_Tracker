@@ -358,16 +358,16 @@ void copy_data(void *dst, const void *src, primitive_type_t primitive_type)
         return;
 
     switch (primitive_type) {
-        case PRIMITIVE_TYPE_I8:  {*(int8_t *)dst   = *(int8_t *)src;   break;}
-        case PRIMITIVE_TYPE_I16: {*(int16_t *)dst  = *(int16_t *)src;  break;}
-        case PRIMITIVE_TYPE_I32: {*(int32_t *)dst  = *(int32_t *)src;  break;}
-        case PRIMITIVE_TYPE_I64: {*(int64_t *)dst  = *(int64_t *)src;  break;}
-        case PRIMITIVE_TYPE_U8:  {*(uint8_t *)dst  = *(uint8_t *)src;  break;}
-        case PRIMITIVE_TYPE_U16: {*(uint16_t *)dst = *(uint16_t *)src; break;}
-        case PRIMITIVE_TYPE_U32: {*(uint32_t *)dst = *(uint32_t *)src; break;}
-        case PRIMITIVE_TYPE_U64: {*(uint64_t *)dst = *(uint64_t *)src; break;}
-        case PRIMITIVE_TYPE_F32: {*(float *)dst    = *(float *)src;    break;}
-        case PRIMITIVE_TYPE_F64: {*(double *)dst   = *(double *)src;   break;}
+        case PRIMITIVE_TYPE_I8:  {memcpy(dst, src, 1); break;}
+        case PRIMITIVE_TYPE_I16: {memcpy(dst, src, 2); break;}
+        case PRIMITIVE_TYPE_I32: {memcpy(dst, src, 4); break;}
+        case PRIMITIVE_TYPE_I64: {memcpy(dst, src, 8); break;}
+        case PRIMITIVE_TYPE_U8:  {memcpy(dst, src, 1); break;}
+        case PRIMITIVE_TYPE_U16: {memcpy(dst, src, 2); break;}
+        case PRIMITIVE_TYPE_U32: {memcpy(dst, src, 4); break;}
+        case PRIMITIVE_TYPE_U64: {memcpy(dst, src, 8); break;}
+        case PRIMITIVE_TYPE_F32: {memcpy(dst, src, 4); break;}
+        case PRIMITIVE_TYPE_F64: {memcpy(dst, src, 8); break;}
         default: break;
     }
 }

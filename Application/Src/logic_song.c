@@ -115,7 +115,7 @@ void song_draw_editor_song_data(void)
         const int32_t ROW = scroll + y;
 
         for (int32_t x = 0; x < CHANNEL_COUNT; x++) {
-            const chain_id_t CHAIN = data_get_song_chain(x, ROW);
+            const chain_id_t CHAIN = project_data.song.chain[x][ROW];
             const bool IS_CHAIN_NULL = (CHAIN == 0x00);
 
             const color_t COLOR_VALUE = (ROW % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
@@ -162,7 +162,7 @@ void song_unhighlight_cursor(void)
 {
     static const region_t *REGION = &REGION_SONG_EDITOR_SONG;
     const int32_t RELATIVE_ROW = cursor.y - scroll;
-    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = project_data.song.chain[cursor.x][cursor.y];
     const bool IS_CHAIN_NULL = (SELECTED_CHAIN == 0x00);
 
     const color_t COLOR_VALUE = (cursor.y % 4 == 0 ? COLOR_DARK      : COLOR_NORMAL);
@@ -222,7 +222,7 @@ void song_update_chain(void)
 {
     static const region_t *REGION = &REGION_SONG_EDITOR_SONG;
     const int32_t RELATIVE_ROW = cursor.y - scroll;
-    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = project_data.song.chain[cursor.x][cursor.y];
     const bool IS_CHAIN_NULL = (SELECTED_CHAIN == 0x00);
 
     const symbol_t SYMBOL[2] = {
@@ -350,10 +350,10 @@ void song_move_page(joystick_position_t joystick_position)
 
 void song_insert_chain()
 {
-    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = project_data.song.chain[cursor.x][cursor.y];
 
     if (SELECTED_CHAIN == 0x00) {
-        data_set_song_chain(copied_chain, cursor.x, cursor.y);
+        project_data.song.chain[cursor.x][cursor.y] = copied_chain;
         song_update_chain();
     }
     else {
@@ -368,20 +368,20 @@ void song_insert_new_chain(void)
 
 void song_delete_chain(void)
 {
-    const chain_id_t SELECTED_CHAIN = data_get_song_chain(cursor.x, cursor.y);
+    const chain_id_t SELECTED_CHAIN = project_data.song.chain[cursor.x][cursor.y];
 
     if (SELECTED_CHAIN == 0x00)
         return;
 
     copied_chain = SELECTED_CHAIN;
 
-    data_set_song_chain(0x00, cursor.x, cursor.y);
+    project_data.song.chain[cursor.x][cursor.y] = 0x00;
     song_update_chain();
 }
 
 void song_change_chain(joystick_position_t joystick_position)
 {
-    const int32_t SELECTED_CHAIN = (int32_t) data_get_song_chain(cursor.x, cursor.y);
+    const int32_t SELECTED_CHAIN = (int32_t) project_data.song.chain[cursor.x][cursor.y];
 
     int32_t new_chain = SELECTED_CHAIN;
 
@@ -410,7 +410,7 @@ void song_change_chain(joystick_position_t joystick_position)
     }
 
     if (new_chain != SELECTED_CHAIN) {
-        data_set_song_chain((chain_id_t)new_chain, cursor.x, cursor.y);
+        project_data.song.chain[cursor.x][cursor.y] = (chain_id_t) new_chain;
         song_update_chain();
         copied_chain = (chain_id_t)new_chain;
     }
@@ -418,5 +418,5 @@ void song_change_chain(joystick_position_t joystick_position)
 
 chain_id_t song_get_selected_chain(void)
 {
-    return data_get_song_chain(cursor.x,cursor.y);
+    return project_data.song.chain[cursor.x][cursor.y];
 }

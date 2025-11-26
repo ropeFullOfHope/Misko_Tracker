@@ -49,7 +49,7 @@ static parameter_t copied_parameter = 0x00;
 
 void phrase_init(phrase_id_t phrase)
 {
-    selected_phrase = phrase;
+    selected_phrase = phrase - 1;
 
     phrase_draw_title();
     phrase_draw_editor_phrase();
@@ -76,8 +76,8 @@ void phrase_draw_title(void)
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
         region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
 
-    region_draw(REGION, HEX_DIGIT[selected_phrase / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
-    region_draw(REGION, HEX_DIGIT[selected_phrase % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
+    region_draw(REGION, HEX_DIGIT[(selected_phrase + 1) / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
+    region_draw(REGION, HEX_DIGIT[(selected_phrase + 1) % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
 }
 
 void phrase_draw_editor_phrase(void)
@@ -155,15 +155,15 @@ void phrase_draw_editor_phrase_data(void)
     static const region_t *REGION = &REGION_PHRASE_EDITOR_PHRASE;
 
     for (int32_t i = 0; i < 16; i++) {
-        const note_t NOTE = data_get_phrase_note(selected_phrase, i);
-        const instrument_id_t INSTRUMENT = data_get_phrase_instrument(selected_phrase, i);
-        const volume_t VOLUME = data_get_phrase_volume(selected_phrase, i);
+        const note_t NOTE = project_data.phrase[selected_phrase].note[i];
+        const instrument_id_t INSTRUMENT = project_data.phrase[selected_phrase].instrument[i];
+        const volume_t VOLUME = project_data.phrase[selected_phrase].volume[i];
 
         command_id_t command[COMMANDS_PER_ROW];
         parameter_t parameter[COMMANDS_PER_ROW];
         for (int32_t j = 0; j < COMMANDS_PER_ROW; j++) {
-            command[j]   = data_get_phrase_command(j, selected_phrase, i);
-            parameter[j] = data_get_phrase_parameter(j, selected_phrase, i);
+            command[j]   = project_data.phrase[selected_phrase].command[i][j];
+            parameter[j] = project_data.phrase[selected_phrase].parameter[i][j];
         }
 
         const bool IS_NOTE_NULL = (NOTE == 0x00);
@@ -178,9 +178,9 @@ void phrase_draw_editor_phrase_data(void)
         const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         const symbol_t SYMBOL_NOTE[3] = {
-            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][0]),
-            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][1]),
-            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][2])
+            NOTE_METADATA[NOTE].name[0],
+            NOTE_METADATA[NOTE].name[1],
+            NOTE_METADATA[NOTE].name[2]
         };
         const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
 
@@ -234,7 +234,7 @@ void phrase_draw_editor_phrase_data(void)
 void phrase_draw_editor_command_description_name(void)
 {
     static const region_t *REGION = &REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION;
-    const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+    const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
     const command_metadata_t *SELECTED_COMMAND_METADATA = &COMMAND_METADATA[SELECTED_COMMAND];
 
     for (int32_t i = 0; i < 3; i++)
@@ -267,7 +267,7 @@ void phrase_draw_editor_command_description_name(void)
 void phrase_draw_editor_command_description_description(void)
 {
     const region_t *REGION = &REGION_PHRASE_EDITOR_COMMAND_DESCRIPTION;
-    const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+    const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
     const command_metadata_t *SELECTED_COMMAND_METADATA = &COMMAND_METADATA[SELECTED_COMMAND];
 
     int32_t written_rows = 0;
@@ -362,7 +362,7 @@ void phrase_unhighlight_cursor(void)
 
     switch(cursor.x) {
         case PHRASE_COLUMN_NOTE: {
-            const note_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
+            const note_t SELECTED_NOTE = project_data.phrase[selected_phrase].note[cursor.y];
             const bool IS_NOTE_NULL = (SELECTED_NOTE == 0x00);
 
             const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
@@ -375,7 +375,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = project_data.phrase[selected_phrase].instrument[cursor.y];
             const bool IS_INSTRUMENT_NULL = (SELECTED_INSTRUMENT == 0x00);
 
             const color_t COLOR_INSTRUMENT = (IS_INSTRUMENT_NULL ? COLOR_NULL : COLOR_VALUE);
@@ -387,7 +387,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = project_data.phrase[selected_phrase].volume[cursor.y];
             const bool IS_VOLUME_NULL = (SELECTED_VOLUME == 0x00);
 
             const color_t COLOR_VOLUME = (IS_VOLUME_NULL ? COLOR_NULL : COLOR_VALUE);
@@ -399,7 +399,7 @@ void phrase_unhighlight_cursor(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
             const bool IS_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
 
             const color_t COLOR_COMMAND = (IS_COMMAND_NULL ? COLOR_NULL : COLOR_VALUE);
@@ -507,13 +507,12 @@ void phrase_update_value(void)
 
     switch (cursor.x) {
         case PHRASE_COLUMN_NOTE: {
-            const note_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
-            const bool IS_SELECTED_NOTE_NULL = (SELECTED_NOTE == 0x00);
+            const note_t SELECTED_NOTE = project_data.phrase[selected_phrase].note[cursor.y];
 
             const symbol_t SYMBOL_NOTE[3] = {
-                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_METADATA.name[SELECTED_NOTE][0]),
-                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_METADATA.name[SELECTED_NOTE][1]),
-                (IS_SELECTED_NOTE_NULL ? '-' : NOTE_METADATA.name[SELECTED_NOTE][2])
+                NOTE_METADATA[SELECTED_NOTE].name[0],
+                NOTE_METADATA[SELECTED_NOTE].name[1],
+                NOTE_METADATA[SELECTED_NOTE].name[2]
             };
 
             region_change_symbol(REGION, SYMBOL_NOTE[0], 2, cursor.y + 1);
@@ -524,7 +523,7 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = project_data.phrase[selected_phrase].instrument[cursor.y];
             const bool IS_SELECTED_INSTRUMENT_NULL = (SELECTED_INSTRUMENT == 0x00);
 
             const symbol_t SYMBOL_INSTRUMENT[2] = {
@@ -539,7 +538,7 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = project_data.phrase[selected_phrase].volume[cursor.y];
             const bool IS_SELECTED_VOLUME_NULL = (SELECTED_VOLUME == 0x00);
 
             const symbol_t SYMBOL_VOLUME[2] = {
@@ -554,8 +553,8 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
-            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
+            const parameter_t SELECTED_PARAMETER = project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
             const bool IS_SELECTED_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
 
             const symbol_t SYMBOL_COMMAND[3] = {
@@ -578,8 +577,8 @@ void phrase_update_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
-            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
+            const parameter_t SELECTED_PARAMETER = project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
             const bool IS_SELECTED_COMMAND_NULL = (SELECTED_COMMAND == 0x00);
 
             const symbol_t SYMBOL_PARAMETER[2] = {
@@ -688,10 +687,10 @@ void phrase_insert_value(void)
 {
     switch (cursor.x) {
         case PHRASE_COLUMN_NOTE: {
-            const note_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
+            const note_t SELECTED_NOTE = project_data.phrase[selected_phrase].note[cursor.y];
 
             if (SELECTED_NOTE == 0x00) {
-                data_set_phrase_note(copied_note, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].note[cursor.y] = copied_note;
                 phrase_update_value();
             }
             else {
@@ -702,10 +701,10 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = project_data.phrase[selected_phrase].instrument[cursor.y];
 
             if (SELECTED_INSTRUMENT == 0x00) {
-                data_set_phrase_instrument(copied_instrument, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].instrument[cursor.y] = copied_instrument;
                 phrase_update_value();
             }
             else {
@@ -716,10 +715,10 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = project_data.phrase[selected_phrase].volume[cursor.y];
 
             if (SELECTED_VOLUME == 0x00) {
-                data_set_phrase_volume(copied_volume, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].volume[cursor.y] = copied_volume;
                 phrase_update_value();
             }
             else {
@@ -730,12 +729,12 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
-            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
+            const parameter_t SELECTED_PARAMETER = project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
 
             if (SELECTED_COMMAND == 0x00) {
-                data_set_phrase_command(copied_command, cursor_command, selected_phrase, cursor.y);
-                data_set_phrase_parameter(copied_parameter, cursor_command, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].command[cursor.y][cursor_command] = copied_command;
+                project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command] = copied_parameter;
                 phrase_update_value();
                 phrase_update_command_description();
             }
@@ -748,8 +747,8 @@ void phrase_insert_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
-            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
+            const parameter_t SELECTED_PARAMETER = project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
 
             if (SELECTED_COMMAND != 0x00) {
                 copied_command = SELECTED_COMMAND;
@@ -768,14 +767,14 @@ void phrase_delete_value(void)
 {
     switch (cursor.x) {
         case PHRASE_COLUMN_NOTE: {
-            const note_t SELECTED_NOTE = data_get_phrase_note(selected_phrase, cursor.y);
+            const note_t SELECTED_NOTE = project_data.phrase[selected_phrase].note[cursor.y];
 
             if (SELECTED_NOTE == 0x00)
                 return;
 
             copied_note = SELECTED_NOTE;
 
-            data_set_phrase_note(0x00, selected_phrase, cursor.y);
+            project_data.phrase[selected_phrase].note[cursor.y] = 0x00;
 
             phrase_update_value();
 
@@ -783,14 +782,14 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const instrument_id_t SELECTED_INSTRUMENT = data_get_phrase_instrument(selected_phrase, cursor.y);
+            const instrument_id_t SELECTED_INSTRUMENT = project_data.phrase[selected_phrase].instrument[cursor.y];
 
             if (SELECTED_INSTRUMENT == 0x00)
                 return;
 
             copied_instrument = SELECTED_INSTRUMENT;
 
-            data_set_phrase_instrument(0x00, selected_phrase, cursor.y);
+            project_data.phrase[selected_phrase].instrument[cursor.y] = 0x00;
 
             phrase_update_value();
 
@@ -798,14 +797,14 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const volume_t SELECTED_VOLUME = data_get_phrase_volume(selected_phrase, cursor.y);
+            const volume_t SELECTED_VOLUME = project_data.phrase[selected_phrase].volume[cursor.y];
 
             if (SELECTED_VOLUME == 0x00)
                 return;
 
             copied_volume = SELECTED_VOLUME;
 
-            data_set_phrase_volume(0x00, selected_phrase, cursor.y);
+            project_data.phrase[selected_phrase].volume[cursor.y] = 0x00;
 
             phrase_update_value();
 
@@ -813,8 +812,8 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
-            const parameter_t SELECTED_PARAMETER = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
+            const parameter_t SELECTED_PARAMETER = project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
 
             if (SELECTED_COMMAND == 0x00)
                 return;
@@ -822,8 +821,8 @@ void phrase_delete_value(void)
             copied_command = SELECTED_COMMAND;
             copied_parameter = SELECTED_PARAMETER;
 
-            data_set_phrase_command(0x00, cursor_command, selected_phrase, cursor.y);
-            data_set_phrase_parameter(0x00, cursor_command, selected_phrase, cursor.y);
+            project_data.phrase[selected_phrase].command[cursor.y][cursor_command] = 0x00;
+            project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command] = 0x00;
 
             phrase_update_value();
             phrase_update_command_description();
@@ -832,14 +831,14 @@ void phrase_delete_value(void)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const command_id_t SELECTED_COMMAND = data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const command_id_t SELECTED_COMMAND = project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
 
             if (SELECTED_COMMAND == 0x00)
                 return;
 
             copied_parameter = 0x00;
 
-            data_set_phrase_parameter(0x00, cursor_command, selected_phrase, cursor.y);
+            project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command] = 0x00;
 
             phrase_update_value();
 
@@ -855,7 +854,7 @@ void phrase_change_value(joystick_position_t joystick_position)
 {
     switch (cursor.x) {
         case PHRASE_COLUMN_NOTE: {
-            const int32_t SELECTED_NOTE = (int32_t) data_get_phrase_note(selected_phrase, cursor.y);
+            const int32_t SELECTED_NOTE = (int32_t) project_data.phrase[selected_phrase].note[cursor.y];
             int32_t new_note = SELECTED_NOTE;
 
             if (SELECTED_NOTE == 0x00)
@@ -863,19 +862,19 @@ void phrase_change_value(joystick_position_t joystick_position)
 
             switch (joystick_position) {
                 case JOYSTICK_POSITION_UP:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, +1, 0x01, NOTE_COUNT - 1);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, +1, 0x01, NOTE_COUNT - 3);
                     break;
 
                 case JOYSTICK_POSITION_DOWN:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, -1, 0x01, NOTE_COUNT - 1);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, -1, 0x01, NOTE_COUNT - 3);
                     break;
 
                 case JOYSTICK_POSITION_RIGHT:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, +12, 0x01, NOTE_COUNT - 1);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, +12, 0x01, NOTE_COUNT - 3);
                     break;
 
                 case JOYSTICK_POSITION_LEFT:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, -12, 0x01, NOTE_COUNT - 1);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, -12, 0x01, NOTE_COUNT - 3);
                     break;
 
                 default:
@@ -883,7 +882,7 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_note != SELECTED_NOTE) {
-                data_set_phrase_note((note_t) new_note, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].note[cursor.y] = (note_t) new_note;
                 phrase_update_value();
                 copied_note = (note_t) new_note;
             }
@@ -892,7 +891,7 @@ void phrase_change_value(joystick_position_t joystick_position)
         }
 
         case PHRASE_COLUMN_INSTRUMENT: {
-            const int32_t SELECTED_INSTRUMENT = (int32_t) data_get_phrase_instrument(selected_phrase, cursor.y);
+            const int32_t SELECTED_INSTRUMENT = (int32_t) project_data.phrase[selected_phrase].instrument[cursor.y];
             int32_t new_instrument = SELECTED_INSTRUMENT;
 
             if (SELECTED_INSTRUMENT == 0x00)
@@ -920,7 +919,7 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_instrument != SELECTED_INSTRUMENT) {
-                data_set_phrase_instrument((instrument_id_t) new_instrument, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].instrument[cursor.y] = (instrument_id_t) new_instrument;
                 phrase_update_value();
                 copied_instrument = (instrument_id_t) new_instrument;
             }
@@ -929,7 +928,7 @@ void phrase_change_value(joystick_position_t joystick_position)
         }
 
         case PHRASE_COLUMN_VOLUME: {
-            const int32_t SELECTED_VOLUME = (int32_t) data_get_phrase_volume(selected_phrase, cursor.y);
+            const int32_t SELECTED_VOLUME = (int32_t) project_data.phrase[selected_phrase].volume[cursor.y];
             int32_t new_volume = SELECTED_VOLUME;
 
             if (SELECTED_VOLUME == 0x00)
@@ -957,7 +956,7 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_volume != SELECTED_VOLUME) {
-                data_set_phrase_volume((volume_t) new_volume, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].volume[cursor.y] = (volume_t) new_volume;
                 phrase_update_value();
                 copied_volume = (volume_t) new_volume;
             }
@@ -966,7 +965,7 @@ void phrase_change_value(joystick_position_t joystick_position)
         }
 
         case PHRASE_COLUMN_COMMAND: {
-            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+            const int32_t SELECTED_COMMAND = (int32_t) project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
             int32_t new_command = SELECTED_COMMAND;
 
             if (SELECTED_COMMAND == 0x00)
@@ -988,7 +987,7 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_command != SELECTED_COMMAND) {
-                data_set_phrase_command((command_id_t) new_command, cursor_command, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].command[cursor.y][cursor_command] = (command_id_t) new_command;
                 phrase_update_value();
                 phrase_update_command_description();
                 copied_command = (command_id_t) new_command;
@@ -998,8 +997,8 @@ void phrase_change_value(joystick_position_t joystick_position)
         }
 
         case PHRASE_COLUMN_PARAMETER: {
-            const int32_t SELECTED_COMMAND = (int32_t) data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
-            const int32_t SELECTED_PARAMETER = (int32_t) data_get_phrase_parameter(cursor_command, selected_phrase, cursor.y);
+            const int32_t SELECTED_COMMAND = (int32_t) project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
+            const int32_t SELECTED_PARAMETER = (int32_t) project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command];
             int32_t new_parameter = SELECTED_PARAMETER;
 
             if (SELECTED_COMMAND == 0x00)
@@ -1027,7 +1026,7 @@ void phrase_change_value(joystick_position_t joystick_position)
             }
 
             if (new_parameter != SELECTED_PARAMETER) {
-                data_set_phrase_parameter((parameter_t) new_parameter, cursor_command, selected_phrase, cursor.y);
+                project_data.phrase[selected_phrase].parameter[cursor.y][cursor_command] = (parameter_t) new_parameter;
                 phrase_update_value();
                 copied_parameter = (parameter_t) new_parameter;
             }
@@ -1045,7 +1044,7 @@ command_id_t phrase_get_selected_command(void)
     if (cursor.x == PHRASE_COLUMN_COMMAND ||
         cursor.x == PHRASE_COLUMN_PARAMETER)
     {
-        return data_get_phrase_command(cursor_command, selected_phrase, cursor.y);
+        return project_data.phrase[selected_phrase].command[cursor.y][cursor_command];
     }
 
     return COMMAND_NULL;
@@ -1053,5 +1052,5 @@ command_id_t phrase_get_selected_command(void)
 
 instrument_id_t phrase_get_selected_instrument(void)
 {
-    return data_get_phrase_instrument(selected_phrase, cursor.y);
+    return project_data.phrase[selected_phrase].instrument[cursor.y];
 }

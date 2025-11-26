@@ -5,8 +5,8 @@
 #include "logic_chain.h"
 #include "logic_phrase.h"
 #include "logic_instrument.h"
-#include "logic_audio.h"
 #include "data.h"
+#include "audio.h"
 #include "ticks.h"
 #include "button.h"
 #include "joystick.h"
@@ -67,9 +67,6 @@ void logic_update(void)
 
         current_logic_state = logic_state_table[current_logic_state]();
     }
-
-    if (is_playback_enabled)
-        logic_audio_update();
 }
 
 void logic_joystick_auto_repeat(void)
@@ -83,11 +80,11 @@ void logic_joystick_auto_repeat(void)
         is_joystick_triggered = false;
     }
     else if (CURRENT_JOYSTICK_POSITION != previous_joystick_position) {
-        joystick_delay = data_get_cursor_delay();
+        joystick_delay = preferences.cursor.delay;
         is_joystick_triggered = true;
     }
     else if (joystick_delay == 0){
-        joystick_delay = data_get_cursor_repeat();
+        joystick_delay = preferences.cursor.repeat;
         is_joystick_triggered = true;
     }
     else {
@@ -479,6 +476,6 @@ void draw_map(void)
 
 void play_song_from_start(void)
 {
-    logic_audio_init();
+    audio_start();
     is_playback_enabled = true;
 }

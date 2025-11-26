@@ -1,6 +1,6 @@
 ../Application/Src/logic_chain.c:44:6:chain_init	1
 ../Application/Src/logic_chain.c:57:6:chain_deinit	1
-../Application/Src/logic_chain.c:64:6:chain_draw_title	2
+../Application/Src/logic_chain.c:64:6:chain_draw_title	3
 ../Application/Src/logic_chain.c:77:6:chain_draw_editor_chain	1
 ../Application/Src/logic_chain.c:85:6:chain_draw_editor_phrase_preview	2
 ../Application/Src/logic_chain.c:100:6:chain_draw_editor_chain_labels	1
@@ -10,7 +10,7 @@
 ../Application/Src/logic_chain.c:167:6:chain_draw_editor_phrase_preview_labels	1
 ../Application/Src/logic_chain.c:182:6:chain_draw_editor_phrase_preview_row_numbers	3
 ../Application/Src/logic_chain.c:193:6:chain_draw_editor_phrase_preview_spacing	2
-../Application/Src/logic_chain.c:204:6:chain_draw_editor_phrase_preview_data	15
+../Application/Src/logic_chain.c:204:6:chain_draw_editor_phrase_preview_data	12
 ../Application/Src/logic_chain.c:253:6:chain_clear_title	1
 ../Application/Src/logic_chain.c:260:6:chain_clear_editor_chain	1
 ../Application/Src/logic_chain.c:267:6:chain_clear_editor_phrase_preview	1

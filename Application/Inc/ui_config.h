@@ -1,6 +1,7 @@
 #ifndef INC_UI_CONFIG_H_
 #define INC_UI_CONFIG_H_
 
+#include <stdbool.h>
 #include "void_utils.h"
 #include "region.h"
 #include "data.h"
@@ -21,11 +22,8 @@ typedef struct {
         uint32_t option_count;
     } display;
     struct {
-        struct {
-            void (*get)(void*, context_t, primitive_type_t);
-            void (*set)(const void*, context_t, primitive_type_t);
-        } function;
-        context_t context;
+        void *pointer;
+        bool indirect;
         primitive_type_t primitive_type;
         struct {
             primitive_t small;

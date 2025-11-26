@@ -9,6 +9,7 @@
 
 #define OUTPUT_SAMPLE_RATE 48000
 #define ENGINE_TICK_RATE   60
+#define ROWS_PER_BEAT      4
 
 #define CHANNEL_COUNT    8
 #define SONG_ROW_COUNT   256
@@ -95,44 +96,7 @@ typedef struct {
     } cursor;
 } preferences_t;
 
-typedef union {
-    struct {
-        instrument_id_t (*id)(void);
-        uint32_t member_offset;
-    } instrument;
-    struct {
-        uint32_t member_offset;
-    } project_settings;
-    struct {
-        uint32_t member_offset;
-    } preferences;
-} context_t;
-
-chain_id_t data_get_song_chain(int32_t channel, int32_t row);
-void data_set_song_chain(chain_id_t chain, int32_t channel, int32_t row);
-phrase_id_t data_get_chain_phrase(chain_id_t chain, int32_t row);
-void data_set_chain_phrase(phrase_id_t phrase, chain_id_t chain, int32_t row);
-transpose_t data_get_chain_transpose(chain_id_t chain, int32_t row);
-void data_set_chain_transpose(transpose_t transpose, chain_id_t chain, int32_t row);
-note_t data_get_phrase_note(phrase_id_t phrase, int32_t row);
-void data_set_phrase_note(note_t note, phrase_id_t phrase, int32_t row);
-instrument_id_t data_get_phrase_instrument(phrase_id_t phrase, int32_t row);
-void data_set_phrase_instrument(instrument_id_t instrument, phrase_id_t phrase, int32_t row);
-volume_t data_get_phrase_volume(phrase_id_t phrase, int32_t row);
-void data_set_phrase_volume(volume_t volume, phrase_id_t phrase, int32_t row);
-command_id_t data_get_phrase_command(int32_t command_number, phrase_id_t phrase, int32_t row);
-void data_set_phrase_command(command_id_t command, int32_t command_number, phrase_id_t phrase, int32_t row);
-parameter_t data_get_phrase_parameter(int32_t command_number, phrase_id_t phrase, int32_t row);
-void data_set_phrase_parameter(parameter_t parameter, int32_t command_number, phrase_id_t phrase, int32_t row);
-tempo_t data_get_tempo(void);
-cursor_delay_t data_get_cursor_delay(void);
-cursor_delay_t data_get_cursor_repeat(void);
-
-void data_get_instrument(void *data, context_t context, primitive_type_t primitive_type);
-void data_set_instrument(const void *data, context_t context, primitive_type_t primitive_type);
-void data_get_project_settings(void *data, context_t context, primitive_type_t primitive_type);
-void data_set_project_settings(const void *data, context_t context, primitive_type_t primitive_type);
-void data_get_preferences(void *data, context_t context, primitive_type_t primitive_type);
-void data_set_preferences(const void *data, context_t context, primitive_type_t primitive_type);
+extern project_data_t project_data;
+extern preferences_t preferences;
 
 #endif /* INC_DATA_H_ */

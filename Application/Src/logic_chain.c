@@ -36,14 +36,14 @@ typedef struct {
 } cursor_t;
 
 static cursor_t cursor = {0};
-static chain_id_t selected_chain = 0x01;
+static chain_id_t selected_chain = 0x00;
 static phrase_id_t previewed_phrase = 0x00;
 static phrase_id_t copied_phrase = 0x01;
 static transpose_t copied_transpose = 0x80;
 
 void chain_init(chain_id_t chain)
 {
-    selected_chain = chain;
+    selected_chain = chain - 1;
 
     chain_draw_title();
     chain_draw_editor_chain();
@@ -70,8 +70,8 @@ void chain_draw_title(void)
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
         region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
 
-    region_draw(REGION, HEX_DIGIT[selected_chain / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
-    region_draw(REGION, HEX_DIGIT[selected_chain % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
+    region_draw(REGION, HEX_DIGIT[(selected_chain + 1) / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
+    region_draw(REGION, HEX_DIGIT[(selected_chain + 1) % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
 }
 
 void chain_draw_editor_chain(void)
@@ -84,7 +84,7 @@ void chain_draw_editor_chain(void)
 
 void chain_draw_editor_phrase_preview(void)
 {
-    const phrase_id_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+    const phrase_id_t PHRASE = project_data.chain[selected_chain].phrase[cursor.y];
 
     previewed_phrase = PHRASE;
 
@@ -134,8 +134,8 @@ void chain_draw_editor_chain_data(void)
     static const region_t *REGION = &REGION_CHAIN_EDITOR_CHAIN;
 
     for (int32_t i = 0; i < 16; i++) {
-        const phrase_id_t PHRASE    = data_get_chain_phrase(selected_chain, i);
-        const transpose_t TRANSPOSE = data_get_chain_transpose(selected_chain, i);
+        const phrase_id_t PHRASE    = project_data.chain[selected_chain].phrase[i];
+        const transpose_t TRANSPOSE = project_data.chain[selected_chain].transpose[i];
 
         const bool IS_PHRASE_NULL = (PHRASE == 0x00);
         const bool IS_TRANSPOSE_NULL = (TRANSPOSE == 0x00);
@@ -205,12 +205,12 @@ void chain_draw_editor_phrase_preview_data(void)
 {
     static const region_t *REGION = &REGION_CHAIN_EDITOR_PHRASE_PREVIEW;
 
-    const phrase_id_t PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+    const phrase_id_t PHRASE = project_data.chain[selected_chain].phrase[cursor.y] - 1;
 
     for (int32_t i = 0; i < 16; i++) {
-        const note_t NOTE = data_get_phrase_note(PHRASE, i);
-        const instrument_id_t INSTRUMENT = data_get_phrase_instrument(PHRASE, i);
-        const volume_t VOLUME = data_get_phrase_volume(PHRASE, i);
+        const note_t NOTE = project_data.phrase[PHRASE].note[i];
+        const instrument_id_t INSTRUMENT = project_data.phrase[PHRASE].instrument[i];
+        const volume_t VOLUME = project_data.phrase[PHRASE].volume[i];
 
         const bool IS_NOTE_NULL = (NOTE == 0x00);
         const bool IS_INSTRUMENT_NULL = (INSTRUMENT == 0x00);
@@ -220,9 +220,9 @@ void chain_draw_editor_phrase_preview_data(void)
         const color_t COLOR_NULL  = (i % 4 == 0 ? COLOR_DARK_FADE : COLOR_NORMAL_FADE);
 
         const symbol_t SYMBOL_NOTE[3] = {
-            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][0]),
-            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][1]),
-            (IS_NOTE_NULL ? '-' : NOTE_METADATA.name[NOTE][2]),
+            NOTE_METADATA[NOTE].name[0],
+            NOTE_METADATA[NOTE].name[1],
+            NOTE_METADATA[NOTE].name[2]
         };
         const color_t COLOR_NOTE = (IS_NOTE_NULL ? COLOR_NULL : COLOR_VALUE);
 
@@ -300,7 +300,7 @@ void chain_unhighlight_cursor(void)
 
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = project_data.chain[selected_chain].phrase[cursor.y];
             const bool IS_SELECTED_PHRASE_NULL = (SELECTED_PHRASE == 0x00);
 
             const color_t COLOR_PHRASE = (IS_SELECTED_PHRASE_NULL ? COLOR_NULL : COLOR_VALUE);
@@ -312,7 +312,7 @@ void chain_unhighlight_cursor(void)
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            const transpose_t SELECTED_TRANSPOSE = project_data.chain[selected_chain].transpose[cursor.y];
             const bool IS_SELECTED_TRANSPOSE_NULL = (SELECTED_TRANSPOSE == 0x00);
             const bool IS_SELECTED_TRANSPOSE_ZERO = (SELECTED_TRANSPOSE == 0x80);
 
@@ -387,7 +387,7 @@ void chain_update_value(void)
 
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = project_data.chain[selected_chain].phrase[cursor.y];
             const bool IS_SELECTED_PHRASE_NULL = (SELECTED_PHRASE == 0x00);
 
             const symbol_t SYMBOL_PHRASE[2] = {
@@ -402,7 +402,7 @@ void chain_update_value(void)
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            const transpose_t SELECTED_TRANSPOSE = project_data.chain[selected_chain].transpose[cursor.y];
             const bool IS_SELECTED_TRANSPOSE_NULL = (SELECTED_TRANSPOSE == 0x00);
 
             const symbol_t SYMBOL_TRANSPOSE[2] = {
@@ -423,7 +423,7 @@ void chain_update_value(void)
 
 void chain_update_phrase_preview(void)
 {
-    const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+    const phrase_id_t SELECTED_PHRASE = project_data.chain[selected_chain].phrase[cursor.y];
 
     if (SELECTED_PHRASE == previewed_phrase)
         return;
@@ -492,10 +492,10 @@ void chain_insert_value()
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = project_data.chain[selected_chain].phrase[cursor.y];
 
             if (SELECTED_PHRASE == 0x00) {
-                data_set_chain_phrase(copied_phrase, selected_chain, cursor.y);
+                project_data.chain[selected_chain].phrase[cursor.y] = copied_phrase;
                 chain_update_value();
                 chain_update_phrase_preview();
             }
@@ -507,10 +507,10 @@ void chain_insert_value()
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            const transpose_t SELECTED_TRANSPOSE = project_data.chain[selected_chain].transpose[cursor.y];
 
             if (SELECTED_TRANSPOSE == 0x00) {
-                data_set_chain_transpose(copied_transpose, selected_chain, cursor.y);
+                project_data.chain[selected_chain].transpose[cursor.y] = copied_transpose;
                 chain_update_value();
             }
             else {
@@ -529,14 +529,14 @@ void chain_delete_value()
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const phrase_id_t SELECTED_PHRASE = data_get_chain_phrase(selected_chain, cursor.y);
+            const phrase_id_t SELECTED_PHRASE = project_data.chain[selected_chain].phrase[cursor.y];
 
             if (SELECTED_PHRASE == 0x00)
                 return;
 
             copied_phrase = SELECTED_PHRASE;
 
-            data_set_chain_phrase(0x00, selected_chain, cursor.y);
+            project_data.chain[selected_chain].phrase[cursor.y] = 0x00;
 
             chain_update_value();
             chain_update_phrase_preview();
@@ -545,14 +545,14 @@ void chain_delete_value()
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            transpose_t SELECTED_TRANSPOSE = data_get_chain_transpose(selected_chain, cursor.y);
+            transpose_t SELECTED_TRANSPOSE = project_data.chain[selected_chain].transpose[cursor.y];
 
             if (SELECTED_TRANSPOSE == 0x00)
                 return;
 
             copied_transpose = SELECTED_TRANSPOSE;
 
-            data_set_chain_transpose(0x00, selected_chain, cursor.y);
+            project_data.chain[selected_chain].transpose[cursor.y] = 0x00;
 
             chain_update_value();
 
@@ -568,7 +568,7 @@ void chain_change_value(joystick_position_t joystick_position)
 {
     switch (cursor.x) {
         case CHAIN_COLUMN_PHRASE: {
-            const int32_t SELECTED_PHRASE = (int32_t) data_get_chain_phrase(selected_chain, cursor.y);
+            const int32_t SELECTED_PHRASE = (int32_t) project_data.chain[selected_chain].phrase[cursor.y];
             int32_t new_phrase = SELECTED_PHRASE;
 
             if (SELECTED_PHRASE == 0x00)
@@ -596,7 +596,7 @@ void chain_change_value(joystick_position_t joystick_position)
             }
 
             if (new_phrase != SELECTED_PHRASE) {
-                data_set_chain_phrase((phrase_id_t) new_phrase, selected_chain, cursor.y);
+                project_data.chain[selected_chain].phrase[cursor.y] = (phrase_id_t) new_phrase;
                 chain_update_value();
                 chain_update_phrase_preview();
                 copied_phrase = (phrase_id_t) new_phrase;
@@ -605,7 +605,7 @@ void chain_change_value(joystick_position_t joystick_position)
         }
 
         case CHAIN_COLUMN_TRANSPOSE: {
-            const int32_t SELECTED_TRANSPOSE = (int32_t) data_get_chain_transpose(selected_chain, cursor.y);
+            const int32_t SELECTED_TRANSPOSE = (int32_t) project_data.chain[selected_chain].transpose[cursor.y];
             int32_t new_transpose = SELECTED_TRANSPOSE;
 
             if (SELECTED_TRANSPOSE == 0x00)
@@ -633,7 +633,7 @@ void chain_change_value(joystick_position_t joystick_position)
             }
 
             if (new_transpose != SELECTED_TRANSPOSE) {
-                data_set_chain_transpose((transpose_t) new_transpose, selected_chain, cursor.y);
+                project_data.chain[selected_chain].transpose[cursor.y] = (transpose_t) new_transpose;
                 chain_update_value();
                 copied_transpose = (transpose_t) new_transpose;
             }
@@ -647,5 +647,5 @@ void chain_change_value(joystick_position_t joystick_position)
 
 phrase_id_t chain_get_selected_phrase(void)
 {
-    return data_get_chain_phrase(selected_chain, cursor.y);
+    return project_data.chain[selected_chain].phrase[cursor.y];
 }

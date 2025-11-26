@@ -1,5 +1,0 @@
-../Application/Src/logic_audio.c:34:6:logic_audio_init	3
-../Application/Src/logic_audio.c:63:6:logic_audio_update	14
-../Application/Src/logic_audio.c:147:6:calculate_samples_per_tick	1
-../Application/Src/logic_audio.c:158:9:get_instrument_sample	5
-../Application/Src/logic_audio.c:179:6:update_current_note_instrument_volume	6

@@ -38,9 +38,12 @@ DRESULT disk_read(BYTE pdrv, BYTE *buff, LBA_t sector, UINT count)
     switch (pdrv)
     {
         case DEV_SD:
-            return RES_NOTRDY;
+            if (sd_read(buff, sector, count) == 0)
+                return RES_OK;
+            else
+                return RES_ERROR;
 
         default:
-            return RES_NOTRDY;
+            return RES_PARERR;
     }
 }

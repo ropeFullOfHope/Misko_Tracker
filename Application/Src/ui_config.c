@@ -41,18 +41,25 @@ void ui_config_change_data(const configGroup_t *config_group, const region_t *re
 
     const configItem_t * const config = &config_group->configs[config_number];
 
-    if (config->data.function.get == NULL || config->data.function.set == NULL)
+    if (config->data.pointer == NULL)
         return;
 
     uint8_t data_buffer[8];
+    const void *src = config->data.pointer;
+    void *dst = config->data.pointer;
 
-    config->data.function.get(data_buffer, config->data.context, config->data.primitive_type);
+    if (config->data.indirect == true) {
+        src = *(void * const *)src;
+        dst = *(void **)dst;
+    }
+
+    copy_data(data_buffer, src, config->data.primitive_type);
 
     primitive_t delta = big_step ? config->data.step.big : config->data.step.small;
 
     void_change_value_within_bounds(data_buffer, delta, increase, config->data.bounds.min, config->data.bounds.max, config->data.primitive_type);
 
-    config->data.function.set(data_buffer, config->data.context, config->data.primitive_type);
+    copy_data(dst, data_buffer, config->data.primitive_type);
 
     uint32_t y_offset = config_number;
 
@@ -116,12 +123,16 @@ static void ui_config_draw_data(const configItem_t *config, const region_t *regi
     if (config == NULL || region == NULL)
         return;
 
-    if (config->data.function.get == NULL)
+    if (config->data.pointer == NULL)
         return;
 
     uint8_t data_buffer[8];
+    const void *src = config->data.pointer;
 
-    config->data.function.get(data_buffer, config->data.context, config->data.primitive_type);
+    if (config->data.indirect == true)
+        src = *(void * const *)src;
+
+    copy_data(data_buffer, src, config->data.primitive_type);
 
     char string_buffer[MAX_STRING_BUFFER_LENGTH];
     const display_format_t display_format = {
@@ -143,12 +154,16 @@ static void ui_config_update_data(const configItem_t *config, const region_t *re
     if (config == NULL || region == NULL)
         return;
 
-    if (config->data.function.get == NULL)
+    if (config->data.pointer == NULL)
         return;
 
     uint8_t data_buffer[8];
+    const void *src = config->data.pointer;
 
-    config->data.function.get(data_buffer, config->data.context, config->data.primitive_type);
+    if (config->data.indirect == true)
+        src = *(void * const *)src;
+
+    copy_data(data_buffer, src, config->data.primitive_type);
 
     char string_buffer[MAX_STRING_BUFFER_LENGTH];
     const display_format_t display_format = {

@@ -12,7 +12,6 @@ Application/Src/app.o: ../Application/Src/app.c \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/backlight.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/joystick.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sound.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/cordic_math.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h \
@@ -43,9 +42,14 @@ Application/Src/app.o: ../Application/Src/app.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sd.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/LED.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ff.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ffconf.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/basic_utils.h
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/app.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/logic.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/video.h:
@@ -59,7 +63,6 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/ticks.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/backlight.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/joystick.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sound.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/cordic_math.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:
@@ -90,6 +93,11 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sd.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/LED.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ff.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ffconf.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/basic_utils.h:

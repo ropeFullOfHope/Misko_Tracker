@@ -13,8 +13,6 @@ static void instrument_clear_editor_common_config(void);
 static void instrument_clear_editor_type_config(void);
 static void instrument_highlight_cursor(void);
 static void instrument_unhighlight_cursor(void);
-static instrument_type_t instrument_get_instrument_type(void);
-static instrument_id_t instrument_get_selected_instrument_callback(void);
 
 typedef struct {
     enum {
@@ -24,6 +22,17 @@ typedef struct {
     } window;
     int32_t y;
 } cursor_t;
+
+struct {
+    void *instrument_type;
+    void *volume;
+    union {
+        struct {
+            void *wave;
+            void *pwm;
+        } basic_wave;
+    };
+} selected_instrument_pointers;
 
 const configGroup_t CONFIGS_COMMON = {
     .configs = (const configItem_t[]) {
@@ -43,10 +52,8 @@ const configGroup_t CONFIGS_COMMON = {
                 .option_count = INSTRUMENT_TYPE_COUNT
             },
             .data = {
-                .function.get = data_get_instrument,
-                .function.set = data_set_instrument,
-                .context.instrument.id = instrument_get_selected_instrument_callback,
-                .context.instrument.member_offset = offsetof(instrument_t, instrument_type),
+                .pointer = &selected_instrument_pointers.instrument_type,
+                .indirect = true,
                 .primitive_type = PRIMITIVE_TYPE_I8,
                 .step.small.i8 = 1,
                 .step.big.i8   = 1,
@@ -65,10 +72,8 @@ const configGroup_t CONFIGS_COMMON = {
                 .offset = 7
             },
             .data = {
-                .function.get = data_get_instrument,
-                .function.set = data_set_instrument,
-                .context.instrument.id = instrument_get_selected_instrument_callback,
-                .context.instrument.member_offset = offsetof(instrument_t, volume),
+                .pointer = &selected_instrument_pointers.volume,
+                .indirect = true,
                 .primitive_type = PRIMITIVE_TYPE_U8,
                 .step.small.u8 = 0x01,
                 .step.big.u8   = 0x10,
@@ -101,10 +106,8 @@ const configGroup_t CONFIGS_BASIC_WAVE = {
                 .option_count = BASIC_WAVE_COUNT
             },
             .data = {
-                .function.get = data_get_instrument,
-                .function.set = data_set_instrument,
-                .context.instrument.id = instrument_get_selected_instrument_callback,
-                .context.instrument.member_offset = offsetof(instrument_t, basic_wave.wave),
+                .pointer = &selected_instrument_pointers.basic_wave.wave,
+                .indirect = true,
                 .primitive_type = PRIMITIVE_TYPE_I8,
                 .step.small.i8 = 1,
                 .step.big.i8   = 1,
@@ -123,10 +126,8 @@ const configGroup_t CONFIGS_BASIC_WAVE = {
                 .offset = 5
             },
             .data = {
-                .function.get = data_get_instrument,
-                .function.set = data_set_instrument,
-                .context.instrument.id = instrument_get_selected_instrument_callback,
-                .context.instrument.member_offset = offsetof(instrument_t, basic_wave.pwm),
+                .pointer = &selected_instrument_pointers.basic_wave.pwm,
+                .indirect = true,
                 .primitive_type = PRIMITIVE_TYPE_U8,
                 .step.small.u8 = 0x01,
                 .step.big.u8   = 0x10,
@@ -143,7 +144,13 @@ static instrument_id_t selected_instrument;
 
 void instrument_init(instrument_id_t instrument)
 {
-    selected_instrument = instrument;
+    selected_instrument = instrument - 1;
+
+    void *p_base = &project_data.instrument[selected_instrument];
+    selected_instrument_pointers.instrument_type = PTR_MEMBER(p_base, offsetof(instrument_t, instrument_type), void);
+    selected_instrument_pointers.volume = PTR_MEMBER(p_base, offsetof(instrument_t, volume), void);
+    selected_instrument_pointers.basic_wave.wave = PTR_MEMBER(p_base, offsetof(instrument_t, basic_wave.wave), void);
+    selected_instrument_pointers.basic_wave.pwm = PTR_MEMBER(p_base, offsetof(instrument_t, basic_wave.pwm), void);
 
     instrument_draw_title();
     instrument_draw_editor_common_config();
@@ -166,7 +173,7 @@ void instrument_move_cursor(joystick_position_t joystick_position)
     static const int32_t common_configs_config_count = (int32_t)CONFIGS_COMMON.config_count;
     int32_t type_configs_config_count = 0;
 
-    instrument_type_t instrument_type = instrument_get_instrument_type();
+    instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
     switch (instrument_type) {
         case INSTRUMENT_TYPE_BASIC_WAVE: {type_configs_config_count = (int32_t)CONFIGS_BASIC_WAVE.config_count; break;}
         default: break;
@@ -223,7 +230,7 @@ void instrument_change_value(joystick_position_t joystick_position)
     bool increase;
     bool big_step;
 
-    instrument_type_t instrument_type = instrument_get_instrument_type();
+    instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
 
     switch (cursor.window) {
         case WINDOW_COMMON_CONFIG: {
@@ -273,7 +280,7 @@ void instrument_change_value(joystick_position_t joystick_position)
     ui_config_change_data(config_group, region, (uint32_t)cursor.y, increase, big_step);
 
     // If the instrument type was changed, redraw the type config.
-    if (instrument_type != instrument_get_instrument_type()) {
+    if (instrument_type != project_data.instrument[selected_instrument].instrument_type) {
         instrument_clear_editor_type_config();
         instrument_draw_editor_type_config();
     }
@@ -288,8 +295,8 @@ static void instrument_draw_title(void)
     for (int32_t i = 0; i < TITLE_LENGTH; i++)
         region_draw(REGION, TITLE[i], COLOR_NORMAL, i, 0);
 
-    region_draw(REGION, HEX_DIGIT[selected_instrument / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
-    region_draw(REGION, HEX_DIGIT[selected_instrument % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
+    region_draw(REGION, HEX_DIGIT[(selected_instrument + 1) / 0x10], COLOR_NORMAL, TITLE_LENGTH + 1, 0);
+    region_draw(REGION, HEX_DIGIT[(selected_instrument + 1) % 0x10], COLOR_NORMAL, TITLE_LENGTH + 2, 0);
 }
 
 static void instrument_draw_editor_common_config(void)
@@ -305,7 +312,7 @@ static void instrument_draw_editor_type_config(void)
     static const region_t * const region = &REGION_INSTRUMENT_EDITOR_TYPE_CONFIG;
     const configGroup_t *config_group = NULL;
 
-    instrument_type_t instrument_type = instrument_get_instrument_type();
+    instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
 
     switch (instrument_type) {
         case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
@@ -350,7 +357,7 @@ static void instrument_highlight_cursor(void)
         case WINDOW_TYPE_CONFIG: {
             region = &REGION_INSTRUMENT_EDITOR_TYPE_CONFIG;
 
-            instrument_type_t instrument_type = instrument_get_instrument_type();
+            instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
             switch (instrument_type) {
                 case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
                 default: return;
@@ -380,7 +387,7 @@ static void instrument_unhighlight_cursor(void)
         case WINDOW_TYPE_CONFIG: {
             region = &REGION_INSTRUMENT_EDITOR_TYPE_CONFIG;
 
-            instrument_type_t instrument_type = instrument_get_instrument_type();
+            instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
             switch (instrument_type) {
                 case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
                 default: return;
@@ -394,19 +401,4 @@ static void instrument_unhighlight_cursor(void)
 
     if (region != NULL && config_group != NULL)
         ui_config_color_data(config_group, region, (uint32_t)cursor.y, COLOR_DARK);
-}
-
-static instrument_type_t instrument_get_instrument_type(void)
-{
-    const configItem_t *config = &CONFIGS_COMMON.configs[0];
-
-    instrument_type_t instrument_type;
-    config->data.function.get(&instrument_type, config->data.context, config->data.primitive_type);
-
-    return instrument_type;
-}
-
-static instrument_id_t instrument_get_selected_instrument_callback(void)
-{
-    return selected_instrument;
 }
