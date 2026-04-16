@@ -44,6 +44,14 @@ void LCD_init(void)
 
     // Turn on backlight.
     backlight_set_brightness(50);
+
+    // Fill the screen with background color.
+    for (int32_t x = 0; x < COLUMN_COUNT; x++) {
+        for (int32_t y = 0; y < ROW_COUNT; y++) {
+            LCD_draw(' ', COLOR_NORMAL, x, y);
+        }
+    }
+    LCD_update_screen();
 }
 
 void LCD_draw(symbol_t symbol, color_t color, int32_t x, int32_t y)

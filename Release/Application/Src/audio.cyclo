@@ -1,1 +1,5 @@
-../Application/Src/audio.c:3:6:audio_update	1
+../Application/Src/audio.c:131:16:audio_get_next_sample	19
+../Application/Src/audio.c:40:6:audio_start	19
+../Application/Src/audio.c:92:6:audio_stop	1
+../Application/Src/audio.c:102:6:audio_half_callback	11
+../Application/Src/audio.c:111:6:audio_full_callback	11

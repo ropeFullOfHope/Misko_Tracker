@@ -20,9 +20,15 @@ static inline I2C_status_t I2C_transmit(uint8_t *data, uint32_t size);
 
 static uint8_t current_volume = 0;
 
+void volume_init(void)
+{
+    volume_config_set(MEMORY_VOLATILE, ZERO_CROSSING_ENABLED, POT_POSITIONS_63);
+    volume_set(0x00);
+}
+
 void volume_set(uint8_t volume)
 {
-    current_volume = volume & VOLUME_MASK;
+    current_volume = (volume & VOLUME_MASK) ^ VOLUME_MASK;
 
     uint8_t data[2] = {
         POT_0_WIPER_REG | current_volume,

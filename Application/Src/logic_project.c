@@ -5,6 +5,7 @@
 #include "region.h"
 #include "lcd.h"
 #include "basic_utils.h"
+#include "volume.h"
 
 static void project_draw_title(void);
 static void project_draw_editor(void);
@@ -58,7 +59,7 @@ const configGroup_t CONFIGS_PROJECT_SETTINGS = {
 
 const configGroup_t CONFIGS_PREFERENCES = {
     .label = {
-        .name = "Preferences:",
+        .name = "System Settings:",
         .color = COLOR_DARK
     },
     .configs = (const configItem_t[]) {
@@ -239,6 +240,8 @@ void project_change_value(joystick_position_t joystick_position)
     }
 
     ui_config_change_data(config_group, region, (uint32_t)cursor.y, increase, big_step);
+
+    volume_set(preferences.master_volume);
 }
 
 static void project_draw_title(void)

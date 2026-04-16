@@ -31,7 +31,7 @@ System/Src/ili9341.o: ../System/Src/ili9341.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/ili9341.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/ili9341_registers.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:
@@ -64,4 +64,4 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/ili9341_regis
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/millis.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h:

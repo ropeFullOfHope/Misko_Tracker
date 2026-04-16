@@ -58,7 +58,6 @@ static void MX_TIM4_Init(void);
 static void MX_FMC_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_CORDIC_Init(void);
-static void MX_TIM6_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_I2C3_Init(void);
 /* USER CODE BEGIN PFP */
@@ -107,7 +106,6 @@ int main(void)
   MX_FMC_Init();
   MX_SPI1_Init();
   MX_CORDIC_Init();
-  MX_TIM6_Init();
   MX_I2S3_Init();
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
@@ -168,7 +166,7 @@ void SystemClock_Config(void)
   /* Set AHB prescaler*/
   LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
   LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2);
+  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
   LL_SetSystemCoreClock(170000000);
 
    /* Update the time base */
@@ -446,7 +444,7 @@ static void MX_I2S3_Init(void)
 
   LL_DMA_SetDataTransferDirection(DMA2, LL_DMA_CHANNEL_1, LL_DMA_DIRECTION_MEMORY_TO_PERIPH);
 
-  LL_DMA_SetChannelPriorityLevel(DMA2, LL_DMA_CHANNEL_1, LL_DMA_PRIORITY_VERYHIGH);
+  LL_DMA_SetChannelPriorityLevel(DMA2, LL_DMA_CHANNEL_1, LL_DMA_PRIORITY_HIGH);
 
   LL_DMA_SetMode(DMA2, LL_DMA_CHANNEL_1, LL_DMA_MODE_CIRCULAR);
 
@@ -469,7 +467,8 @@ static void MX_I2S3_Init(void)
   I2S_InitStruct.ClockPolarity = LL_I2S_POLARITY_LOW;
   LL_I2S_Init(SPI3, &I2S_InitStruct);
   /* USER CODE BEGIN I2S3_Init 2 */
-  //LL_I2S_Enable(SPI3);
+  LL_DMA_EnableIT_HT(DMA2, LL_DMA_CHANNEL_1);
+  LL_DMA_EnableIT_TC(DMA2, LL_DMA_CHANNEL_1);
   /* USER CODE END I2S3_Init 2 */
 
 }
@@ -533,7 +532,7 @@ static void MX_SPI1_Init(void)
   SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
   SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
   SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
-  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV256;
+  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV8;
   SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
   SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
   SPI_InitStruct.CRCPoly = 7;
@@ -670,44 +669,6 @@ static void MX_TIM4_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   GPIO_InitStruct.Alternate = LL_GPIO_AF_2;
   LL_GPIO_Init(LCD_BACKLIGHT_GPIO_Port, &GPIO_InitStruct);
-
-}
-
-/**
-  * @brief TIM6 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM6_Init(void)
-{
-
-  /* USER CODE BEGIN TIM6_Init 0 */
-
-  /* USER CODE END TIM6_Init 0 */
-
-  LL_TIM_InitTypeDef TIM_InitStruct = {0};
-
-  /* Peripheral clock enable */
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM6);
-
-  /* TIM6 interrupt Init */
-  NVIC_SetPriority(TIM6_DAC_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
-  NVIC_EnableIRQ(TIM6_DAC_IRQn);
-
-  /* USER CODE BEGIN TIM6_Init 1 */
-
-  /* USER CODE END TIM6_Init 1 */
-  TIM_InitStruct.Prescaler = 0;
-  TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 3541;
-  LL_TIM_Init(TIM6, &TIM_InitStruct);
-  LL_TIM_DisableARRPreload(TIM6);
-  LL_TIM_SetTriggerOutput(TIM6, LL_TIM_TRGO_RESET);
-  LL_TIM_DisableMasterSlaveMode(TIM6);
-  /* USER CODE BEGIN TIM6_Init 2 */
-  LL_TIM_EnableIT_UPDATE(TIM6);
-  //LL_TIM_EnableCounter(TIM6);
-  /* USER CODE END TIM6_Init 2 */
 
 }
 

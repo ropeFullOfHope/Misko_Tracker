@@ -47,14 +47,14 @@ void ILI9341_init(void)
 void ILI9341_set_address(uint16_t address)
 {
     *FMC_BANK1_REG = address;
-    //__DSB();
+    __DSB();
 }
 
 void ILI9341_send_data(uint16_t *data, uint32_t length)
 {
     for (uint32_t i = 0; i < length; i++) {
         *FMC_BANK1_MEM = *(data + i);
-        //__DSB();
+        __DSB();
     }
 }
 

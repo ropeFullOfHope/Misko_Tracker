@@ -1,4 +1,7 @@
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:5455:22:LL_TIM_ClearFlag_UPDATE	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1663:26:LL_DMA_IsActiveFlag_TC1	2
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1755:26:LL_DMA_IsActiveFlag_HT1	2
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:2063:22:LL_DMA_ClearFlag_TC1	1
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:2155:22:LL_DMA_ClearFlag_HT1	1
 ../Core/Src/stm32g4xx_it.c:70:6:NMI_Handler	1
 ../Core/Src/stm32g4xx_it.c:85:6:HardFault_Handler	1
 ../Core/Src/stm32g4xx_it.c:100:6:MemManage_Handler	1
@@ -8,5 +11,4 @@
 ../Core/Src/stm32g4xx_it.c:158:6:DebugMon_Handler	1
 ../Core/Src/stm32g4xx_it.c:171:6:PendSV_Handler	1
 ../Core/Src/stm32g4xx_it.c:184:6:SysTick_Handler	1
-../Core/Src/stm32g4xx_it.c:205:6:TIM6_DAC_IRQHandler	1
-../Core/Src/stm32g4xx_it.c:218:6:DMA2_Channel1_IRQHandler	1
+../Core/Src/stm32g4xx_it.c:205:6:DMA2_Channel1_IRQHandler	3

@@ -6,7 +6,7 @@
 
 #define DEADZONE (512 - 1)
 
-static uint16_t joystick_raw[2] = {0};
+static volatile uint16_t joystick_raw[2] = {0};
 static uint16_t joystick_center[2] = {0};
 static joystick_position_t joystick_position = JOYSTICK_POSITION_CENTER;
 

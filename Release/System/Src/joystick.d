@@ -31,7 +31,7 @@ System/Src/joystick.o: ../System/Src/joystick.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/lcd.h
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/cordic_math.h
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/joystick.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h:
@@ -64,4 +64,4 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/joystick.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/lcd.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/cordic_math.h:

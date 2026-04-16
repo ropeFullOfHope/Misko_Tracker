@@ -13,7 +13,8 @@ Application/Src/app.o: ../Application/Src/app.c \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/backlight.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/joystick.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/cordic_math.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h \
+ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/file_manager.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h \
@@ -46,7 +47,6 @@ Application/Src/app.o: ../Application/Src/app.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sd.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/LED.h \
- C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ff.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ffconf.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/basic_utils.h
@@ -64,7 +64,8 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/micros.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/backlight.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/joystick.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/cordic_math.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h:
+C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/file_manager.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h:
@@ -97,7 +98,6 @@ C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/interrupt.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/sd.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/LED.h:
-C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/System/Inc/volume.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ff.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Middleware/Inc/ffconf.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/basic_utils.h:

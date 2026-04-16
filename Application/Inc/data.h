@@ -31,10 +31,12 @@ typedef uint8_t command_id_t;
 typedef uint8_t parameter_t;
 typedef uint8_t master_volume_t;
 typedef uint8_t cursor_delay_t;
+typedef uint8_t sample_id_t;
 
 typedef enum {
     INSTRUMENT_TYPE_NONE,
     INSTRUMENT_TYPE_BASIC_WAVE,
+    INSTRUMENT_TYPE_SAMPLE,
     INSTRUMENT_TYPE_COUNT
 } instrument_type_t;
 
@@ -77,15 +79,18 @@ typedef struct {
             basic_wave_t wave;
             pwm_t pwm;
         } basic_wave;
+        struct {
+            sample_id_t sample_id;
+        } sample;
     };
 } instrument_t;
 
 typedef struct {
+    project_settings_t project_settings;
     song_t song;
     chain_t chain[CHAIN_COUNT];
     phrase_t phrase[PHRASE_COUNT];
     instrument_t instrument[INSTRUMENT_COUNT];
-    project_settings_t project_settings;
 } project_data_t;
 
 typedef struct {

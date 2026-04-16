@@ -18,6 +18,7 @@ typedef enum {
     POT_POSITIONS_33 = 1
 } pot_config_t;
 
+void volume_init(void);
 void volume_set(uint8_t volume);
 uint8_t volume_get(void);
 void volume_config_set(v_nv_control_t v_nv_control, zero_crossing_t zero_crossing, pot_config_t pot_config);

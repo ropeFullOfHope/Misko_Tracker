@@ -31,6 +31,9 @@ struct {
             void *wave;
             void *pwm;
         } basic_wave;
+        struct {
+            void *sample_id;
+        } sample;
     };
 } selected_instrument_pointers;
 
@@ -47,7 +50,8 @@ const configGroup_t CONFIGS_COMMON = {
                 .offset = 7,
                 .options = (const char * []) {
                     "None",
-                    "Basic Wave"
+                    "Basic Wave",
+                    "Sample"
                 },
                 .option_count = INSTRUMENT_TYPE_COUNT
             },
@@ -137,6 +141,32 @@ const configGroup_t CONFIGS_BASIC_WAVE = {
         }
     },
     .config_count = 2
+};
+
+const configGroup_t CONFIGS_SAMPLE = {
+    .configs = (const configItem_t[]) {
+        {
+            .label = {
+                .name = "Sample ID",
+                .color = COLOR_NORMAL
+            },
+            .display = {
+                .type = STRING_TYPE_HEX_UPPERCASE,
+                .size = 2,
+                .offset = 10
+            },
+            .data = {
+                .pointer = &selected_instrument_pointers.sample.sample_id,
+                .indirect = true,
+                .primitive_type = PRIMITIVE_TYPE_U8,
+                .step.small.u8 = 0x01,
+                .step.big.u8   = 0x10,
+                .bounds.min.u8 = 0x00,
+                .bounds.max.u8 = 0xFF
+            }
+        }
+    },
+    .config_count = 1
 };
 
 static cursor_t cursor = {0};
@@ -316,6 +346,7 @@ static void instrument_draw_editor_type_config(void)
 
     switch (instrument_type) {
         case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
+        case INSTRUMENT_TYPE_SAMPLE:     {config_group = &CONFIGS_SAMPLE;     break;}
         default: return;
     }
 

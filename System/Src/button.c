@@ -2,7 +2,7 @@
 #include "stm32g4xx_ll_gpio.h"
 #include "micros.h"
 
-#define USE_CALL_BASED_HANDLING // Comment this out to use time based handling.
+//#define USE_CALL_BASED_HANDLING // Comment this out to use time based handling.
 
 #ifdef USE_CALL_BASED_HANDLING
     #define DEBOUNCING_TIME    3

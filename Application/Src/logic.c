@@ -10,6 +10,7 @@
 #include "ticks.h"
 #include "button.h"
 #include "joystick.h"
+#include "file_manager.h"
 
 static void logic_joystick_auto_repeat(void);
 static void draw_sidebar(void);
@@ -442,6 +443,10 @@ logic_state_t logic_state_project(void)
                 default:
                     break;
             }
+        }
+        else if (is_button_pressed(BUTTON_RIGHT)) {
+            fmanager_save_config();
+            fmanager_save_project();
         }
 
         return LOGIC_STATE_PROJECT;

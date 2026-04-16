@@ -200,25 +200,22 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles TIM6 global interrupt, DAC1 and DAC3 channel underrun error interrupts.
-  */
-void TIM6_DAC_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
-  LL_TIM_ClearFlag_UPDATE(TIM6);
-  /* USER CODE END TIM6_DAC_IRQn 0 */
-  /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
-
-  /* USER CODE END TIM6_DAC_IRQn 1 */
-}
-
-/**
   * @brief This function handles DMA2 channel1 global interrupt.
   */
 void DMA2_Channel1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Channel1_IRQn 0 */
+    if(LL_DMA_IsActiveFlag_HT1(DMA2))
+    {
+        LL_DMA_ClearFlag_HT1(DMA2);
+        audio_half_callback();
+    }
 
+    if(LL_DMA_IsActiveFlag_TC1(DMA2))
+    {
+        LL_DMA_ClearFlag_TC1(DMA2);
+        audio_full_callback();
+    }
   /* USER CODE END DMA2_Channel1_IRQn 0 */
   /* USER CODE BEGIN DMA2_Channel1_IRQn 1 */
 

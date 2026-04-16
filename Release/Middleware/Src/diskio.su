@@ -1,3 +1,0 @@
-../Middleware/Src/diskio.c:6:9:disk_status	0	static
-../Middleware/Src/diskio.c:18:9:disk_initialize	0	static
-../Middleware/Src/diskio.c:30:9:disk_read	0	static

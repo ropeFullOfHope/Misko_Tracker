@@ -9,8 +9,8 @@
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1663:26:LL_DMA_IsActiveFlag_TC1	16	static
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:2063:22:LL_DMA_ClearFlag_TC1	16	static
 ../System/Src/ili9341.c:10:6:ILI9341_init	16	static
-../System/Src/ili9341.c:47:6:ILI9341_set_address	16	static
-../System/Src/ili9341.c:53:6:ILI9341_send_data	24	static
+../System/Src/ili9341.c:47:6:ILI9341_set_address	16	static,ignoring_inline_asm
+../System/Src/ili9341.c:53:6:ILI9341_send_data	24	static,ignoring_inline_asm
 ../System/Src/ili9341.c:61:6:ILI9341_send_data_DMA	16	static
 ../System/Src/ili9341.c:72:10:ILI9341_is_DMA_ready	8	static
 ../System/Src/ili9341.c:77:6:ILI9341_hard_reset	8	static

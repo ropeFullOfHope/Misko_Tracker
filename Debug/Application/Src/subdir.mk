@@ -11,6 +11,7 @@ C_SRCS += \
 ../Application/Src/data.c \
 ../Application/Src/data_commands.c \
 ../Application/Src/data_notes.c \
+../Application/Src/file_manager.c \
 ../Application/Src/logic.c \
 ../Application/Src/logic_chain.c \
 ../Application/Src/logic_instrument.c \
@@ -29,6 +30,7 @@ OBJS += \
 ./Application/Src/data.o \
 ./Application/Src/data_commands.o \
 ./Application/Src/data_notes.o \
+./Application/Src/file_manager.o \
 ./Application/Src/logic.o \
 ./Application/Src/logic_chain.o \
 ./Application/Src/logic_instrument.o \
@@ -47,6 +49,7 @@ C_DEPS += \
 ./Application/Src/data.d \
 ./Application/Src/data_commands.d \
 ./Application/Src/data_notes.d \
+./Application/Src/file_manager.d \
 ./Application/Src/logic.d \
 ./Application/Src/logic_chain.d \
 ./Application/Src/logic_instrument.d \
@@ -66,7 +69,7 @@ Application/Src/%.o Application/Src/%.su Application/Src/%.cyclo: ../Application
 clean: clean-Application-2f-Src
 
 clean-Application-2f-Src:
-	-$(RM) ./Application/Src/app.cyclo ./Application/Src/app.d ./Application/Src/app.o ./Application/Src/app.su ./Application/Src/audio.cyclo ./Application/Src/audio.d ./Application/Src/audio.o ./Application/Src/audio.su ./Application/Src/basic_utils.cyclo ./Application/Src/basic_utils.d ./Application/Src/basic_utils.o ./Application/Src/basic_utils.su ./Application/Src/data.cyclo ./Application/Src/data.d ./Application/Src/data.o ./Application/Src/data.su ./Application/Src/data_commands.cyclo ./Application/Src/data_commands.d ./Application/Src/data_commands.o ./Application/Src/data_commands.su ./Application/Src/data_notes.cyclo ./Application/Src/data_notes.d ./Application/Src/data_notes.o ./Application/Src/data_notes.su ./Application/Src/logic.cyclo ./Application/Src/logic.d ./Application/Src/logic.o ./Application/Src/logic.su ./Application/Src/logic_chain.cyclo ./Application/Src/logic_chain.d ./Application/Src/logic_chain.o ./Application/Src/logic_chain.su ./Application/Src/logic_instrument.cyclo ./Application/Src/logic_instrument.d ./Application/Src/logic_instrument.o ./Application/Src/logic_instrument.su ./Application/Src/logic_phrase.cyclo ./Application/Src/logic_phrase.d ./Application/Src/logic_phrase.o ./Application/Src/logic_phrase.su ./Application/Src/logic_project.cyclo ./Application/Src/logic_project.d ./Application/Src/logic_project.o ./Application/Src/logic_project.su ./Application/Src/logic_song.cyclo ./Application/Src/logic_song.d ./Application/Src/logic_song.o ./Application/Src/logic_song.su ./Application/Src/region.cyclo ./Application/Src/region.d ./Application/Src/region.o ./Application/Src/region.su ./Application/Src/ui_config.cyclo ./Application/Src/ui_config.d ./Application/Src/ui_config.o ./Application/Src/ui_config.su ./Application/Src/video.cyclo ./Application/Src/video.d ./Application/Src/video.o ./Application/Src/video.su ./Application/Src/void_utils.cyclo ./Application/Src/void_utils.d ./Application/Src/void_utils.o ./Application/Src/void_utils.su
+	-$(RM) ./Application/Src/app.cyclo ./Application/Src/app.d ./Application/Src/app.o ./Application/Src/app.su ./Application/Src/audio.cyclo ./Application/Src/audio.d ./Application/Src/audio.o ./Application/Src/audio.su ./Application/Src/basic_utils.cyclo ./Application/Src/basic_utils.d ./Application/Src/basic_utils.o ./Application/Src/basic_utils.su ./Application/Src/data.cyclo ./Application/Src/data.d ./Application/Src/data.o ./Application/Src/data.su ./Application/Src/data_commands.cyclo ./Application/Src/data_commands.d ./Application/Src/data_commands.o ./Application/Src/data_commands.su ./Application/Src/data_notes.cyclo ./Application/Src/data_notes.d ./Application/Src/data_notes.o ./Application/Src/data_notes.su ./Application/Src/file_manager.cyclo ./Application/Src/file_manager.d ./Application/Src/file_manager.o ./Application/Src/file_manager.su ./Application/Src/logic.cyclo ./Application/Src/logic.d ./Application/Src/logic.o ./Application/Src/logic.su ./Application/Src/logic_chain.cyclo ./Application/Src/logic_chain.d ./Application/Src/logic_chain.o ./Application/Src/logic_chain.su ./Application/Src/logic_instrument.cyclo ./Application/Src/logic_instrument.d ./Application/Src/logic_instrument.o ./Application/Src/logic_instrument.su ./Application/Src/logic_phrase.cyclo ./Application/Src/logic_phrase.d ./Application/Src/logic_phrase.o ./Application/Src/logic_phrase.su ./Application/Src/logic_project.cyclo ./Application/Src/logic_project.d ./Application/Src/logic_project.o ./Application/Src/logic_project.su ./Application/Src/logic_song.cyclo ./Application/Src/logic_song.d ./Application/Src/logic_song.o ./Application/Src/logic_song.su ./Application/Src/region.cyclo ./Application/Src/region.d ./Application/Src/region.o ./Application/Src/region.su ./Application/Src/ui_config.cyclo ./Application/Src/ui_config.d ./Application/Src/ui_config.o ./Application/Src/ui_config.su ./Application/Src/video.cyclo ./Application/Src/video.d ./Application/Src/video.o ./Application/Src/video.su ./Application/Src/void_utils.cyclo ./Application/Src/void_utils.d ./Application/Src/void_utils.o ./Application/Src/void_utils.su
 
 .PHONY: clean-Application-2f-Src
 

@@ -1,3 +1,0 @@
-../Middleware/Src/diskio.c:6:9:disk_status	2
-../Middleware/Src/diskio.c:18:9:disk_initialize	1
-../Middleware/Src/diskio.c:30:9:disk_read	1

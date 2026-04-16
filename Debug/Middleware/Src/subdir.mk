@@ -6,15 +6,18 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Middleware/Src/diskio.c \
-../Middleware/Src/ff.c 
+../Middleware/Src/ff.c \
+../Middleware/Src/ffunicode.c 
 
 OBJS += \
 ./Middleware/Src/diskio.o \
-./Middleware/Src/ff.o 
+./Middleware/Src/ff.o \
+./Middleware/Src/ffunicode.o 
 
 C_DEPS += \
 ./Middleware/Src/diskio.d \
-./Middleware/Src/ff.d 
+./Middleware/Src/ff.d \
+./Middleware/Src/ffunicode.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +27,7 @@ Middleware/Src/%.o Middleware/Src/%.su Middleware/Src/%.cyclo: ../Middleware/Src
 clean: clean-Middleware-2f-Src
 
 clean-Middleware-2f-Src:
-	-$(RM) ./Middleware/Src/diskio.cyclo ./Middleware/Src/diskio.d ./Middleware/Src/diskio.o ./Middleware/Src/diskio.su ./Middleware/Src/ff.cyclo ./Middleware/Src/ff.d ./Middleware/Src/ff.o ./Middleware/Src/ff.su
+	-$(RM) ./Middleware/Src/diskio.cyclo ./Middleware/Src/diskio.d ./Middleware/Src/diskio.o ./Middleware/Src/diskio.su ./Middleware/Src/ff.cyclo ./Middleware/Src/ff.d ./Middleware/Src/ff.o ./Middleware/Src/ff.su ./Middleware/Src/ffunicode.cyclo ./Middleware/Src/ffunicode.d ./Middleware/Src/ffunicode.o ./Middleware/Src/ffunicode.su
 
 .PHONY: clean-Middleware-2f-Src
 

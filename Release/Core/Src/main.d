@@ -27,8 +27,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cordic.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h \
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_crs.h \
@@ -37,7 +40,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_utils.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h \
  C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/app.h
@@ -70,8 +72,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_sram.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_fmc.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cordic.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_i2c.h:
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_crs.h:
@@ -80,7 +85,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_utils.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h:
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_spi.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:
 C:/Users/uporabnik/STM32CubeIDE/workspace/Misko_Tracker/Application/Inc/app.h:

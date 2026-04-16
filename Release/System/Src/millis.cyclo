@@ -1,3 +1,0 @@
-../System/Src/millis.c:4:6:millis_init	1
-../System/Src/millis.c:9:10:millis	1
-../System/Src/millis.c:14:6:delay_millis	2

@@ -4,6 +4,8 @@
 #include <stdint.h>
 
 void audio_start(void);
-void audio_fill_buffer(uint16_t *buffer, uint32_t size);
+void audio_stop(void);
+void audio_half_callback(void);
+void audio_full_callback(void);
 
 #endif /* INC_AUDIO_H_ */
