@@ -1,16 +1,6 @@
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:894:22:LL_GPIO_SetOutputPin	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:923:22:LL_GPIO_ResetOutputPin	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:517:22:LL_DMA_EnableChannel	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:539:22:LL_DMA_DisableChannel	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:561:26:LL_DMA_IsEnabledChannel	2
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:997:22:LL_DMA_SetDataLength	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1188:22:LL_DMA_SetM2MSrcAddress	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1213:22:LL_DMA_SetM2MDstAddress	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:1663:26:LL_DMA_IsActiveFlag_TC1	2
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h:2063:22:LL_DMA_ClearFlag_TC1	1
 ../System/Src/ili9341.c:10:6:ILI9341_init	4
 ../System/Src/ili9341.c:47:6:ILI9341_set_address	1
-../System/Src/ili9341.c:53:6:ILI9341_send_data	2
+../System/Src/ili9341.c:53:6:ILI9341_send_data	3
 ../System/Src/ili9341.c:61:6:ILI9341_send_data_DMA	3
 ../System/Src/ili9341.c:72:10:ILI9341_is_DMA_ready	1
 ../System/Src/ili9341.c:77:6:ILI9341_hard_reset	1

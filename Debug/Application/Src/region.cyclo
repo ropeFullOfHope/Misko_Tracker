@@ -1,5 +1,5 @@
-../Application/Src/region.c:28:6:region_draw	6
-../Application/Src/region.c:42:6:region_change_symbol	6
-../Application/Src/region.c:57:6:region_change_color	6
-../Application/Src/region.c:72:6:region_fill	4
-../Application/Src/region.c:82:9:region_draw_text	20
+../Application/Src/region.c:28:6:region_draw	5
+../Application/Src/region.c:42:6:region_change_symbol	5
+../Application/Src/region.c:57:6:region_change_color	5
+../Application/Src/region.c:72:6:region_fill	6
+../Application/Src/region.c:82:9:region_draw_text	21

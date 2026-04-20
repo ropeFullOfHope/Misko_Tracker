@@ -1,3 +1,5 @@
+#pragma GCC diagnostic ignored "-Wconversion"
+
 /**
  ******************************************************************************
  * @file      syscalls.c

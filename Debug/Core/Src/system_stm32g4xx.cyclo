@@ -1,2 +1,2 @@
-../Core/Src/system_stm32g4xx.c:179:6:SystemInit	1
-../Core/Src/system_stm32g4xx.c:228:6:SystemCoreClockUpdate	6
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h:86:13:SystemInit	1
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h:87:13:SystemCoreClockUpdate	5

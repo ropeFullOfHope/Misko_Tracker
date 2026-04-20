@@ -1,5 +1,3 @@
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2023:22:LL_TIM_EnableCounter	1
-../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2291:26:LL_TIM_GetCounter	1
 ../System/Src/micros.c:4:6:micros_init	1
 ../System/Src/micros.c:9:10:micros	1
 ../System/Src/micros.c:14:6:delay_micros	2

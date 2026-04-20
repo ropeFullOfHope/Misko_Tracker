@@ -17,7 +17,6 @@ static void draw_sidebar(void);
 static void draw_map(void);
 static void play_song_from_start(void);
 
-static bool is_playback_enabled   = false;
 static bool is_joystick_triggered = false;
 
 /* Finite State Machine definitions */
@@ -481,6 +480,8 @@ void draw_map(void)
 
 void play_song_from_start(void)
 {
-    audio_start();
-    is_playback_enabled = true;
+    if (audio_is_playing() == false)
+        audio_start();
+    else
+        audio_schedule_stop();
 }

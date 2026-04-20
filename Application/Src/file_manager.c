@@ -52,7 +52,7 @@ static const char MAGIC_CONFIG[4]  = {'M', 'C', 'F', 'G'};
 static const char MAGIC_PROJECT[4] = {'M', 'T', 'R', 'K'};
 
 static FATFS sd;
-static int32_t row;
+static int32_t log_row;
 
 void fmanager_init(void)
 {
@@ -106,35 +106,23 @@ void fmanager_save_config(void)
     FIL file;
 
     // Create a temporary config file.
-    if (f_open(&file, "0:/config.tmp", FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
-        LED_write(1);
+    if (f_open(&file, "0:/config.tmp", FA_WRITE | FA_CREATE_ALWAYS) != FR_OK)
         return;
-    }
     sd_serialize_config(&file);
-    if (f_close(&file) != FR_OK) {
-        LED_write(2);
+    if (f_close(&file) != FR_OK)
         return;
-    }
 
     // Delete the old backup config file.
-    if ((f_unlink("0:/config.bak") | FR_OK | FR_NO_FILE) != (FR_OK | FR_NO_FILE)) {
-        LED_write(3);
+    if ((f_unlink("0:/config.bak") | FR_OK | FR_NO_FILE) != (FR_OK | FR_NO_FILE))
         return;
-    }
 
     // Rename the current config file to a backup config file.
-    if (f_rename("0:/config.cfg", "0:/config.bak") != FR_OK) {
-        LED_write(4);
+    if (f_rename("0:/config.cfg", "0:/config.bak") != FR_OK)
         return;
-    }
 
     // Rename the temporary config file to a current config file.
-    if (f_rename("0:/config.tmp", "0:/config.cfg") != FR_OK) {
-        LED_write(5);
+    if (f_rename("0:/config.tmp", "0:/config.cfg") != FR_OK)
         return;
-    }
-
-    LED_write(0xFF);
 }
 
 void fmanager_save_project(void)
@@ -160,14 +148,14 @@ static void log_clear(void)
 {
     region_fill(&REGION_FMANAGER, ' ', COLOR_NORMAL);
     LCD_update_screen();
-    row = 0;
+    log_row = 0;
 }
 
 static void log_write(const char *text)
 {
-    region_draw_text(&REGION_FMANAGER, text, COLOR_NORMAL, 0, row);
+    region_draw_text(&REGION_FMANAGER, text, COLOR_NORMAL, 0, log_row);
     LCD_update_screen();
-    row++;
+    log_row++;
 }
 
 
@@ -572,26 +560,26 @@ static result_t sd_deserialize_project(FIL *file)
 
         switch (data_block_type) {
             case BT_CHAIN: {
-                uint8_t buffer[sizeof(chain_t)];
+                uint8_t chain_buffer[sizeof(chain_t)];
                 bytes_to_read = sizeof(chain_t);
-                if ((f_read(file, buffer, bytes_to_read, &bytes_read) != FR_OK) || (bytes_read < bytes_to_read)) return R_READ_ERROR;
-                project_data.chain[data_block_id] = *(chain_t *)buffer;
+                if ((f_read(file, chain_buffer, bytes_to_read, &bytes_read) != FR_OK) || (bytes_read < bytes_to_read)) return R_READ_ERROR;
+                project_data.chain[data_block_id] = *(chain_t *)chain_buffer;
 
                 break;
             }
             case BT_PHRASE: {
-                uint8_t buffer[sizeof(phrase_t)];
+                uint8_t phrase_buffer[sizeof(phrase_t)];
                 bytes_to_read = sizeof(phrase_t);
-                if ((f_read(file, buffer, bytes_to_read, &bytes_read) != FR_OK) || (bytes_read < bytes_to_read)) return R_READ_ERROR;
-                project_data.phrase[data_block_id] = *(phrase_t *)buffer;
+                if ((f_read(file, phrase_buffer, bytes_to_read, &bytes_read) != FR_OK) || (bytes_read < bytes_to_read)) return R_READ_ERROR;
+                project_data.phrase[data_block_id] = *(phrase_t *)phrase_buffer;
 
                 break;
             }
             case BT_INSTRUMENT: {
-                uint8_t buffer[sizeof(instrument_t)];
+                uint8_t instrument_buffer[sizeof(instrument_t)];
                 bytes_to_read = sizeof(instrument_t);
-                if ((f_read(file, buffer, bytes_to_read, &bytes_read) != FR_OK) || (bytes_read < bytes_to_read)) return R_READ_ERROR;
-                project_data.instrument[data_block_id] = *(instrument_t *)buffer;
+                if ((f_read(file, instrument_buffer, bytes_to_read, &bytes_read) != FR_OK) || (bytes_read < bytes_to_read)) return R_READ_ERROR;
+                project_data.instrument[data_block_id] = *(instrument_t *)instrument_buffer;
 
                 break;
             }
@@ -666,10 +654,10 @@ static result_t sd_serialize_project(FIL *file)
         *(uint16_t *)buffer = (uint16_t)chain_id;
         if ((f_write(file, buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
 
-        uint8_t buffer[sizeof(chain_t)];
+        uint8_t chain_buffer[sizeof(chain_t)];
         bytes_to_write = sizeof(chain_t);
-        *(chain_t *)buffer = project_data.chain[chain_id];
-        if ((f_write(file, buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
+        *(chain_t *)chain_buffer = project_data.chain[chain_id];
+        if ((f_write(file, chain_buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
     }
 
     // Phrase
@@ -686,10 +674,10 @@ static result_t sd_serialize_project(FIL *file)
         *(uint16_t *)buffer = (uint16_t)phrase_id;
         if ((f_write(file, buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
 
-        uint8_t buffer[sizeof(phrase_t)];
+        uint8_t phrase_buffer[sizeof(phrase_t)];
         bytes_to_write = sizeof(phrase_t);
-        *(phrase_t *)buffer = project_data.phrase[phrase_id];
-        if ((f_write(file, buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
+        *(phrase_t *)phrase_buffer = project_data.phrase[phrase_id];
+        if ((f_write(file, phrase_buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
     }
 
     // Instrument
@@ -706,10 +694,10 @@ static result_t sd_serialize_project(FIL *file)
         *(uint16_t *)buffer = (uint16_t)instrument_id;
         if ((f_write(file, buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
 
-        uint8_t buffer[sizeof(instrument_t)];
+        uint8_t instrument_buffer[sizeof(instrument_t)];
         bytes_to_write = sizeof(instrument_t);
-        *(instrument_t *)buffer = project_data.instrument[instrument_id];
-        if ((f_write(file, buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
+        *(instrument_t *)instrument_buffer = project_data.instrument[instrument_id];
+        if ((f_write(file, instrument_buffer, bytes_to_write, &bytes_written) != FR_OK) || (bytes_written < bytes_to_write)) return R_WRITE_ERROR;
     }
 
     return R_OK;

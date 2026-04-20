@@ -206,6 +206,7 @@ void instrument_move_cursor(joystick_position_t joystick_position)
     instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
     switch (instrument_type) {
         case INSTRUMENT_TYPE_BASIC_WAVE: {type_configs_config_count = (int32_t)CONFIGS_BASIC_WAVE.config_count; break;}
+        case INSTRUMENT_TYPE_SAMPLE:     {type_configs_config_count = (int32_t)CONFIGS_SAMPLE.config_count; break;}
         default: break;
     }
 
@@ -273,6 +274,7 @@ void instrument_change_value(joystick_position_t joystick_position)
 
             switch (instrument_type) {
                 case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
+                case INSTRUMENT_TYPE_SAMPLE:     {config_group = &CONFIGS_SAMPLE; break;}
                 default: break;
             }
             break;
@@ -391,6 +393,7 @@ static void instrument_highlight_cursor(void)
             instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
             switch (instrument_type) {
                 case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
+                case INSTRUMENT_TYPE_SAMPLE:     {config_group = &CONFIGS_SAMPLE; break;}
                 default: return;
             }
             break;
@@ -421,6 +424,7 @@ static void instrument_unhighlight_cursor(void)
             instrument_type_t instrument_type = project_data.instrument[selected_instrument].instrument_type;
             switch (instrument_type) {
                 case INSTRUMENT_TYPE_BASIC_WAVE: {config_group = &CONFIGS_BASIC_WAVE; break;}
+                case INSTRUMENT_TYPE_SAMPLE: {config_group = &CONFIGS_SAMPLE; break;}
                 default: return;
             }
             break;

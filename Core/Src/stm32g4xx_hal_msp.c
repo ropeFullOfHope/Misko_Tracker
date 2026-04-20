@@ -150,7 +150,7 @@ static void HAL_FMC_MspInit(void){
 
 void HAL_SRAM_MspInit(SRAM_HandleTypeDef* hsram){
   /* USER CODE BEGIN SRAM_MspInit 0 */
-
+  (void) hsram;
   /* USER CODE END SRAM_MspInit 0 */
   HAL_FMC_MspInit();
   /* USER CODE BEGIN SRAM_MspInit 1 */
@@ -210,7 +210,7 @@ static void HAL_FMC_MspDeInit(void){
 
 void HAL_SRAM_MspDeInit(SRAM_HandleTypeDef* hsram){
   /* USER CODE BEGIN SRAM_MspDeInit 0 */
-
+  (void) hsram;
   /* USER CODE END SRAM_MspDeInit 0 */
   HAL_FMC_MspDeInit();
   /* USER CODE BEGIN SRAM_MspDeInit 1 */

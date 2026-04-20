@@ -1,10 +1,8 @@
-../System/Src/lcd.c:28:6:LCD_init	4
-../System/Src/lcd.c:57:6:LCD_draw	10
-../System/Src/lcd.c:84:6:LCD_change_symbol	8
-../System/Src/lcd.c:107:6:LCD_change_color	8
-../System/Src/lcd.c:130:6:LCD_update_screen	2
-../System/Src/lcd.c:136:6:LCD_update_one_tile	3
-../System/Src/lcd.c:146:6:LCD_update_tile	7
+../System/Src/lcd.c:57:6:LCD_draw	9
+../System/Src/lcd.c:84:6:LCD_change_symbol	7
+../System/Src/lcd.c:107:6:LCD_change_color	7
+../System/Src/lcd.c:146:6:LCD_update_tile	5
+../System/Src/lcd.c:136:6:LCD_update_one_tile	4
+../System/Src/lcd.c:130:6:LCD_update_screen	6
+../System/Src/lcd.c:28:6:LCD_init	14
 ../System/Src/lcd.c:168:6:LCD_is_DMA_ready	1
-../System/Src/lcd.c:173:6:LCD_enqueue_tile	2
-../System/Src/lcd.c:185:15:LCD_dequeue_tile	2
