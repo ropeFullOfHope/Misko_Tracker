@@ -5,6 +5,7 @@
 
 typedef enum {
     COMMAND_NULL,
+    COMMAND_BRK,
     COMMAND_ARP,
     COMMAND_PCH,
     COMMAND_COUNT

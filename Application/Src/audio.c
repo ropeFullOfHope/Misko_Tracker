@@ -97,7 +97,7 @@ void audio_start(void)
             channel_data[channel].sample.phase.whole = 0;
             channel_data[channel].sample.phase.fraction = 0.0f;
 
-            float note_ratio = NOTE_METADATA[channel_data[channel].current_note].frequency / NOTE_METADATA[0x31].frequency;
+            float note_ratio = NOTE_METADATA[channel_data[channel].current_note].frequency / NOTE_METADATA[project_data.instrument[channel_data[channel].current_instrument_id].sample.root_note].frequency;
             channel_data[channel].sample.phase_advance.whole = (uint32_t)floorf(note_ratio);
             channel_data[channel].sample.phase_advance.fraction = note_ratio - (float)channel_data[channel].sample.phase_advance.whole;
         }
@@ -211,7 +211,7 @@ static int16_t audio_get_next_sample(uint32_t channel) {
                                                  * project_data.instrument[channel_data[channel].current_instrument_id].volume * (1.0f / 127.0f));
                         break;
                     case BASIC_WAVE_SINE:
-                        sample = (int16_t)roundf(sinf(channel_data[channel].simple_wave.phase)
+                        sample = (int16_t)roundf(sinf(channel_data[channel].simple_wave.phase * (2.0f * (float)M_PI))
                                                  * 32767.0f
                                                  * (channel_data[channel].current_volume - 1) * (1.0f / 127.0f)
                                                  * project_data.instrument[channel_data[channel].current_instrument_id].volume * (1.0f / 127.0f));
@@ -277,7 +277,8 @@ static int16_t audio_get_next_sample(uint32_t channel) {
     if (channel_data[channel].row_sample_index >= samples_per_row) {
         channel_data[channel].row_sample_index = 0;
         channel_data[channel].phrase_index += 1;
-        if (channel_data[channel].phrase_index >= PHRASE_ROW_COUNT)
+        if (channel_data[channel].phrase_index >= PHRASE_ROW_COUNT ||
+            project_data.phrase[channel_data[channel].current_phrase].command[channel_data[channel].phrase_index][0] == COMMAND_BRK)
         {
             channel_data[channel].phrase_index = 0;
             channel_data[channel].chain_index += 1;
@@ -310,7 +311,7 @@ static int16_t audio_get_next_sample(uint32_t channel) {
             channel_data[channel].sample.phase.whole = 0;
             channel_data[channel].sample.phase.fraction = 0.0f;
 
-            float note_ratio = NOTE_METADATA[channel_data[channel].current_note].frequency / NOTE_METADATA[0x31].frequency;
+            float note_ratio = NOTE_METADATA[channel_data[channel].current_note].frequency / NOTE_METADATA[project_data.instrument[channel_data[channel].current_instrument_id].sample.root_note].frequency;
             channel_data[channel].sample.phase_advance.whole = (uint32_t)floorf(note_ratio);
             channel_data[channel].sample.phase_advance.fraction = note_ratio - (float)channel_data[channel].sample.phase_advance.whole;
         }

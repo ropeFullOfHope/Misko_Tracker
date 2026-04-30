@@ -862,19 +862,19 @@ void phrase_change_value(joystick_position_t joystick_position)
 
             switch (joystick_position) {
                 case JOYSTICK_POSITION_UP:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, +1, 0x01, NOTE_COUNT - 3);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, +1, 0x01, NOTE_COUNT - 1);
                     break;
 
                 case JOYSTICK_POSITION_DOWN:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, -1, 0x01, NOTE_COUNT - 3);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, -1, 0x01, NOTE_COUNT - 1);
                     break;
 
                 case JOYSTICK_POSITION_RIGHT:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, +12, 0x01, NOTE_COUNT - 3);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, +12, 0x01, NOTE_COUNT - 1);
                     break;
 
                 case JOYSTICK_POSITION_LEFT:
-                    new_note = change_value_within_bounds(SELECTED_NOTE, -12, 0x01, NOTE_COUNT - 3);
+                    new_note = change_value_within_bounds(SELECTED_NOTE, -12, 0x01, NOTE_COUNT - 1);
                     break;
 
                 default:

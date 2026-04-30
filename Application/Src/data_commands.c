@@ -12,6 +12,17 @@ const command_metadata_t COMMAND_METADATA[COMMAND_COUNT] = {
             }
         }
     },
+    [COMMAND_BRK] = {
+        .name = {'B', 'R', 'K'},
+        .full_name = "Phrase Break",
+        .parameter_type = PARAMETER_XX,
+        .description = {
+            .general = "Ends the Phrase early.",
+            .parameter = {
+                .xx = "Does nothing."
+            }
+        }
+    },
     [COMMAND_ARP] = {
         .name = {'A', 'R', 'P'},
         .full_name = "Arpeggio",

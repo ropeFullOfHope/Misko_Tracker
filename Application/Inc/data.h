@@ -81,6 +81,7 @@ typedef struct {
         } basic_wave;
         struct {
             sample_id_t sample_id;
+            note_t root_note;
         } sample;
     };
 } instrument_t;

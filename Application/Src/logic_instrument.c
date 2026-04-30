@@ -33,6 +33,7 @@ struct {
         } basic_wave;
         struct {
             void *sample_id;
+            void *root_note;
         } sample;
     };
 } selected_instrument_pointers;
@@ -164,9 +165,153 @@ const configGroup_t CONFIGS_SAMPLE = {
                 .bounds.min.u8 = 0x00,
                 .bounds.max.u8 = 0xFF
             }
+        },
+        {
+            .label = {
+                .name = "Root Note",
+                .color = COLOR_NORMAL
+            },
+            .display = {
+                .type = STRING_TYPE_STRING_LIST,
+                .size = 3,
+                .offset = 10,
+                .options = (const char * []) {
+                    "---",
+                    "C-0",
+                    "C#0",
+                    "D-0",
+                    "D#0",
+                    "E-0",
+                    "F-0",
+                    "F#0",
+                    "G-0",
+                    "G#0",
+                    "A-0",
+                    "A#0",
+                    "B-0",
+                    "C-1",
+                    "C#1",
+                    "D-1",
+                    "D#1",
+                    "E-1",
+                    "F-1",
+                    "F#1",
+                    "G-1",
+                    "G#1",
+                    "A-1",
+                    "A#1",
+                    "B-1",
+                    "C-2",
+                    "C#2",
+                    "D-2",
+                    "D#2",
+                    "E-2",
+                    "F-2",
+                    "F#2",
+                    "G-2",
+                    "G#2",
+                    "A-2",
+                    "A#2",
+                    "B-2",
+                    "C-3",
+                    "C#3",
+                    "D-3",
+                    "D#3",
+                    "E-3",
+                    "F-3",
+                    "F#3",
+                    "G-3",
+                    "G#3",
+                    "A-3",
+                    "A#3",
+                    "B-3",
+                    "C-4",
+                    "C#4",
+                    "D-4",
+                    "D#4",
+                    "E-4",
+                    "F-4",
+                    "F#4",
+                    "G-4",
+                    "G#4",
+                    "A-4",
+                    "A#4",
+                    "B-4",
+                    "C-5",
+                    "C#5",
+                    "D-5",
+                    "D#5",
+                    "E-5",
+                    "F-5",
+                    "F#5",
+                    "G-5",
+                    "G#5",
+                    "A-5",
+                    "A#5",
+                    "B-5",
+                    "C-6",
+                    "C#6",
+                    "D-6",
+                    "D#6",
+                    "E-6",
+                    "F-6",
+                    "F#6",
+                    "G-6",
+                    "G#6",
+                    "A-6",
+                    "A#6",
+                    "B-6",
+                    "C-7",
+                    "C#7",
+                    "D-7",
+                    "D#7",
+                    "E-7",
+                    "F-7",
+                    "F#7",
+                    "G-7",
+                    "G#7",
+                    "A-7",
+                    "A#7",
+                    "B-7",
+                    "C-8",
+                    "C#8",
+                    "D-8",
+                    "D#8",
+                    "E-8",
+                    "F-8",
+                    "F#8",
+                    "G-8",
+                    "G#8",
+                    "A-8",
+                    "A#8",
+                    "B-8",
+                    "C-9",
+                    "C#9",
+                    "D-9",
+                    "D#9",
+                    "E-9",
+                    "F-9",
+                    "F#9",
+                    "G-9",
+                    "G#9",
+                    "A-9",
+                    "A#9",
+                    "B-9"
+                },
+                .option_count = 0x79
+            },
+            .data = {
+                .pointer = &selected_instrument_pointers.sample.root_note,
+                .indirect = true,
+                .primitive_type = PRIMITIVE_TYPE_U8,
+                .step.small.u8 = 1,
+                .step.big.u8   = 12,
+                .bounds.min.u8 = 0x01,
+                .bounds.max.u8 = 0x78
+            }
         }
     },
-    .config_count = 1
+    .config_count = 2
 };
 
 static cursor_t cursor = {0};
@@ -181,6 +326,8 @@ void instrument_init(instrument_id_t instrument)
     selected_instrument_pointers.volume = PTR_MEMBER(p_base, offsetof(instrument_t, volume), void);
     selected_instrument_pointers.basic_wave.wave = PTR_MEMBER(p_base, offsetof(instrument_t, basic_wave.wave), void);
     selected_instrument_pointers.basic_wave.pwm = PTR_MEMBER(p_base, offsetof(instrument_t, basic_wave.pwm), void);
+    selected_instrument_pointers.sample.sample_id = PTR_MEMBER(p_base, offsetof(instrument_t, sample.sample_id), void);
+    selected_instrument_pointers.sample.root_note = PTR_MEMBER(p_base, offsetof(instrument_t, sample.root_note), void);
 
     instrument_draw_title();
     instrument_draw_editor_common_config();

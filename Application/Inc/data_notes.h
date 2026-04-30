@@ -4,13 +4,11 @@
 #include "lcd.h"
 
 #define NORMAL_NOTE_COUNT  (10 * 12)
-#define SPECIAL_NOTE_COUNT 4
+#define SPECIAL_NOTE_COUNT 2
 #define NOTE_COUNT         (NORMAL_NOTE_COUNT + SPECIAL_NOTE_COUNT)
 
 #define NOTE_NULL   0x00
-#define NOTE_REST   0x80
-#define NOTE_CUT    0x81
-#define NOTE_RETRIG 0x82
+#define NOTE_REST   0x79
 
 typedef struct {
     const symbol_t name[3];
